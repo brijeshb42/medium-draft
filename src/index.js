@@ -128,17 +128,22 @@ class MyEditor extends React.Component {
   handleBeforeInput(str) {
     // console.log(str);
     const block = getCurrentBlock(this.state.editorState);
-    if (block.getType() === 'blockquote' && (block.text + str) == '--') {
-      this.toggleBlockType('block-quote-caption');
+    const blockType = block.getType();
+    if ((block.text[0] + str) == '--') {
+      if (blockType === 'blockquote') {
+        this.toggleBlockType('block-quote-caption');
+      } else {
+        this.toggleBlockType('caption');
+      }
       return true;
     }
     if (block.getType() !== 'unstyled') {
-      return false;
+      return false;      
     }
-    if ((block.text + str) == '* ') {
+    if ((block.text[0] + str) == '* ') {
       this.toggleBlockType('unordered-list-item');
       return true;
-    } else if ((block.text + str) == '1.') {
+    } else if ((block.text[0] + str) == '1.') {
       this.toggleBlockType('ordered-list-item');
       return true;
     }
@@ -257,6 +262,7 @@ class MyEditor extends React.Component {
 
 const BLOCK_BUTTONS = [
   // {label: 'H2', style: 'header-two'},
+  {label: 'Text', style: 'unstyled'},
   {label: 'Heading', style: 'header-three'},
   {label: 'Quote', style: 'blockquote'},
   {label: 'UL', style: 'unordered-list-item'},

@@ -1,5 +1,6 @@
 import TextComponent from './blocks/text';
-import CaptionComponent from './blocks/blockquotecaption';
+import QuoteCaptionComponent from './blocks/blockquotecaption';
+import CaptionComponent from './blocks/caption';
 
 export default (contentBlock) => {
   const type = contentBlock.getType();
@@ -8,6 +9,9 @@ export default (contentBlock) => {
       component: TextComponent
     };
     case 'block-quote-caption': return {
+      component: QuoteCaptionComponent
+    };
+    case 'caption': return {
       component: CaptionComponent
     };
   }

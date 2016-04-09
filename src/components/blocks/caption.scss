@@ -1,0 +1,26 @@
+.block-caption {
+    display: block;
+    position: relative;
+    font-style: normal;
+    padding: 10px 0;
+    font-family: 'Hoefler Text', 'Georgia', serif;
+    margin: 20px 0;
+
+    &::before {
+        content: '“';
+        color: #ccc;
+        display: inline;
+        position: absolute;
+        left: -25px;
+        top: -5px;
+        font-size: 3em;
+    }
+    &::after {
+        content: '”';
+        color: #ccc;
+        position: absolute;
+        right: -25px;
+        top: -5px;
+        font-size: 3em;
+    }
+}
