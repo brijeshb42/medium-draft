@@ -3,7 +3,7 @@ body {
 }
 
 a, a:visited {
-  color: #1717EF;
+  color: #08c;
 }
 
 .RichEditor-root {
@@ -23,6 +23,11 @@ a, a:visited {
   cursor: text;
   margin-top: 10px;
   position: relative;
+
+  h3 {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+  }
 }
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,
@@ -40,24 +45,13 @@ a, a:visited {
 }
 
 .RichEditor-editor .RichEditor-blockquote {
-  border-left: 5px solid #ddd;
+  border-left: 5px solid #4CA8DE;
   color: #555;
   font-family: 'Hoefler Text', 'Georgia', serif;
-  font-size: 1.1em;
-  // font-style: italic;
-  // margin: 0;
-  // padding: 10px 20px;
+  font-size: 1.2em;
   margin: 0;
-  padding: 5px 0 5px 20px;
-  // border-left: 5px solid #FFCDBA;
-
-  // &:first-child {
-  //   margin-top: 0;
-  // }
-
-  // &:last-child {
-  //   margin-bottom: 0;
-  // }
+  padding: 10px 0 10px 20px;
+  background-color: #E2F2FF;
 }
 
 .RichEditor-editor .public-DraftStyleDefault-pre {
@@ -67,23 +61,7 @@ a, a:visited {
   padding: 20px;
 }
 
-.RichEditor-controls {
-  font-family: 'Helvetica', sans-serif;
-  font-size: 14px;
-  margin-bottom: 5px;
-  user-select: none;
-  display: inline-block;
-  // border-right: 1px solid #222;
-  // margin-left: 10px;
-}
-
-.RichEditor-styleButton {
-  color: #999;
-  cursor: pointer;
-  margin-right: 16px;
-  padding: 2px 0;
-}
-
-.RichEditor-activeButton {
-  color: #5890ff;
+.public-DraftStyleDefault-unorderedListItem,
+.public-DraftStyleDefault-orderedListItem {
+  margin-bottom: 10px;
 }

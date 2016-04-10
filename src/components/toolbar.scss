@@ -1,0 +1,57 @@
+.editor-toolbar {
+  background: #545454;
+  color: #fff;
+  // padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 2;
+
+  .url-input {
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: block;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #08c;
+
+    &:focus {
+      outline: none;
+      border-color: #50FF4D;
+      background-color: #eee;
+    }
+  }
+}
+
+.RichEditor-controls {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 14px;
+  // margin-bottom: 5px;
+  user-select: none;
+  display: inline-block;
+  padding: 10px 15px;
+  border-right: 1px solid #000;
+  // border-right: 1px solid #222;
+  // margin-left: 10px;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+a.RichEditor-linkButton {
+  color: #fff;
+}
+
+.RichEditor-styleButton {
+  color: #fff;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 2px 0;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.RichEditor-activeButton {
+  color: #50FF4D;
+}

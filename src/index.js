@@ -1,6 +1,6 @@
 import 'draft-js/dist/Draft.css';
 import './index.scss';
-// import './hint.scss';
+import './components/blocks/text.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -22,7 +22,7 @@ import Toolbar from 'components/toolbar';
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
 import keyBindingFn from 'util/keybinding';
-import { getCurrentBlock } from 'util';
+import { getCurrentBlock, resetBlockWithType } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const styleMap = {
@@ -34,6 +34,7 @@ const styleMap = {
 function getBlockStyle(block) {
   switch (block.getType()) {
     case 'blockquote': return 'block block-quote RichEditor-blockquote';
+    case 'unstyled': return 'block block-paragraph';
     default: return null;
   }
 }
@@ -56,9 +57,21 @@ class MyEditor extends React.Component {
       urlValue: ''
     };
     this.focus = () => this.refs.editor.focus();
+    this.onChange = (editorState) => this.setState({editorState});
 
-    this.onChange = this.onChange.bind(this);
+    this.onClick = () => {
+      if (!this.state.editorEnabled) {
+        this.setState({
+          editorEnabled: true
+        }, () => {
+          this.focus();
+        });
+      }
+    };
+
+    this.logData = this.logData.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
@@ -69,14 +82,14 @@ class MyEditor extends React.Component {
   }
 
   componentDidMount() {
-    this.refs.editor.focus();
+    this.focus();
   }
 
-  onChange(editorState) {
-    this.setState({editorState});
-  }
+  // onChange(editorState) {
+  //   this.setState({editorState});
+  // }
 
-  onClick(e) {
+  logData(e) {
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     console.log(this.state.editorState.getSelection().toJS());
     window.sel = this.state.editorState.getSelection();
@@ -111,24 +124,36 @@ class MyEditor extends React.Component {
   }
 
   handleBeforeInput(str) {
-    const block = getCurrentBlock(this.state.editorState);
+    const { editorState } = this.state;
+    const block = getCurrentBlock(editorState);
     const blockType = block.getType();
-    if ((block.text[0] + str) == '--') {
+    const blockLength = block.getLength();
+    if (blockLength > 1) {
+      return false;      
+    }
+    if (block.text[0]+str === '--' && blockType !== 'caption' && blockType !== 'block-quote-caption') {
       if (blockType === 'blockquote') {
-        this.toggleBlockType('block-quote-caption');
+        this.onChange(resetBlockWithType(editorState, 'block-quote-caption'));
       } else {
-        this.toggleBlockType('caption');
+        this.onChange(resetBlockWithType(editorState, 'caption'));
       }
       return true;
     }
-    if (block.getType() !== 'unstyled') {
-      return false;      
-    }
-    if ((block.text[0] + str) == '* ') {
-      this.toggleBlockType('unordered-list-item');
+    if (block.text[0]+str === '""' && blockType !== 'blockquote') {
+      this.onChange(resetBlockWithType(editorState, 'blockquote'));
       return true;
-    } else if ((block.text[0] + str) == '1.') {
-      this.toggleBlockType('ordered-list-item');
+    }
+    if ((block.text[0] + str) == '* ' && blockType !== 'unordered-list-item') {
+      this.onChange(resetBlockWithType(editorState, 'unordered-list-item'));
+      return true;
+    } else if ((block.text[0] + str) == '1.' && blockType !== 'ordered-list-item') {
+      this.onChange(resetBlockWithType(editorState, 'ordered-list-item'));
+      return true;
+    } else if (block.text[0] + str === '##' && blockType !== 'header-three') {
+      this.onChange(resetBlockWithType(editorState, 'header-three'));
+      return true;
+    } else if (block.text[0] + str === '==' && blockType !== 'unstyled') {
+      this.onChange(resetBlockWithType(editorState, 'unstyled'));
       return true;
     }
     return false;
@@ -158,6 +183,10 @@ class MyEditor extends React.Component {
     });
   }
 
+  onTab(e) {
+    this.setState(RichUtils.onTab(e, this.state.editorState, 2));
+  }
+
   loadSavedData() {
     const data = window.localStorage.getItem('editor');
     if (data === null) {
@@ -184,7 +213,7 @@ class MyEditor extends React.Component {
     return (
       <div className="RichEditor-root">
         <div className="editor-action">
-          <button onClick={this.onClick}>State</button>
+          <button onClick={this.logData}>Log State</button>
           <button onClick={this.toggleEdit}>Toggle Edit</button>
           <button onClick={this.loadSavedData}>Load local data.</button>
         </div>
@@ -195,18 +224,19 @@ class MyEditor extends React.Component {
           editorEnabled={editorEnabled}
           setLink={this.setLink}
           focus={this.focus} />
-        <div className="RichEditor-editor">
+        <div className="RichEditor-editor" onClick={this.onClick}>
           <Editor
             ref="editor"
+            editorState={editorState}
             blockRendererFn={rendererFn}
             blockStyleFn={getBlockStyle}
-            editorState={editorState}
             onChange={this.onChange}
             handleKeyCommand={this.handleKeyCommand}
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
             handleBeforeInput={this.handleBeforeInput}
+            placeholder="Write your story"
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} /> : null }
         </div>

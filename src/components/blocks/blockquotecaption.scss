@@ -1,6 +1,15 @@
 .block-quote {
     cite {
         display: block;
-        margin: 20px 0 0 0;
+        margin: 0;
+
+        &::before {
+            content: '\2013';
+            color: #999;
+            float: left;
+            font-weight: bold;
+            display: inline;
+            margin-right: 10px;
+        }
     }
 }

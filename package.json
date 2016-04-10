@@ -11,7 +11,7 @@
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.3.0",
+    "draft-js": "^0.4.0",
     "lodash": "^4.6.1",
     "react": "^0.14.8",
     "react-addons-linked-state-mixin": "^0.14.8",

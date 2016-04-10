@@ -17,8 +17,8 @@ export const findLinkEntities = (contentBlock, callback) => {
 
 export default (props) => {
   // console.log(props);
-  const { href } = Entity.get(props.entityKey).getData();
+  const { url } = Entity.get(props.entityKey).getData();
   return (
-    <a href={ href } className="draft-link hint--bottom" data-hint={ href } target="_blank">{props.children}</a>
+    <a href={ url } className="draft-link hint--bottom" data-hint={ url } target="_blank">{props.children}</a>
   );
 };

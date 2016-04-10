@@ -2,9 +2,7 @@ import './addbutton.scss';
 
 import React from 'react';
 
-import { getVisibleSelectionRect } from 'draft-js';
-
-import { getSelectionRect, getSelection, getSelectedBlockNode } from 'util';
+import { getSelectedBlockNode } from 'util';
 
 export default class AddButton extends React.Component {
   constructor(props) {

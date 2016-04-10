@@ -4,7 +4,14 @@
     font-style: normal;
     padding: 10px 0;
     font-family: 'Hoefler Text', 'Georgia', serif;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
+    background-color: #F7F7F7;
+    border-radius: 5px;
+
+    // a {
+    //     color: #08c;
+    //     text-decoration: none;
+    // }
 
     &::before {
         content: '“';
@@ -22,5 +29,9 @@
         right: -25px;
         top: -5px;
         font-size: 3em;
+    }
+
+    .public-DraftStyleDefault-ltr {
+        text-align: center;
     }
 }

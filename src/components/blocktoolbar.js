@@ -1,15 +1,13 @@
 import React from 'react';
+import { RichUtils } from 'draft-js';
 
 import StyleButton from './stylebutton';
 
 
 export default (props) => {
   const {editorState} = props;
-  const selection = editorState.getSelection();
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType();
+  // const selection = editorState.getSelection();
+  const blockType = RichUtils.getCurrentBlockType(editorState);
 
   return (
     <div className="RichEditor-controls">

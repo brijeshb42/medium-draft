@@ -1,7 +1,13 @@
+import './toolbar.scss';
+
 import React from 'react';
+
+import { getVisibleSelectionRect } from 'draft-js';
 
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
+
+window.getVisibleSelectionRect = getVisibleSelectionRect;
 
 export default class Toolbar extends React.Component {
 
@@ -31,7 +37,7 @@ export default class Toolbar extends React.Component {
       this.setState({
         showURLInput: false,
         urlInputValue: ''
-      });
+      }, () => this.props.focus());
     }
   }
 
@@ -47,6 +53,7 @@ export default class Toolbar extends React.Component {
     const { editorState } = this.props;
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
+      this.props.focus();
       return;
     }
     this.setState({
@@ -64,28 +71,31 @@ export default class Toolbar extends React.Component {
     }
     return (
       <div className="editor-toolbar">
-        <BlockToolbar
+        {!showURLInput ? <BlockToolbar
           editorState={editorState}
           onToggle={this.props.toggleBlockType}
-          buttons={BLOCK_BUTTONS} />
-        <InlineToolbar
+          buttons={BLOCK_BUTTONS} /> : null}
+        {!showURLInput ? <InlineToolbar
           editorState={editorState}
           onToggle={this.props.toggleInlineStyle}
-          buttons={INLINE_BUTTONS} />
+          buttons={INLINE_BUTTONS} /> : null}
+        <div className="RichEditor-controls">
         {showURLInput ? <input
           ref="urlinput"
           type="text"
+          className="url-input"
           onKeyDown={this.onKeyDown}
           onChange={this.onChange}
-          value={urlInputValue} /> : <a href="#1" onClick={this.showLinkInput}>#</a>}
+          value={urlInputValue} /> : <a className="RichEditor-linkButton" href="#" onClick={this.showLinkInput}>#</a>}
+        </div>
       </div>
     );
   }
 }
 
 const BLOCK_BUTTONS = [
-  {label: 'Text', style: 'unstyled'},
-  {label: 'H', style: 'header-three'},
+  {label: 'Title', style: 'header-three'},
+  {label: 'Normal', style: 'unstyled'},
   {label: 'Quote', style: 'blockquote'},
   {label: 'UL', style: 'unordered-list-item'},
   {label: 'OL', style: 'ordered-list-item'},
@@ -96,5 +106,5 @@ const INLINE_BUTTONS = [
   {label: <i>I</i>, style: 'ITALIC'},
   {label: <u>U</u>, style: 'UNDERLINE'},
   {label: <strike>S</strike>, style: 'STRIKETHROUGH'},
-  {label: <span style={{backgroundColor: 'yellow'}}>H</span>, style: 'HIGHLIGHT'},
+  {label: 'Hi', style: 'HIGHLIGHT'},
 ];
