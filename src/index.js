@@ -16,9 +16,8 @@ import {
   Entity,
 } from 'draft-js';
 
-import BlockToolbar from 'components/blocktoolbar';
-import InlineToolbar from 'components/inlinetoolbar';
 import AddButton from 'components/addbutton';
+import Toolbar from 'components/toolbar';
 
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
@@ -35,7 +34,6 @@ const styleMap = {
 function getBlockStyle(block) {
   switch (block.getType()) {
     case 'blockquote': return 'block block-quote RichEditor-blockquote';
-    case 'unstyled': return 'block block-paragraph';
     default: return null;
   }
 }
@@ -65,25 +63,16 @@ class MyEditor extends React.Component {
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-    this.onKeyDown = this.onKeyDown.bind(this);
-    this.showLinkInput = this.showLinkInput.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
-    this.changeUrl = this.changeUrl.bind(this);
+    this.setLink = this.setLink.bind(this);
   }
 
   componentDidMount() {
     this.refs.editor.focus();
-    // console.log(this.refs.editor);
-    // setInterval(() => {
-    //   const s = getSelection();
-    //   console.log(s);
-    //   console.log(getSelectionRect(s));
-    // }, 5000);
   }
 
   onChange(editorState) {
-    // console.log(editorState.getSelection().toJS());
     this.setState({editorState});
   }
 
@@ -93,23 +82,19 @@ class MyEditor extends React.Component {
     window.sel = this.state.editorState.getSelection();
   }
 
-  onKeyDown(e) {
-    if (e.which === 13 && e.target.value !== '') {
-      const { editorState } = this.state;
-      const selection = editorState.getSelection();
-      const entityKey = Entity.create('LINK', 'MUTABLE', {href: e.target.value});
-      this.setState({
-        editorState: RichUtils.toggleLink(
-          editorState,
-          selection,
-          entityKey
-        ),
-        showURLInput: false,
-        urlValue: '',
-      }, () => {
-        setTimeout(() => this.refs.editor.focus(), 0);
-      });
-    }
+  setLink(url) {
+    const { editorState } = this.state;
+    const selection = editorState.getSelection();
+    const entityKey = Entity.create('LINK', 'MUTABLE', {href: url});
+    this.setState({
+      editorState: RichUtils.toggleLink(
+        editorState,
+        selection,
+        entityKey
+      ),
+    }, () => {
+      setTimeout(() => this.refs.editor.focus(), 0);
+    });
   }
 
   handleKeyCommand(command) {
@@ -126,7 +111,6 @@ class MyEditor extends React.Component {
   }
 
   handleBeforeInput(str) {
-    // console.log(str);
     const block = getCurrentBlock(this.state.editorState);
     const blockType = block.getType();
     if ((block.text[0] + str) == '--') {
@@ -168,22 +152,6 @@ class MyEditor extends React.Component {
     );
   }
 
-  showLinkInput(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const { editorState } = this.state;
-    const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      this.refs.editor.focus();
-      return;
-    }
-    this.setState({
-      showURLInput: true
-    }, () => {
-      this.refs.urlinput.focus();
-    });
-  }
-
   toggleEdit(e) {
     this.setState({
       editorEnabled: !this.state.editorEnabled
@@ -211,12 +179,6 @@ class MyEditor extends React.Component {
     }
   }
 
-  changeUrl(e) {
-    this.setState({
-      urlValue: e.target.value
-    });
-  }
-
   render() {
     const { editorState, showURLInput, editorEnabled, urlValue } = this.state;
     return (
@@ -226,20 +188,13 @@ class MyEditor extends React.Component {
           <button onClick={this.toggleEdit}>Toggle Edit</button>
           <button onClick={this.loadSavedData}>Load local data.</button>
         </div>
-        { editorEnabled ? <BlockToolbar
-                          editorState={editorState}
-                          onToggle={this.toggleBlockType}
-                          buttons={BLOCK_BUTTONS} /> : null}
-        { editorEnabled ? <InlineToolbar
-                          editorState={editorState}
-                          onToggle={this.toggleInlineStyle}
-                          buttons={INLINE_BUTTONS} /> : null}
-        { editorEnabled ? (showURLInput ? <input
-                          ref="urlinput"
-                          type="text"
-                          onKeyDown={this.onKeyDown}
-                          onChange={this.changeUrl}
-                          value={urlValue} /> : <a href="#1" onClick={this.showLinkInput}>#</a>) : null}
+        <Toolbar
+          editorState={editorState}
+          toggleBlockType={this.toggleBlockType}
+          toggleInlineStyle={this.toggleInlineStyle}
+          editorEnabled={editorEnabled}
+          setLink={this.setLink}
+          focus={this.focus} />
         <div className="RichEditor-editor">
           <Editor
             ref="editor"
@@ -259,23 +214,6 @@ class MyEditor extends React.Component {
     );
   }
 }
-
-const BLOCK_BUTTONS = [
-  // {label: 'H2', style: 'header-two'},
-  {label: 'Text', style: 'unstyled'},
-  {label: 'Heading', style: 'header-three'},
-  {label: 'Quote', style: 'blockquote'},
-  {label: 'UL', style: 'unordered-list-item'},
-  {label: 'OL', style: 'ordered-list-item'},
-];
-
-const INLINE_BUTTONS = [
-  {label: <b>B</b>, style: 'BOLD'},
-  {label: <i>I</i>, style: 'ITALIC'},
-  {label: <u>U</u>, style: 'UNDERLINE'},
-  {label: <strike>S</strike>, style: 'STRIKETHROUGH'},
-  {label: <span style={{backgroundColor: 'yellow'}}>H</span>, style: 'HIGHLIGHT'},
-];
 
 setTimeout(() => {
   ReactDOM.render(
