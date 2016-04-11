@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot"
+    "clean": "rm -rf dist/static/",
+    "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
+    "build": "NODE_ENV=production webpack"
   },
   "keywords": [],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",

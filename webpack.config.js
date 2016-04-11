@@ -68,6 +68,7 @@ function getEntry(env) {
     // 'vendor-base': ['lodash', 'history'],
     // 'vendor-base': ['history'],
     'vendor-react': [
+      'babel-polyfill',
       'react',
       'react-dom',
       'immutable',
@@ -81,7 +82,7 @@ function getEntry(env) {
     entries.push('webpack-dev-server/client?http://localhost:8080/');
     entries.push('webpack/hot/only-dev-server');
   }
-  entries.push('babel-polyfill');
+  // entries.push('babel-polyfill');
   entries.push('./index');
   entry.app = entries;
   // console.log(entry);
