@@ -164,6 +164,8 @@ export default class Toolbar extends React.Component {
 }
 
 const BLOCK_BUTTONS = [
+  // {label: 'H1', style: 'header-one'},
+  // {label: 'H2', style: 'header-two'},
   {label: 'T', style: 'header-three'},
   {label: 'N', style: 'unstyled'},
   {label: 'Q', style: 'blockquote'},

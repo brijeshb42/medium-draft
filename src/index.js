@@ -74,9 +74,7 @@ class MyEditor extends React.Component {
 
     this.logData = this.logData.bind(this);
     this.onClick = this.onClick.bind(this);
-    // this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    // this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -110,7 +108,7 @@ class MyEditor extends React.Component {
   }
 
   handleKeyCommand(command) {
-    // console.log(command);
+    console.log(command);
     if (command === 'editor-save') {
       window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
       window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
@@ -128,10 +126,6 @@ class MyEditor extends React.Component {
       this.loadSavedData();
       return true;
     }
-    // else if (command === 'toggle-edit-mode') {
-    //   this.toggleEdit();
-    //   return true;
-    // }
     const { editorState } = this.state;
     const block = getCurrentBlock(editorState);
     if (command.indexOf('changetype:') == 0) {
@@ -155,43 +149,6 @@ class MyEditor extends React.Component {
     }
     return false;
   }
-
-  // handleBeforeInput(str) {
-  //   const { editorState } = this.state;
-  //   const selection = editorState.getSelection();
-  //   const block = getCurrentBlock(editorState);
-  //   const blockType = block.getType();
-  //   const blockLength = block.getLength();
-  //   if (selection.getAnchorOffset() > 1) {
-  //     return false;
-  //   }
-  //   if (block.text[0]+str === '--' && blockType !== 'caption' && blockType !== 'block-quote-caption') {
-  //     if (blockType === 'blockquote') {
-  //       this.onChange(resetBlockWithType(editorState, 'block-quote-caption'));
-  //     } else {
-  //       this.onChange(resetBlockWithType(editorState, 'caption'));
-  //     }
-  //     return true;
-  //   }
-  //   if (block.text[0]+str === '""' && blockType !== 'blockquote') {
-  //     this.onChange(resetBlockWithType(editorState, 'blockquote'));
-  //     return true;
-  //   }
-  //   if ((block.text[0] + str) == '* ' && blockType !== 'unordered-list-item') {
-  //     this.onChange(resetBlockWithType(editorState, 'unordered-list-item'));
-  //     return true;
-  //   } else if ((block.text[0] + str) == '1.' && blockType !== 'ordered-list-item') {
-  //     this.onChange(resetBlockWithType(editorState, 'ordered-list-item'));
-  //     return true;
-  //   } else if (block.text[0] + str === '##' && blockType !== 'header-three') {
-  //     this.onChange(resetBlockWithType(editorState, 'header-three'));
-  //     return true;
-  //   } else if (block.text[0] + str === '==' && blockType !== 'unstyled') {
-  //     this.onChange(resetBlockWithType(editorState, 'unstyled'));
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   _toggleBlockType(blockType) {
     this.onChange(
@@ -265,6 +222,10 @@ class MyEditor extends React.Component {
             setLink={this.setLink}
             focus={this.focus} />
         </div>
+        <div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+        </div>
       </div>
     );
   }
@@ -276,12 +237,3 @@ setTimeout(() => {
     document.getElementById('app')
   );
 }, 100);
-
-/*
-<div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-          <button onClick={this.loadSavedData}>Load local data.</button>
-        </div>
-        */
-//handleBeforeInput={this.handleBeforeInput}

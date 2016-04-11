@@ -71,3 +71,13 @@ a, a:visited {
 .public-DraftStyleDefault-orderedListItem {
   margin-bottom: 10px;
 }
+
+.editor-action {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+
+  button {
+    display: block;
+  }
+}

@@ -7,7 +7,7 @@ var ENV_DEV = 'development';
 var ENV_PROD = 'production';
 var ENV_TEST = 'test';
 
-var BUILD_DIR = path.resolve(__dirname, 'dist');
+var BUILD_DIR = path.resolve(__dirname, 'dist', 'static');
 var APP_DIR = path.resolve(__dirname, 'src');
 
 var env = process.env.NODE_ENV || ENV_DEV;
@@ -70,6 +70,7 @@ function getEntry(env) {
     'vendor-react': [
       'react',
       'react-dom',
+      'immutable',
       'draft-js',
       // 'react-redux',
       // 'react-addons-shallow-compare'
