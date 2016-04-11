@@ -22,7 +22,7 @@ import Toolbar from 'components/toolbar';
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
 import keyBindingFn from 'util/keybinding';
-import { getCurrentBlock, resetBlockWithType } from 'model';
+import { getCurrentBlock, resetBlockWithType, addNewBlock } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const styleMap = {
@@ -110,11 +110,28 @@ class MyEditor extends React.Component {
   }
 
   handleKeyCommand(command) {
+    // console.log(command);
     if (command === 'editor-save') {
       window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
       window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
       return true;
+    } else if (command === 'showlinkinput') {
+      if (this.refs.toolbar) {
+        this.refs.toolbar.showLinkInput(null, true);
+      }
+      return true;
+    } else if (command === 'add-new-block') {
+      const { editorState } = this.state;
+      this.onChange(addNewBlock(editorState, 'blockquote'));
+      return true;
+    } else if (command === 'load-saved-data') {
+      this.loadSavedData();
+      return true;
     }
+    // else if (command === 'toggle-edit-mode') {
+    //   this.toggleEdit();
+    //   return true;
+    // }
     const { editorState } = this.state;
     const block = getCurrentBlock(editorState);
     if (command.indexOf('changetype:') == 0) {
@@ -200,10 +217,6 @@ class MyEditor extends React.Component {
     });
   }
 
-  // onTab(e) {
-  //   this.setState(RichUtils.onTab(e, this.state.editorState, 2));
-  // }
-
   loadSavedData() {
     const data = window.localStorage.getItem('editor');
     if (data === null) {
@@ -229,11 +242,6 @@ class MyEditor extends React.Component {
     const { editorState, showURLInput, editorEnabled, urlValue } = this.state;
     return (
       <div className="RichEditor-root">
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-          <button onClick={this.loadSavedData}>Load local data.</button>
-        </div>
         <div className="RichEditor-editor">
           <Editor
             ref="editor"
@@ -249,6 +257,7 @@ class MyEditor extends React.Component {
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} /> : null }
           <Toolbar
+            ref="toolbar"
             editorState={editorState}
             toggleBlockType={this.toggleBlockType}
             toggleInlineStyle={this.toggleInlineStyle}
@@ -268,5 +277,11 @@ setTimeout(() => {
   );
 }, 100);
 
-
+/*
+<div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+          <button onClick={this.loadSavedData}>Load local data.</button>
+        </div>
+        */
 //handleBeforeInput={this.handleBeforeInput}

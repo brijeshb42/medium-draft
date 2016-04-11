@@ -71,8 +71,8 @@ function getEntry(env) {
       'react',
       'react-dom',
       'draft-js',
-      'react-redux',
-      'react-addons-shallow-compare'
+      // 'react-redux',
+      // 'react-addons-shallow-compare'
     ]
   };
   var entries = [];

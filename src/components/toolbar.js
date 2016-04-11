@@ -53,17 +53,15 @@ export default class Toolbar extends React.Component {
       return;
     }
     const node = nativeSelection.getRangeAt(0).startContainer.parentNode;
-    // window.nod = node;
     const rect = getSelectionRect(nativeSelection);
-    console.log(rect);
     if (this.hasDimension) {
       let left = rect.left - this.rect.width;
       if (rect.width >= this.rect.width) {
-        left = (rect.width - this.rect.width) / 2; // - (rect.width - this.rect.width) / 2;
+        left = (rect.width - this.rect.width) / 2;
       }
       this.setState({
         style: {
-          top: rect.top - this.rect.height - 60,
+          top: rect.top - this.rect.height - 50,
           width: this.rect.width,
           left
         }
@@ -83,7 +81,6 @@ export default class Toolbar extends React.Component {
     this.forceHide = false;
     const node = ReactDOM.findDOMNode(this);
     if (!node) {
-      // this.hasDimension = false;
       return;
     }
     this.rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
@@ -92,12 +89,16 @@ export default class Toolbar extends React.Component {
 
   onKeyDown(e) {
     if (e.which === 13 && e.target.value !== '') {
+      e.preventDefault();
+      e.stopPropagation();
       this.props.setLink(this.state.urlInputValue);
       this.setState({
         showURLInput: false,
         urlInputValue: '',
       }, () => this.props.focus());
     } else if (e.which === 27) {
+      e.preventDefault();
+      e.stopPropagation();
       this.setState({
         showURLInput: false,
         urlInputValue: '',
@@ -111,9 +112,11 @@ export default class Toolbar extends React.Component {
     });
   }
 
-  showLinkInput(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  showLinkInput(e, direct=false) {
+    if (!direct) {
+      e.preventDefault();
+      e.stopPropagation();   
+    }
     const { editorState } = this.props;
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
@@ -130,10 +133,6 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    // console.log('fh ', this.forceHide);
-    // if(this.forceHide) {
-    //   return null;
-    // }
     const { editorState, editorEnabled } = this.props;
     const { showURLInput, urlInputValue, style } = this.state;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {

@@ -8,18 +8,18 @@ a, a:visited {
 
 .RichEditor-root {
   background: #fff;
-  border: 1px solid #ddd;
+  // border: 1px solid #ddd;
   box-sizing: border-box;
   font-family: 'Georgia', serif;
   padding: 15px 30px;
   position: relative;
 
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
 .RichEditor-editor {
-  border-top: 1px solid #ddd;
+  // border-top: 1px solid #ddd;
   cursor: text;
   margin-top: 10px;
   position: relative;

@@ -1,8 +1,24 @@
+$add-btn-width: 22px;
+
 .add-button {
-    background: #FFF;
-    border: 1px solid #ccc;
-    height: 24px;
-    width: 24px;
-    border-radius: 12px;
+    background-color: #EAEAEA;
+    border: none;
+    // border: 1px solid #A0A0A0;
+    color: #6D6D6D;
+    cursor: pointer;
+    height: $add-btn-width;
+    width: $add-btn-width;
+    border-radius: $add-btn-width/2;
+    position: absolute;
     z-index: 1;
+    left: -27px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #08c;
+        color: #08c;
+    }
 }

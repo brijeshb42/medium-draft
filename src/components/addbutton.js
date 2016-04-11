@@ -20,45 +20,72 @@ export default class AddButton extends React.Component {
     this.hideBlock = this.hideBlock.bind(this);
   }
 
+  // To show + button only when text length == 0
+  // componentWillReceiveProps(newProps) {
+  //   const { editorState } = newProps;
+  //   const contentState = editorState.getCurrentContent();
+  //   const selectionState = editorState.getSelection();
+  //   if (!selectionState.isCollapsed() || selectionState.anchorKey != selectionState.focusKey) {
+  //     // console.log('no sel');
+  //     this.hideBlock();
+  //     return;
+  //   }
+  //   const block = contentState.getBlockForKey(selectionState.anchorKey);
+  //   const bkey = block.getKey();
+  //   if (block.getLength() > 0) {
+  //     this.hideBlock();
+  //     return;
+  //   }
+  //   if (block.getType() !== this.blockType) {
+  //     this.blockType = block.getType();
+  //     if (block.getLength() == 0) {
+  //       setTimeout(this.findNode, 0);
+  //     }
+  //     return;
+  //   }
+  //   if (this.blockKey === bkey) {
+  //     // console.log('block exists');
+  //     if (block.getLength() > 0) {
+  //       this.hideBlock();
+  //     } else {
+  //       this.setState({
+  //         visible: true
+  //       });
+  //     }
+  //     return;
+  //   }
+  //   this.blockKey = bkey;
+  //   if (block.getLength() > 0) {
+  //     // console.log('no len');
+  //     this.hideBlock();
+  //     return;
+  //   }
+  //   setTimeout(this.findNode, 0);
+  // }
+
+  // Show + button regardless of block length
   componentWillReceiveProps(newProps) {
     const { editorState } = newProps;
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
     if (!selectionState.isCollapsed() || selectionState.anchorKey != selectionState.focusKey) {
-      console.log('no sel');
       this.hideBlock();
       return;
     }
     const block = contentState.getBlockForKey(selectionState.anchorKey);
     const bkey = block.getKey();
-    if (block.getLength() > 0) {
-      this.hideBlock();
-      return;
-    }
     if (block.getType() !== this.blockType) {
       this.blockType = block.getType();
-      if (block.getLength() == 0) {
-        setTimeout(this.findNode, 0);
-      }
+      setTimeout(this.findNode, 0);
       return;
     }
     if (this.blockKey === bkey) {
-      console.log('block exists');
-      if (block.getLength() > 0) {
-        this.hideBlock();
-      } else {
-        this.setState({
-          visible: true
-        });
-      }
+      this.setState({
+        visible: true
+      });
       return;
     }
     this.blockKey = bkey;
-    if (block.getLength() > 0) {
-      console.log('no len');
-      this.hideBlock();
-      return;
-    }
     setTimeout(this.findNode, 0);
   }
 
@@ -72,13 +99,12 @@ export default class AddButton extends React.Component {
 
   findNode() {
     const node = getSelectedBlockNode(window);
-    // window.nod = node;
     if (node === this.node) {
-      console.log('Node exists');
+      // console.log('Node exists');
       return;
     }
     if (!node) {
-      console.log('no node');
+      // console.log('no node');
       this.setState({
         visible: false
       });
@@ -89,8 +115,7 @@ export default class AddButton extends React.Component {
     this.setState({
       visible: true,
       style: {
-        position: 'absolute',
-        left: - 27,
+        // left: - 27,
         top: node.offsetTop
       }
     });
