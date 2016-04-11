@@ -13,14 +13,16 @@ export const getSelectionRect = (selected) => {
    return rect;
 }
 
-export const getSelection = () => {
-   let t = '';
-   if (window.getSelection) {
-     t = window.getSelection();
-   } else if (document.getSelection) {
-     t = document.getSelection();
-   } else if (document.selection) {
-     t = document.selection.createRange().text;
+// export const getSelectedNode = (selection) => {};
+
+export const getSelection = (root) => {
+   let t = null;
+   if (root.getSelection) {
+     t = root.getSelection();
+   } else if (root.document.getSelection) {
+     t = root.document.getSelection();
+   } else if (root.document.selection) {
+     t = root.document.selection.createRange().text;
    }
    return t;
 }

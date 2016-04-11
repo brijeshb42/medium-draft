@@ -1,13 +1,15 @@
 .editor-toolbar {
-  background: #545454;
+  background: #000;
   color: #fff;
   // padding: 5px 10px;
   border-radius: 5px;
   z-index: 2;
+  position: absolute;
+  transition: all 0.2s ease;
 
   .url-input {
     box-sizing: border-box;
-    border-radius: 3px;
+    border-radius: 2px;
     display: block;
     width: 100%;
     padding: 5px;
@@ -28,7 +30,7 @@
   user-select: none;
   display: inline-block;
   padding: 10px 15px;
-  border-right: 1px solid #000;
+  border-right: 1px solid #555;
   // border-right: 1px solid #222;
   // margin-left: 10px;
 

@@ -8,25 +8,12 @@
     background-color: #F7F7F7;
     border-radius: 5px;
 
-    // a {
-    //     color: #08c;
-    //     text-decoration: none;
-    // }
-
     &::before {
         content: '“';
         color: #ccc;
         display: inline;
         position: absolute;
         left: -25px;
-        top: -5px;
-        font-size: 3em;
-    }
-    &::after {
-        content: '”';
-        color: #ccc;
-        position: absolute;
-        right: -25px;
         top: -5px;
         font-size: 3em;
     }

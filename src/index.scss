@@ -25,8 +25,8 @@ a, a:visited {
   position: relative;
 
   h3 {
-    font-size: 1.5em;
-    margin: 0.5em 0;
+    font-size: 1.3em;
+    margin: 0.6em 0;
   }
 }
 
@@ -52,6 +52,12 @@ a, a:visited {
   margin: 0;
   padding: 10px 0 10px 20px;
   background-color: #E2F2FF;
+}
+
+.RichEditor-blockquote {
+  a {
+    text-decoration: underline;
+  }
 }
 
 .RichEditor-editor .public-DraftStyleDefault-pre {

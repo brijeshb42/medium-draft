@@ -57,7 +57,10 @@ class MyEditor extends React.Component {
       urlValue: ''
     };
     this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => {
+      window.editorState = editorState;
+      this.setState({editorState});
+    };
 
     this.onClick = () => {
       if (!this.state.editorEnabled) {
@@ -71,9 +74,9 @@ class MyEditor extends React.Component {
 
     this.logData = this.logData.bind(this);
     this.onClick = this.onClick.bind(this);
-    this.onTab = this.onTab.bind(this);
+    // this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.handleBeforeInput = this.handleBeforeInput.bind(this);
+    // this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -85,10 +88,6 @@ class MyEditor extends React.Component {
     this.focus();
   }
 
-  // onChange(editorState) {
-  //   this.setState({editorState});
-  // }
-
   logData(e) {
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     console.log(this.state.editorState.getSelection().toJS());
@@ -98,7 +97,7 @@ class MyEditor extends React.Component {
   setLink(url) {
     const { editorState } = this.state;
     const selection = editorState.getSelection();
-    const entityKey = Entity.create('LINK', 'MUTABLE', {href: url});
+    const entityKey = Entity.create('LINK', 'MUTABLE', { url });
     this.setState({
       editorState: RichUtils.toggleLink(
         editorState,
@@ -113,9 +112,26 @@ class MyEditor extends React.Component {
   handleKeyCommand(command) {
     if (command === 'editor-save') {
       window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
       return true;
     }
-    const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
+    const { editorState } = this.state;
+    const block = getCurrentBlock(editorState);
+    if (command.indexOf('changetype:') == 0) {
+      let newBlockType = command.split(':')[1];
+      const currentBlockType = block.getType();
+      if (currentBlockType == 'atomic' || currentBlockType == 'media') {
+        return false;
+      }
+      if (currentBlockType == 'blockquote' && newBlockType == 'caption') {
+        newBlockType = 'block-quote-caption';
+      } else if (currentBlockType == 'block-quote-caption' && newBlockType == 'caption') {
+        newBlockType = 'blockquote';
+      }
+      this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
+      return true;
+    }
+    const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       this.onChange(newState);
       return true;
@@ -123,41 +139,42 @@ class MyEditor extends React.Component {
     return false;
   }
 
-  handleBeforeInput(str) {
-    const { editorState } = this.state;
-    const block = getCurrentBlock(editorState);
-    const blockType = block.getType();
-    const blockLength = block.getLength();
-    if (blockLength > 1) {
-      return false;      
-    }
-    if (block.text[0]+str === '--' && blockType !== 'caption' && blockType !== 'block-quote-caption') {
-      if (blockType === 'blockquote') {
-        this.onChange(resetBlockWithType(editorState, 'block-quote-caption'));
-      } else {
-        this.onChange(resetBlockWithType(editorState, 'caption'));
-      }
-      return true;
-    }
-    if (block.text[0]+str === '""' && blockType !== 'blockquote') {
-      this.onChange(resetBlockWithType(editorState, 'blockquote'));
-      return true;
-    }
-    if ((block.text[0] + str) == '* ' && blockType !== 'unordered-list-item') {
-      this.onChange(resetBlockWithType(editorState, 'unordered-list-item'));
-      return true;
-    } else if ((block.text[0] + str) == '1.' && blockType !== 'ordered-list-item') {
-      this.onChange(resetBlockWithType(editorState, 'ordered-list-item'));
-      return true;
-    } else if (block.text[0] + str === '##' && blockType !== 'header-three') {
-      this.onChange(resetBlockWithType(editorState, 'header-three'));
-      return true;
-    } else if (block.text[0] + str === '==' && blockType !== 'unstyled') {
-      this.onChange(resetBlockWithType(editorState, 'unstyled'));
-      return true;
-    }
-    return false;
-  }
+  // handleBeforeInput(str) {
+  //   const { editorState } = this.state;
+  //   const selection = editorState.getSelection();
+  //   const block = getCurrentBlock(editorState);
+  //   const blockType = block.getType();
+  //   const blockLength = block.getLength();
+  //   if (selection.getAnchorOffset() > 1) {
+  //     return false;
+  //   }
+  //   if (block.text[0]+str === '--' && blockType !== 'caption' && blockType !== 'block-quote-caption') {
+  //     if (blockType === 'blockquote') {
+  //       this.onChange(resetBlockWithType(editorState, 'block-quote-caption'));
+  //     } else {
+  //       this.onChange(resetBlockWithType(editorState, 'caption'));
+  //     }
+  //     return true;
+  //   }
+  //   if (block.text[0]+str === '""' && blockType !== 'blockquote') {
+  //     this.onChange(resetBlockWithType(editorState, 'blockquote'));
+  //     return true;
+  //   }
+  //   if ((block.text[0] + str) == '* ' && blockType !== 'unordered-list-item') {
+  //     this.onChange(resetBlockWithType(editorState, 'unordered-list-item'));
+  //     return true;
+  //   } else if ((block.text[0] + str) == '1.' && blockType !== 'ordered-list-item') {
+  //     this.onChange(resetBlockWithType(editorState, 'ordered-list-item'));
+  //     return true;
+  //   } else if (block.text[0] + str === '##' && blockType !== 'header-three') {
+  //     this.onChange(resetBlockWithType(editorState, 'header-three'));
+  //     return true;
+  //   } else if (block.text[0] + str === '==' && blockType !== 'unstyled') {
+  //     this.onChange(resetBlockWithType(editorState, 'unstyled'));
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   _toggleBlockType(blockType) {
     this.onChange(
@@ -183,9 +200,9 @@ class MyEditor extends React.Component {
     });
   }
 
-  onTab(e) {
-    this.setState(RichUtils.onTab(e, this.state.editorState, 2));
-  }
+  // onTab(e) {
+  //   this.setState(RichUtils.onTab(e, this.state.editorState, 2));
+  // }
 
   loadSavedData() {
     const data = window.localStorage.getItem('editor');
@@ -217,14 +234,7 @@ class MyEditor extends React.Component {
           <button onClick={this.toggleEdit}>Toggle Edit</button>
           <button onClick={this.loadSavedData}>Load local data.</button>
         </div>
-        <Toolbar
-          editorState={editorState}
-          toggleBlockType={this.toggleBlockType}
-          toggleInlineStyle={this.toggleInlineStyle}
-          editorEnabled={editorEnabled}
-          setLink={this.setLink}
-          focus={this.focus} />
-        <div className="RichEditor-editor" onClick={this.onClick}>
+        <div className="RichEditor-editor">
           <Editor
             ref="editor"
             editorState={editorState}
@@ -235,10 +245,16 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
-            handleBeforeInput={this.handleBeforeInput}
             placeholder="Write your story"
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} /> : null }
+          <Toolbar
+            editorState={editorState}
+            toggleBlockType={this.toggleBlockType}
+            toggleInlineStyle={this.toggleInlineStyle}
+            editorEnabled={editorEnabled}
+            setLink={this.setLink}
+            focus={this.focus} />
         </div>
       </div>
     );
@@ -251,3 +267,6 @@ setTimeout(() => {
     document.getElementById('app')
   );
 }, 100);
+
+
+//handleBeforeInput={this.handleBeforeInput}

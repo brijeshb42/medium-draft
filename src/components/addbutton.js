@@ -72,7 +72,7 @@ export default class AddButton extends React.Component {
 
   findNode() {
     const node = getSelectedBlockNode(window);
-    window.nod = node;
+    // window.nod = node;
     if (node === this.node) {
       console.log('Node exists');
       return;

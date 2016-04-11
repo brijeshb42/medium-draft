@@ -13,8 +13,13 @@ export const resetBlockWithType = (editorState, newType) => {
   const key = selectionState.getStartKey();
   const blockMap = contentState.getBlockMap();
   const block = blockMap.get(key);
+  let newText = "";
+  let text = block.getText();
+  if (block.getLength() >= 2) {
+    newText = text.substr(1);
+  }
   const newBlock = block.merge({
-    text: "",
+    text: newText,
     type: newType
   });
   const newContentState = contentState.merge({
@@ -25,8 +30,4 @@ export const resetBlockWithType = (editorState, newType) => {
     }),
   });
   return EditorState.push(editorState, newContentState, 'change-block-type');
-  // return RichUtils.toggleBlockType(
-  //   editorState,
-  //   newType
-  // );
 };
