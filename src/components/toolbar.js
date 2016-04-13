@@ -2,13 +2,15 @@ import './toolbar.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Entity } from 'draft-js';
 
 import { getVisibleSelectionRect } from 'draft-js';
 
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
-import { getSelection, getSelectionRect } from 'util';
+import { getSelection, getSelectionRect } from 'util/index';
+import { getCurrentBlock } from 'model/index';
 
 window.getVisibleSelectionRect = getVisibleSelectionRect;
 
@@ -88,7 +90,7 @@ export default class Toolbar extends React.Component {
   }
 
   onKeyDown(e) {
-    if (e.which === 13 && e.target.value !== '') {
+    if (e.which === 13) {
       e.preventDefault();
       e.stopPropagation();
       this.props.setLink(this.state.urlInputValue);
@@ -123,13 +125,45 @@ export default class Toolbar extends React.Component {
       this.props.focus();
       return;
     }
-    this.setState({
-      showURLInput: true
-    }, () => {
-      setTimeout(() => {
-        this.refs.urlinput.focus();
-      }, 0);
+    const currentBlock = getCurrentBlock(editorState);
+    let selectedEntity = '';
+    let linkFound = false;
+    currentBlock.findEntityRanges((character) => {
+      const entityKey = character.getEntity();
+      selectedEntity = entityKey;
+      return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+    }, (start, end) => {
+      let selStart = selection.getAnchorOffset();
+      let selEnd = selection.getFocusOffset();
+      if (selection.getIsBackward()) {
+        selStart = selection.getFocusOffset();
+        selEnd = selection.getAnchorOffset();
+      }
+      if (start == selStart && end == selEnd) {
+        linkFound = true;
+        const { url } = Entity.get(selectedEntity).getData();
+        this.setState({
+          showURLInput: true,
+          urlInputValue: url
+        }, () => {
+          setTimeout(() => {
+            this.refs.urlinput.focus();
+            this.refs.urlinput.select();
+          }, 0);
+        });
+      }
+      // console.log(start, end);
+      // console.log(selection.toJS());
     });
+    if (!linkFound) {
+      this.setState({
+        showURLInput: true
+      }, () => {
+        setTimeout(() => {
+          this.refs.urlinput.focus();
+        }, 0);
+      });
+    }
   }
 
   render() {

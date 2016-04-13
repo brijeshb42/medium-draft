@@ -22,13 +22,21 @@ import Toolbar from 'components/toolbar';
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
 import keyBindingFn from 'util/keybinding';
-import { getCurrentBlock, resetBlockWithType, addNewBlock } from 'model';
+import beforeInput from 'util/beforeinput';
+import { getCurrentBlock, addNewBlock } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const styleMap = {
    'HIGHLIGHT': {
       backgroundColor: 'yellow',
    },
+   'CODE': {
+      background: '#DEDEDE',
+      // padding: '0 5px',
+      borderRadius: 2,
+      fontFamily: 'monospace',
+      wordWrap: 'break-word'
+   }
 };
 
 function getBlockStyle(block) {
@@ -75,6 +83,7 @@ class MyEditor extends React.Component {
     this.logData = this.logData.bind(this);
     this.onClick = this.onClick.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -95,7 +104,10 @@ class MyEditor extends React.Component {
   setLink(url) {
     const { editorState } = this.state;
     const selection = editorState.getSelection();
-    const entityKey = Entity.create('LINK', 'MUTABLE', { url });
+    let entityKey = null;
+    if (url !== '') {
+      entityKey = Entity.create('LINK', 'MUTABLE', { url });
+    }
     this.setState({
       editorState: RichUtils.toggleLink(
         editorState,
@@ -107,8 +119,13 @@ class MyEditor extends React.Component {
     });
   }
 
+  handleDroppedFiles(selection, files) {
+    console.log(selection.toJS());
+    console.log(files);
+  }
+
   handleKeyCommand(command) {
-    console.log(command);
+    // console.log(command);
     if (command === 'editor-save') {
       window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
       window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
@@ -148,6 +165,10 @@ class MyEditor extends React.Component {
       return true;
     }
     return false;
+  }
+
+  handleBeforeInput(str) {
+    return beforeInput(this.state.editorState, str, this.onChange);
   }
 
   _toggleBlockType(blockType) {
@@ -207,6 +228,8 @@ class MyEditor extends React.Component {
             blockStyleFn={getBlockStyle}
             onChange={this.onChange}
             handleKeyCommand={this.handleKeyCommand}
+            handleBeforeInput={this.handleBeforeInput}
+            handleDroppedFiles={this.handleDroppedFiles}
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
