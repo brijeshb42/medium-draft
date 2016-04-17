@@ -50,6 +50,7 @@ class MyEditor extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(props);
 
     const decorator = new CompositeDecorator([
       {
@@ -63,6 +64,9 @@ class MyEditor extends React.Component {
       editorEnabled: true,
       urlValue: ''
     };
+    if (props.value) {
+      this.state.editorState = EditorState.push(this.state.editorState, ContentState.createFromBlockArray(convertFromRaw(props.value)));
+    }
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
       window.editorState = editorState;
