@@ -34,7 +34,7 @@
       },
       {
          "key":"99fam",
-         "text":"A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.",
+         "text":"A medium like rich text editor built using draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.",
          "type":"blockquote",
          "depth":0,
          "inlineStyleRanges":[
@@ -42,14 +42,123 @@
          ],
          "entityRanges":[
             {
-               "offset":42,
+               "offset":43,
                "length":8,
                "key":1
             }
          ]
       },
       {
-         "key":"81c0d",
+         "key":"967qt",
+         "text":"The keyboard shortcuts are mentioned below.",
+         "type":"blockquote",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"bah83",
+         "text":"It also has implementations of some custom blocks like",
+         "type":"unstyled",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"euloj",
+         "text":"Custom Blocks",
+         "type":"header-three",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"cavj0",
+         "text":"This is a blockquote.",
+         "type":"blockquote",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"7ajf3",
+         "text":"This is a block-quote-caption block (caption for a blockquote)",
+         "type":"block-quote-caption",
+         "depth":0,
+         "inlineStyleRanges":[
+            {
+               "offset":10,
+               "length":19,
+               "style":"BOLD"
+            }
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"eq01v",
+         "text":"",
+         "type":"unstyled",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"4jprg",
+         "text":"This is a caption block. It is an opinionated block that can be added after special atomic blocks (image, video, embed) to be used as their captions when exporting to HTML or other formats instead of adding nested draft-js editors for simplicity.",
+         "type":"caption",
+         "depth":0,
+         "inlineStyleRanges":[
+            {
+               "offset":10,
+               "length":7,
+               "style":"BOLD"
+            },
+            {
+               "offset":214,
+               "length":8,
+               "style":"BOLD"
+            }
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"7jnpl",
+         "text":"Keyboard shortcuts",
+         "type":"header-three",
+         "depth":0,
+         "inlineStyleRanges":[
+
+         ],
+         "entityRanges":[
+
+         ]
+      },
+      {
+         "key":"c7bqc",
          "text":"Following are the keyboard shortcuts to toggle block types (Alt and CTRL for Windows/Linux and Option and Command for OSX.",
          "type":"unstyled",
          "depth":0,
@@ -82,7 +191,7 @@
       {
          "key":"69emd",
          "text":"Alt/Option +",
-         "type":"unstyled",
+         "type":"unordered-list-item",
          "depth":0,
          "inlineStyleRanges":[
             {
@@ -98,8 +207,8 @@
       {
          "key":"7ah5d",
          "text":"1 - Toggle ordered-list-item.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -119,8 +228,8 @@
       {
          "key":"226et",
          "text":"* - Toggle unordered-list-item.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -140,8 +249,8 @@
       {
          "key":"fdr9n",
          "text":"@ - Add link to selected text.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -156,8 +265,8 @@
       {
          "key":"5dd2l",
          "text":"# - Toggle header-three.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -177,8 +286,8 @@
       {
          "key":"1inva",
          "text":"< - Toggle caption block.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -198,8 +307,8 @@
       {
          "key":"dladv",
          "text":"> - Toggle unstyled block.",
-         "type":"ordered-list-item",
-         "depth":0,
+         "type":"unordered-list-item",
+         "depth":1,
          "inlineStyleRanges":[
             {
                "offset":0,
@@ -219,7 +328,7 @@
       {
          "key":"8abs3",
          "text":"",
-         "type":"header-three",
+         "type":"unstyled",
          "depth":0,
          "inlineStyleRanges":[
 
@@ -302,7 +411,12 @@
          "inlineStyleRanges":[
             {
                "offset":0,
-               "length":14,
+               "length":2,
+               "style":"CODE"
+            },
+            {
+               "offset":3,
+               "length":11,
                "style":"CODE"
             },
             {
@@ -327,17 +441,22 @@
       },
       {
          "key":"11m2k",
-         "text":"*. (An asterisk and a period) -unordered-list-item",
+         "text":"*. (An asterisk and a period) - unordered-list-item",
          "type":"unordered-list-item",
          "depth":0,
          "inlineStyleRanges":[
             {
                "offset":0,
-               "length":29,
+               "length":2,
                "style":"CODE"
             },
             {
-               "offset":31,
+               "offset":3,
+               "length":26,
+               "style":"CODE"
+            },
+            {
+               "offset":32,
                "length":19,
                "style":"CODE"
             }
@@ -354,7 +473,12 @@
          "inlineStyleRanges":[
             {
                "offset":0,
-               "length":19,
+               "length":2,
+               "style":"CODE"
+            },
+            {
+               "offset":3,
+               "length":16,
                "style":"CODE"
             },
             {
@@ -412,10 +536,14 @@
       {
          "key":"3451t",
          "text":"",
-         "type":"header-three",
+         "type":"unstyled",
          "depth":0,
          "inlineStyleRanges":[
-
+            {
+               "offset":0,
+               "length":0,
+               "style":"CODE"
+            }
          ],
          "entityRanges":[
 
@@ -443,11 +571,6 @@
                "offset":4,
                "length":1,
                "style":"CODE"
-            },
-            {
-               "offset":211,
-               "length":0,
-               "style":"CODE"
             }
          ],
          "entityRanges":[
@@ -457,7 +580,7 @@
       {
          "key":"7ku0",
          "text":"",
-         "type":"header-three",
+         "type":"unstyled",
          "depth":0,
          "inlineStyleRanges":[
 
@@ -484,11 +607,7 @@
          "type":"blockquote",
          "depth":0,
          "inlineStyleRanges":[
-            {
-               "offset":115,
-               "length":0,
-               "style":"CODE"
-            }
+
          ],
          "entityRanges":[
 
