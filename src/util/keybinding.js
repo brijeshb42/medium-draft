@@ -10,8 +10,9 @@ export default (e) => {
   if (e.altKey === true) {
     if (e.shiftKey === true) {
       switch (e.keyCode) {
-        // CTRL + Shift + A
+        // Alt + Shift + A
         case 65: return 'add-new-block';
+        // Alt + Shift + D
         case 68: return 'load-saved-data';
         case 69: return 'toggle-edit-mode';
         default: return getDefaultKeyBinding(e);
@@ -30,7 +31,7 @@ export default (e) => {
       //S
       // case 83: return 'editor-save';
       // = +
-      case 187: return 'add-new-block';
+      // case 187: return 'add-new-block';
       // <
       case 188: return 'changetype:caption';
       // // -

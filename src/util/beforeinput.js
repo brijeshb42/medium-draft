@@ -4,7 +4,7 @@ export const StringToTypeMap = {
   '--': 'blockquote:block-quote-caption:caption',
   '""': 'blockquote',
   '\'\'': 'blockquote',
-  '* ': 'unordered-list-item',
+  '*.': 'unordered-list-item',
   '1.': 'ordered-list-item',
   '##': 'header-three',
   '==': 'unstyled'
