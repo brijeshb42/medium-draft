@@ -85,6 +85,7 @@ class MyEditor extends React.Component {
 
     this.logData = this.logData.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
@@ -97,6 +98,14 @@ class MyEditor extends React.Component {
   componentDidMount() {
     this.focus();
   }
+
+  onTab(e) {
+    const { editorState } = this.state;
+    const newEditorState = RichUtils.onTab(e, editorState, 2);
+    if (newEditorState !== editorState) {
+      this.onChange(newEditorState);
+    }
+  };
 
   logData(e) {
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
@@ -231,6 +240,7 @@ class MyEditor extends React.Component {
             blockRendererFn={rendererFn}
             blockStyleFn={getBlockStyle}
             onChange={this.onChange}
+            onTab={this.onTab}
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}
             handleDroppedFiles={this.handleDroppedFiles}
