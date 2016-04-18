@@ -7,7 +7,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
     * `block-quote-caption` - Caption for `blockquote`s.
 
 ##### Following are the keyboard shortcuts to toggle block types (<kbd>Alt and CTRL</kbd> for Windows/Linux and <kbd>Option and Command</kbd> for OSX)
-*   **<kbd>Alt/Option</kbd> + **
+*   <kbd>Alt/Option</kbd> +
 
     *   <kbd>1</kbd> - Toggle Ordered list item
     *   <kbd>*</kbd> - Toggle Unordered list item
