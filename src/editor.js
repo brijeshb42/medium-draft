@@ -13,6 +13,7 @@ import {
   convertFromRaw,
   CompositeDecorator,
   Entity,
+  AtomicBlockUtils
 } from 'draft-js';
 
 import AddButton from 'components/addbutton';
@@ -42,6 +43,7 @@ function getBlockStyle(block) {
   switch (block.getType()) {
     case 'blockquote': return 'block block-quote RichEditor-blockquote';
     case 'unstyled': return 'block block-paragraph';
+    case 'atomic': return 'block block-atomic';
     default: return null;
   }
 }
@@ -88,11 +90,13 @@ class MyEditor extends React.Component {
     this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
+    this.handleReturn = this.handleReturn.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
     this.setLink = this.setLink.bind(this);
+    this.addMedia = this.addMedia.bind(this);
   }
 
   componentDidMount() {
@@ -129,6 +133,21 @@ class MyEditor extends React.Component {
     }, () => {
       setTimeout(() => this.refs.editor.focus(), 0);
     });
+  }
+
+  addMedia() {
+    const src = window.prompt('Enter a URL');
+    if (!src) {
+      return;
+    }
+    const entityKey = Entity.create('image', 'IMMUTABLE', {src});
+    this.onChange(
+      AtomicBlockUtils.insertAtomicBlock(
+        this.state.editorState,
+        entityKey,
+        ' '
+      )
+    );
   }
 
   handleDroppedFiles(selection, files) {
@@ -181,6 +200,16 @@ class MyEditor extends React.Component {
 
   handleBeforeInput(str) {
     return this.props.beforeInput(this.state.editorState, str, this.onChange, this.props.stringToTypeMap);
+  }
+
+  handleReturn(e) {
+    if (e.shiftKey) {
+      this.setState({
+        editorState: RichUtils.insertSoftNewline(this.state.editorState)
+      });
+      return true;
+    }
+    return false;
   }
 
   _toggleBlockType(blockType) {
@@ -244,12 +273,13 @@ class MyEditor extends React.Component {
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}
             handleDroppedFiles={this.handleDroppedFiles}
+            handleReturn={this.handleReturn}
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
             placeholder="Write your story"
             spellCheck={false} />
-          { editorEnabled ? <AddButton editorState={editorState} /> : null }
+          { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
           <Toolbar
             ref="toolbar"
             editorState={editorState}

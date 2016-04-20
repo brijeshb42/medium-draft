@@ -122,7 +122,7 @@ export default class AddButton extends React.Component {
 
   render() {
     if (this.state.visible) {
-      return <button className="add-button" style={this.state.style}>+</button>;
+      return <button onClick={this.props.addMedia} className="add-button" style={this.state.style}>+</button>;
     }
     return null;
   }
