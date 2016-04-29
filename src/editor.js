@@ -31,11 +31,16 @@ const styleMap = {
       backgroundColor: 'yellow',
    },
    'CODE': {
-      background: '#DEDEDE',
-      // padding: '0 5px',
-      borderRadius: 2,
-      fontFamily: 'monospace',
-      wordWrap: 'break-word'
+      fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+      margin: '4px 0',
+      fontSize: '0.9em',
+      padding: '1px 3px',
+      color: '#555',
+      backgroundColor: '#fcfcfc',
+      border: '1px solid #ccc',
+      borderBottomColor: '#bbb',
+      borderRadius: 3,
+      boxShadow: 'inset 0 -1px 0 #bbb',
    }
 };
 
@@ -67,7 +72,7 @@ class MyEditor extends React.Component {
       urlValue: ''
     };
     if (props.value) {
-      this.state.editorState = EditorState.push(this.state.editorState, ContentState.createFromBlockArray(convertFromRaw(props.value)));
+      this.state.editorState = EditorState.push(this.state.editorState, convertFromRaw(props.value));
     }
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
@@ -248,10 +253,11 @@ class MyEditor extends React.Component {
       this.setState({
         editorState: EditorState.push(
           this.state.editorState,
-          ContentState.createFromBlockArray(convertFromRaw(blockData))
+          convertFromRaw(blockData)
         )
       }, () => this.refs.editor.focus());
     } catch(e) {
+      window.er = e;
       console.log(e);
       console.log('Could not load data.');
     }
