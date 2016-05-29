@@ -13,14 +13,17 @@ import {
   convertFromRaw,
   CompositeDecorator,
   Entity,
-  AtomicBlockUtils
+  AtomicBlockUtils,
+  DefaultDraftBlockRenderMap
 } from 'draft-js';
+import { Map } from 'immutable';
 
 import AddButton from 'components/addbutton';
 import Toolbar from 'components/toolbar';
 
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
+import RenderMap from 'model/rendermap';
 import keyBindingFn from 'util/keybinding';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
 import { getCurrentBlock, addNewBlock } from 'model';
@@ -49,7 +52,9 @@ function getBlockStyle(block) {
     case 'blockquote': return 'block block-quote RichEditor-blockquote';
     case 'unstyled': return 'block block-paragraph';
     case 'atomic': return 'block block-atomic';
-    default: return null;
+    case 'caption': return 'block block-caption';
+    case 'block-quote-caption': return 'block block-quote RichEditor-blockquote block-quote-caption';
+    default: return 'block';
   }
 }
 
@@ -57,7 +62,6 @@ class MyEditor extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
 
     const decorator = new CompositeDecorator([
       {
@@ -276,6 +280,7 @@ class MyEditor extends React.Component {
             blockStyleFn={getBlockStyle}
             onChange={this.onChange}
             onTab={this.onTab}
+            blockRenderMap={this.props.blockRenderMap}
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}
             handleDroppedFiles={this.handleDroppedFiles}
@@ -304,9 +309,12 @@ class MyEditor extends React.Component {
   }
 }
 
+const renderMap = Map();
+
 MyEditor.defaultProps = {
   beforeInput,
-  stringToTypeMap: StringToTypeMap
+  stringToTypeMap: StringToTypeMap,
+  blockRenderMap: RenderMap,
 };
 
 

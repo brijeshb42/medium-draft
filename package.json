@@ -13,9 +13,12 @@
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.6.0",
-    "react": "^15.0.1",
-    "react-dom": "^15.0.1"
+    "draft-js": "^0.7.0",
+    "immutable": "^3.8.1"
+  },
+  "peerDependencies": {
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",

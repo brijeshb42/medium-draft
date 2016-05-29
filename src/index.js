@@ -1,12 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import Editor from 'editor';
+import beforeInput, { StringToTypeMap } from 'util/beforeinput';
+import RenderMap from 'model/rendermap';
 
-import Editor from './editor';
-import data from 'json!./data.json';
-
-setTimeout(() => {
-  ReactDOM.render(
-    <Editor value={data} />,
-    document.getElementById('app')
-  );
-}, 100);
+export {
+  Editor,
+  beforeInput,
+  StringToTypeMap,
+  RenderMap
+};

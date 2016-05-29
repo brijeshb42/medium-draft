@@ -172,25 +172,34 @@ export default class Toolbar extends React.Component {
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
       return null;
     }
+    if (showURLInput) {
+      return (
+        <div className="editor-toolbar" style={style}>
+          <div className="RichEditor-controls" style={{display: 'block'}}>
+            <input
+              ref="urlinput"
+              type="text"
+              className="url-input"
+              onKeyDown={this.onKeyDown}
+              onChange={this.onChange}
+              placeholder='Press ENTER or ESC'
+              value={urlInputValue} />
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="editor-toolbar" style={style}>
-        {!showURLInput ? <BlockToolbar
+        <BlockToolbar
           editorState={editorState}
           onToggle={this.props.toggleBlockType}
-          buttons={BLOCK_BUTTONS} /> : null}
-        {!showURLInput ? <InlineToolbar
+          buttons={BLOCK_BUTTONS} />
+        <InlineToolbar
           editorState={editorState}
           onToggle={this.props.toggleInlineStyle}
-          buttons={INLINE_BUTTONS} /> : null}
-        <div className="RichEditor-controls" style={showURLInput ? {display: 'block'} : {}}>
-        {showURLInput ? <input
-          ref="urlinput"
-          type="text"
-          className="url-input"
-          onKeyDown={this.onKeyDown}
-          onChange={this.onChange}
-          placeholder='Press ENTER or ESC'
-          value={urlInputValue} /> : <a className="RichEditor-linkButton" href="#" onClick={this.showLinkInput}>#</a>}
+          buttons={INLINE_BUTTONS} />
+        <div className="RichEditor-controls">
+          <a className="RichEditor-linkButton" href="#" onClick={this.showLinkInput}>#</a>
         </div>
       </div>
     );

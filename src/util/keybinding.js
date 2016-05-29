@@ -2,8 +2,6 @@ import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
 
 export default (e) => {
-  // console.log(e.nativeEvent);
-  // console.log(e.which);
   if(hasCommandModifier(e) && e.keyCode == 83) {
     return 'editor-save';
   }

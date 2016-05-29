@@ -6,7 +6,7 @@ export const StringToTypeMap = {
   '\'\'': 'blockquote',
   '*.': 'unordered-list-item',
   '1.': 'ordered-list-item',
-  '##': 'header-three',
+  '##': 'header-two',
   '==': 'unstyled'
 };
 
@@ -26,27 +26,28 @@ export default (editorState, str, callback, mapping=StringToTypeMap) => {
   if (finalType.length < 1 || finalType.length > 3) {
     return false;
   }
+  let fType = finalType[0];
   if (finalType.length == 1) {
     if (blockType == finalType[0]) {
       return false;
     }
-    callback(resetBlockWithType(editorState, finalType[0]));
   } else if (finalType.length == 2) {
     if (blockType == finalType[1]) {
       return false;
     }
     if (blockType == finalType[0]) {
-      callback(resetBlockWithType(editorState, finalType[1]));
+      fType = finalType[1];
     }
   } else if (finalType.length == 3) {
     if (blockType == finalType[2]) {
       return false;
     }
     if (blockType == finalType[0]) {
-      callback(resetBlockWithType(editorState, finalType[1]));
+      fType = finalType[1];
     } else {
-      callback(resetBlockWithType(editorState, finalType[2]));
+      fType = finalType[2];
     }
   }
+  callback(resetBlockWithType(editorState, fType));
   return true;
 }
