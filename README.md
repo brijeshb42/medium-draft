@@ -5,6 +5,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 * It also has implementations of some custom blocks like:
     * `caption` - Can be used as a caption for media blocks like image or video instead of nested `draft-js` instances for simplicity.
     * `block-quote-caption` - Caption for `blockquote`s.
+    * `todo` - Todo text with a checkbox.
 
 ##### Following are the keyboard shortcuts to toggle block types (<kbd>Alt and CTRL</kbd> for Windows/Linux and <kbd>Option and Command</kbd> for OSX)
 *   <kbd>Alt/Option</kbd> +
