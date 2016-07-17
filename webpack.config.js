@@ -65,16 +65,12 @@ function getPlugins(env) {
 
 function getEntry(env) {
   var entry = {
-    // 'vendor-base': ['lodash', 'history'],
-    // 'vendor-base': ['history'],
     'vendor-react': [
       'babel-polyfill',
       'react',
       'react-dom',
       'immutable',
       'draft-js',
-      // 'react-redux',
-      // 'react-addons-shallow-compare'
     ]
   };
   var entries = [];
@@ -144,15 +140,15 @@ var options = {
   }
 };
 
-if (isProd) {
-  options.externals = {
-    'draft-js': 'draft-js',
-    react: 'react',
-    'immutable-js': 'immutable-js',
-    'react-dom': 'react-dom',
-  };
-  options.library = 'medium-draft';
-  options.libraryTarget = 'umd';
-}
+// if (isProd) {
+//   options.externals = {
+//     'draft-js': 'draft-js',
+//     react: 'react',
+//     'immutable-js': 'immutable-js',
+//     'react-dom': 'react-dom',
+//   };
+//   options.library = 'medium-draft';
+//   options.libraryTarget = 'umd';
+// }
 
 module.exports = options;
