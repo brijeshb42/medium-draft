@@ -63,9 +63,6 @@ export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
   if (block.getLength() >= 2) {
     newText = text.substr(1);
   }
-  console.log(blockMap.toJS());
-  // let newContentState =  Modifier.setBlockType(contentState, selectionState, newType);
-  // newContentState = Modifier.setBlockData(newContentState, selectionState, getDefaultBlockData(newType));
   const newBlock = block.merge({
     text: newText,
     type: newType,
@@ -78,7 +75,6 @@ export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
       focusOffset: 0,
     }),
   });
-  console.log(newContentState.getBlockMap().toJS());
   return EditorState.push(editorState, newContentState, 'change-block-type');
 };
 

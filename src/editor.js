@@ -27,7 +27,7 @@ import RenderMap from 'model/rendermap';
 import keyBindingFn from 'util/keybinding';
 import { Block, Inline, Entity as E } from 'util/constants';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
-import { getCurrentBlock, addNewBlock, updateDataOfBlock } from 'model';
+import { getCurrentBlock, addNewBlock, updateDataOfBlock, resetBlockWithType } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const styleMap = {
@@ -225,6 +225,24 @@ class MyEditor extends React.Component {
       this.onChange(RichUtils.insertSoftNewline(this.state.editorState));
       return true;
     }
+    if (!e.altKey && !e.metaKey && !e.ctrlKey) {
+      const currentBlock = getCurrentBlock(this.state.editorState);
+      const blockType = currentBlock.getType();
+      if (currentBlock.getLength() > 0) {
+        return false;
+      }
+      switch(blockType) {
+        case Block.UL:
+        case Block.OL:
+        case Block.BLOCKQUOTE:
+        case Block.BLOCKQUOTE_CAPTION:
+        case Block.CAPTION:
+          this.onChange(resetBlockWithType(this.state.editorState, Block.UNSTYLED));
+          return true;
+        default:
+          return false;
+      }
+    } 
     return false;
   }
 

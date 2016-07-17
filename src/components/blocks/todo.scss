@@ -12,6 +12,10 @@
     .public-DraftStyleDefault-block {
         margin-left: 18px;
     }
+
+    .block-todo-completed {
+        text-decoration: line-through;
+    }
 }
 
 // .public-DraftEditor-content {

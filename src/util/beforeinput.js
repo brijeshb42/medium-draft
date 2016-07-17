@@ -15,7 +15,7 @@ export const StringToTypeMap = {
   '[]': Block.TODO,
 };
 
-export default (editorState, str, callback, mapping=StringToTypeMap) => {
+export default (editorState, str, onChange, mapping=StringToTypeMap) => {
   const selection = editorState.getSelection();
   const block = getCurrentBlock(editorState);
   const blockType = block.getType();
@@ -53,6 +53,6 @@ export default (editorState, str, callback, mapping=StringToTypeMap) => {
       fType = finalType[2];
     }
   }
-  callback(resetBlockWithType(editorState, fType));
+  onChange(resetBlockWithType(editorState, fType));
   return true;
 }
