@@ -24,10 +24,13 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 ##### Special characters while typing: If while typing in an empty block, if the content matches one of the following, that particular block's type will be changed to the corresponding block specified below
 
 *   `--` `(2 hyphens)` - If current block is `blockquote`, it will be changed to `block-quote-caption`, else `caption`.
-*   `''` `(2 single or double quotes)` - `blockquote`.
+*   `''` `(2 single or double quotes)` or `> ` - `blockquote`.
 *   `*.` `(An asterisk and a period)` - `unordered-list-item`.
+*   `* ` `(An asterisk and a space)` - `unordered-list-item`.
+*   `- ` `(A hyphen and a space)` - `unordered-list-item`.
 *   `1.` `(The number 1 and a period)` - `unordered-list-item`.
-*   `##` - `header-three`.
+*   `##` - `header-two`.
+*   `[]` - `todo`.
 *   `==` - `unstyled`.
 
 ### Issues
