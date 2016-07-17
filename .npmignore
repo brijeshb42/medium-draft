@@ -1,0 +1,7 @@
+dist/
+node_modules/
+.babelrc/
+.gitignore/
+hash.json
+webpack.*.js
+lib/

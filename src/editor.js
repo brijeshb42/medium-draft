@@ -25,15 +25,16 @@ import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
 import RenderMap from 'model/rendermap';
 import keyBindingFn from 'util/keybinding';
+import { Block, Inline, Entity as E } from 'util/constants';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
-import { getCurrentBlock, addNewBlock } from 'model';
+import { getCurrentBlock, addNewBlock, updateDataOfBlock } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const styleMap = {
-   'HIGHLIGHT': {
+   [Inline.HIGHLIGHT]: {
       backgroundColor: 'yellow',
    },
-   'CODE': {
+   [Inline.CODE]: {
       fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
       margin: '4px 0',
       fontSize: '0.9em',
@@ -49,11 +50,12 @@ const styleMap = {
 
 function getBlockStyle(block) {
   switch (block.getType()) {
-    case 'blockquote': return 'block block-quote RichEditor-blockquote';
-    case 'unstyled': return 'block block-paragraph';
-    case 'atomic': return 'block block-atomic';
-    case 'caption': return 'block block-caption';
-    case 'block-quote-caption': return 'block block-quote RichEditor-blockquote block-quote-caption';
+    case Block.BLOCKQUOTE: return 'block block-quote RichEditor-blockquote';
+    case Block.UNSTYLED: return 'block block-paragraph';
+    case Block.ATOMIC: return 'block block-atomic';
+    case Block.CAPTION: return 'block block-caption';
+    case Block.TODO: return 'block block-paragraph block-todo';
+    case Block.BLOCKQUOTE_CAPTION: return 'block block-quote RichEditor-blockquote block-quote-caption';
     default: return 'block';
   }
 }
@@ -80,8 +82,9 @@ class MyEditor extends React.Component {
     }
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
-      window.editorState = editorState;
-      this.setState({editorState});
+      if (this.state.editorEnabled) {
+        this.setState({ editorState });        
+      }
     };
 
     this.onClick = () => {
@@ -106,6 +109,8 @@ class MyEditor extends React.Component {
     this.loadSavedData = this.loadSavedData.bind(this);
     this.setLink = this.setLink.bind(this);
     this.addMedia = this.addMedia.bind(this);
+    this.onChangeData = this.onChangeData.bind(this);
+    this.blockRendererFn = rendererFn(this.onChangeData);
   }
 
   componentDidMount() {
@@ -131,7 +136,7 @@ class MyEditor extends React.Component {
     const selection = editorState.getSelection();
     let entityKey = null;
     if (url !== '') {
-      entityKey = Entity.create('LINK', 'MUTABLE', { url });
+      entityKey = Entity.create(E.LINK, 'MUTABLE', { url });
     }
     this.setState({
       editorState: RichUtils.toggleLink(
@@ -142,6 +147,10 @@ class MyEditor extends React.Component {
     }, () => {
       setTimeout(() => this.refs.editor.focus(), 0);
     });
+  }
+
+  onChangeData(block, newData) {
+    this.onChange(updateDataOfBlock(this.state.editorState, block, newData));
   }
 
   addMedia() {
@@ -177,7 +186,7 @@ class MyEditor extends React.Component {
       return true;
     } else if (command === 'add-new-block') {
       const { editorState } = this.state;
-      this.onChange(addNewBlock(editorState, 'blockquote'));
+      this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return true;
     } else if (command === 'load-saved-data') {
       this.loadSavedData();
@@ -188,13 +197,13 @@ class MyEditor extends React.Component {
     if (command.indexOf('changetype:') == 0) {
       let newBlockType = command.split(':')[1];
       const currentBlockType = block.getType();
-      if (currentBlockType == 'atomic' || currentBlockType == 'media') {
+      if (currentBlockType == Block.ATOMIC || currentBlockType == 'media') {
         return false;
       }
-      if (currentBlockType == 'blockquote' && newBlockType == 'caption') {
-        newBlockType = 'block-quote-caption';
-      } else if (currentBlockType == 'block-quote-caption' && newBlockType == 'caption') {
-        newBlockType = 'blockquote';
+      if (currentBlockType == Block.BLOCKQUOTE && newBlockType == Block.CAPTION) {
+        newBlockType = Block.BLOCKQUOTE_CAPTION;
+      } else if (currentBlockType == Block.BLOCKQUOTE_CAPTION && newBlockType == Block.CAPTION) {
+        newBlockType = Block.BLOCKQUOTE;
       }
       this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
       return true;
@@ -213,9 +222,7 @@ class MyEditor extends React.Component {
 
   handleReturn(e) {
     if (e.shiftKey) {
-      this.setState({
-        editorState: RichUtils.insertSoftNewline(this.state.editorState)
-      });
+      this.onChange(RichUtils.insertSoftNewline(this.state.editorState));
       return true;
     }
     return false;
@@ -261,7 +268,6 @@ class MyEditor extends React.Component {
         )
       }, () => this.refs.editor.focus());
     } catch(e) {
-      window.er = e;
       console.log(e);
       console.log('Could not load data.');
     }
@@ -276,7 +282,7 @@ class MyEditor extends React.Component {
           <Editor
             ref="editor"
             editorState={editorState}
-            blockRendererFn={rendererFn}
+            blockRendererFn={this.blockRendererFn}
             blockStyleFn={getBlockStyle}
             onChange={this.onChange}
             onTab={this.onTab}
@@ -288,7 +294,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
-            placeholder="Write your story"
+            placeholder="Write your story..."
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
           <Toolbar

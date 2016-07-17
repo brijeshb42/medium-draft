@@ -86,7 +86,6 @@ function getEntry(env) {
   entries.push('./index');
   entry['medium-draft'] = entries;
   entry.script = './script';
-  // console.log(entry);
   return entry;
 }
 
@@ -119,7 +118,7 @@ function getLoaders(env) {
 }
 
 
-module.exports = {
+var options = {
   context: APP_DIR,
   debug: true,
   devtool: env === ENV_PROD  ? 'source-map' : 'cheap-module-eval-source-map',
@@ -144,3 +143,16 @@ module.exports = {
     modulesDirectories: ['node_modules'],
   }
 };
+
+if (isProd) {
+  options.externals = {
+    'draft-js': 'draft-js',
+    react: 'react',
+    'immutable-js': 'immutable-js',
+    'react-dom': 'react-dom',
+  };
+  options.library = 'medium-draft';
+  options.libraryTarget = 'umd';
+}
+
+module.exports = options;

@@ -1,13 +1,18 @@
 import { resetBlockWithType, getCurrentBlock } from 'model/index';
+import { Block } from './constants';
 
 export const StringToTypeMap = {
-  '--': 'blockquote:block-quote-caption:caption',
-  '""': 'blockquote',
-  '\'\'': 'blockquote',
-  '*.': 'unordered-list-item',
-  '1.': 'ordered-list-item',
-  '##': 'header-two',
-  '==': 'unstyled'
+  '--': `${Block.BLOCKQUOTE}:${Block.BLOCKQUOTE_CAPTION}:${Block.CAPTION}`,
+  '""': Block.BLOCKQUOTE,
+  '> ': Block.BLOCKQUOTE,
+  '\'\'': Block.BLOCKQUOTE,
+  '*.': Block.UL,
+  '* ': Block.UL,
+  '- ': Block.UL,
+  '1.': Block.OL,
+  '##': Block.H2,
+  '==': Block.UNSTYLED,
+  '[]': Block.TODO,
 };
 
 export default (editorState, str, callback, mapping=StringToTypeMap) => {

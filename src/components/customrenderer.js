@@ -1,23 +1,29 @@
-// import TextComponent from './blocks/text';
 import QuoteCaptionComponent from './blocks/blockquotecaption';
 import CaptionComponent from './blocks/caption';
 import AtomicBlock from './blocks/atomic';
+import TodoBlock from './blocks/todo';
 
-export default (contentBlock) => {
+import { Block } from 'util/constants';
+
+export default (onChangeData) => (contentBlock) => {
+  // console.log(editorState, onChange);
   const type = contentBlock.getType();
   switch (type) {
-    // case 'unstyled': return {
-    //   component: TextComponent
-    // };
-    case 'block-quote-caption': return {
-      component: QuoteCaptionComponent
+    case Block.BLOCKQUOTE_CAPTION: return {
+      component: QuoteCaptionComponent,
     };
-    case 'caption': return {
-      component: CaptionComponent
+    case Block.CAPTION: return {
+      component: CaptionComponent,
     };
-    case 'atomic': return {
+    case Block.ATOMIC: return {
       component: AtomicBlock,
-      editable: false
+      editable: false,
+    };
+    case Block.TODO: return {
+      component: TodoBlock,
+      props: {
+        onChangeData,
+      },
     };
     default: return null;
   }

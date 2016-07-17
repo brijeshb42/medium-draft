@@ -1,19 +1,20 @@
 {
   "name": "medium-draft",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist/static/",
     "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
-    "build": "NODE_ENV=production webpack"
+    "build": "NODE_ENV=production webpack",
+    "babel": "NODE_ENV=production babel ./src --out-dir lib --copy-files --ignore 'script.js'"
   },
   "keywords": [],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.7.0",
+    "draft-js": "",
     "immutable": "^3.8.1"
   },
   "peerDependencies": {
@@ -21,9 +22,11 @@
     "react-dom": "^15.1.0"
   },
   "devDependencies": {
-    "babel-core": "^6.7.4",
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-transform": "^2.0.2",
+    "babel-plugin-resolver": "0.0.7",
     "babel-polyfill": "^6.7.4",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",

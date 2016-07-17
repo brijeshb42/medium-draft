@@ -1,4 +1,4 @@
-export const BLOCKS = {
+export const Block = {
   UNSTYLED: 'unstyled',
   OL: 'ordered-list-item',
   UL: 'unordered-list-item',
@@ -13,10 +13,11 @@ export const BLOCKS = {
   PULLQUOTE: 'pullquote',
   ATOMIC: 'atomic',
   BLOCKQUOTE_CAPTION: 'block-quote-caption',
-  CAPTION: 'caption'
+  CAPTION: 'caption',
+  TODO: 'todo',
 };
 
-export const INLINE = {
+export const Inline = {
   BOLD: 'BOLD',
   CODE: 'CODE',
   ITALIC: 'ITALIC',
@@ -25,12 +26,12 @@ export const INLINE = {
   HIGHLIGHT: 'HIGHLIGHT',
 };
 
-export const ENTITY = {
+export const Entity = {
   LINK: 'LINK'
 };
 
 export default {
-  BLOCKS,
-  INLINE,
-  ENTITY,
+  Block,
+  Inline,
+  Entity,
 };

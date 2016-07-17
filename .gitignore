@@ -60,3 +60,4 @@ node_modules
 dist/
 hash.json
 medium.js
+lib

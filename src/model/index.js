@@ -1,4 +1,13 @@
-import { RichUtils, EditorState, ContentBlock } from 'draft-js'
+import { RichUtils, EditorState, ContentBlock, Modifier } from 'draft-js'
+
+import { Block } from 'util/constants';
+
+export const getDefaultBlockData = (blockType, initialData={}) => {
+  switch(blockType) {
+    case Block.TODO: return { checked: false };
+    default: return initialData;
+  }
+};
 
 
 export const getCurrentBlock = (editorState) => {
@@ -8,7 +17,7 @@ export const getCurrentBlock = (editorState) => {
   return block;
 };
 
-export const addNewBlock = (editorState, newType='unstyled') => {
+export const addNewBlock = (newType=Block.UNSTYLED) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
     console.log('selection not collapsed');
@@ -28,7 +37,8 @@ export const addNewBlock = (editorState, newType='unstyled') => {
       return editorState;
     }
     const newBlock = currentBlock.merge({
-      type: newType
+      type: newType,
+      data: getDefaultBlockData(newType),
     });
     const newContentState = contentState.merge({
       blockMap: blockMap.set(key, newBlock),
@@ -42,7 +52,7 @@ export const addNewBlock = (editorState, newType='unstyled') => {
   return editorState;
 };
 
-export const resetBlockWithType = (editorState, newType='unstyled') => {
+export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
   const contentState = editorState.getCurrentContent();
   const selectionState = editorState.getSelection();
   const key = selectionState.getStartKey();
@@ -53,9 +63,13 @@ export const resetBlockWithType = (editorState, newType='unstyled') => {
   if (block.getLength() >= 2) {
     newText = text.substr(1);
   }
+  console.log(blockMap.toJS());
+  // let newContentState =  Modifier.setBlockType(contentState, selectionState, newType);
+  // newContentState = Modifier.setBlockData(newContentState, selectionState, getDefaultBlockData(newType));
   const newBlock = block.merge({
     text: newText,
-    type: newType
+    type: newType,
+    data: getDefaultBlockData(newType),
   });
   const newContentState = contentState.merge({
     blockMap: blockMap.set(key, newBlock),
@@ -64,5 +78,20 @@ export const resetBlockWithType = (editorState, newType='unstyled') => {
       focusOffset: 0,
     }),
   });
+  console.log(newContentState.getBlockMap().toJS());
   return EditorState.push(editorState, newContentState, 'change-block-type');
+};
+
+
+export const updateDataOfBlock = (editorState, block, newData) => {
+  const contentState = editorState.getCurrentContent();
+  const blockMap = contentState.getBlockMap();
+  const newBlock = block.merge({
+    data: newData
+  });
+  const newContentState = contentState.merge({
+    blockMap: contentState.getBlockMap().set(block.getKey(), newBlock),
+  });
+  return EditorState.push(editorState, newContentState, 'change-block-type');
+  // return editorState;
 };

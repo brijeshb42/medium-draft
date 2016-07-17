@@ -2,7 +2,7 @@ import './addbutton.scss';
 
 import React from 'react';
 
-import { getSelectedBlockNode } from 'util';
+import { getSelectedBlockNode } from 'util/index';
 
 export default class AddButton extends React.Component {
   constructor(props) {
