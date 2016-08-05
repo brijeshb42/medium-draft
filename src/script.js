@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { EditorState, convertToRaw, convertFromRaw, CompositeDecorator } from 'draft-js';
 
 import { Editor, StringToTypeMap, Block, Link, findLinkEntities } from './index';
-// import data from 'json!data.json';
 
 
 const newTypeMap = StringToTypeMap;
@@ -23,6 +22,7 @@ class App extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(decorator),
       editorEnabled: true,
+      placeholder: 'Write your story...'
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -38,21 +38,32 @@ class App extends React.Component {
     this.logData = this.logData.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.fetchData = this.fetchData.bind(this);
+    this.loadSavedData = this.loadSavedData.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.setState({
+      placeholder: 'Loading content...',
+    });
+    setTimeout(this.fetchData, 1000);
   }
 
   fetchData() {
+    window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
     const req = new XMLHttpRequest();
     req.open('GET', '/data.json', true);
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
         this.setState({
-          editorState: EditorState.push(this.state.editorState, convertFromRaw(data))
+          editorState: EditorState.push(this.state.editorState, convertFromRaw(data)),
+          placeholder: 'Write your story...'
+        }, () => {
+          this.refs.editor.focus();
         });
+        window.ga('send', 'event', 'draftjs', 'data-success');
       }
     };
     req.send();
@@ -61,16 +72,48 @@ class App extends React.Component {
   logData(e) {
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     console.log(this.state.editorState.getSelection().toJS());
+    window.ga('send', 'event', 'draftjs', 'log-data');
+  }
+
+  handleKeyCommand(command) {
+    if (command === 'editor-save') {
+      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.ga('send', 'event', 'draftjs', command);
+      return true;
+    } else if (command === 'load-saved-data') {
+      this.loadSavedData();
+      return true;
+    }
+    return false;
+  }
+
+  loadSavedData() {
+    const data = window.localStorage.getItem('editor');
+    if (data === null) {
+      return;
+    }
+    try {
+      const blockData = JSON.parse(data);
+      console.log(blockData);
+      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this.refs.editor.focus);
+    } catch(e) {
+      console.log(e);
+    }
+    window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
   }
 
   toggleEdit(e) {
     this.setState({
       editorEnabled: !this.state.editorEnabled
+    }, () => {
+      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
     });
   }
 
-  onFileDrop(files) {
+  handleDroppedFiles(selection, files) {
     console.log(files);
+    console.log(selection);
+    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
   }
 
   render() {
@@ -82,7 +125,9 @@ class App extends React.Component {
           editorState={editorState}
           onChange={this.onChange}
           editorEnabled={editorEnabled}
-          onFileDrop={this.onFileDrop}
+          handleDroppedFiles={this.handleDroppedFiles}
+          handleKeyCommand={this.handleKeyCommand}
+          placeholder={this.state.placeholder}
         />
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>
@@ -97,3 +142,6 @@ ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
+window.ga = function() {
+  console.log(arguments);
+};

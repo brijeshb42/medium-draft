@@ -77,7 +77,6 @@ class MyEditor extends React.Component {
     this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-    this.loadSavedData = this.loadSavedData.bind(this);
     this.setLink = this.setLink.bind(this);
     this.addMedia = this.addMedia.bind(this);
     this.onChangeData = this.onChangeData.bind(this);
@@ -126,16 +125,14 @@ class MyEditor extends React.Component {
   }
 
   handleDroppedFiles(selection, files) {
-    this.props.onFileDrop(files);
+    if (this.props.handleDroppedFiles) {
+      this.props.handleDroppedFiles(selection, files);
+    }
   }
 
   handleKeyCommand(command) {
     // console.log(command);
-    if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.props.editorState.getCurrentContent()));
-      window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.props.editorState.getCurrentContent()));
-      return true;
-    } else if (command === 'showlinkinput') {
+    if (command === 'showlinkinput') {
       if (this.refs.toolbar) {
         this.refs.toolbar.handleLinkInput(null, true);
       }
@@ -144,8 +141,8 @@ class MyEditor extends React.Component {
       const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return true;
-    } else if (command === 'load-saved-data') {
-      this.loadSavedData();
+    }
+    if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
       return true;
     }
     const { editorState } = this.props;
@@ -222,20 +219,6 @@ class MyEditor extends React.Component {
     );
   }
 
-  loadSavedData() {
-    const data = window.localStorage.getItem('editor');
-    if (data === null) {
-      return;
-    }
-    try {
-      const blockData = JSON.parse(data);
-      console.log(blockData);
-      this.onChange( EditorState.push(this.props.editorState, convertFromRaw(blockData)), () => this.refs.editor.focus());
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
   render() {
     const { editorState, editorEnabled } = this.props;
     return (
@@ -256,7 +239,7 @@ class MyEditor extends React.Component {
             customStyleMap={styleMap}
             readOnly={!editorEnabled}
             keyBindingFn={keyBindingFn}
-            placeholder="Write your story..."
+            placeholder={this.props.placeholder}
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
           <Toolbar
