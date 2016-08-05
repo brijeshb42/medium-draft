@@ -43,7 +43,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 ### Issues
 
-Currently, the toolbar that appears when text is selected needs to be fixed regrading its position in the viewport.
+- [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
 
 #### LICENSE
 

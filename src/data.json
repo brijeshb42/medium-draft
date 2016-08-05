@@ -85,11 +85,6 @@
         {
           "offset": 0,
           "length": 88,
-          "style": "BOLD"
-        },
-        {
-          "offset": 0,
-          "length": 88,
           "style": "HIGHLIGHT"
         }
       ],
@@ -109,13 +104,8 @@
       "depth": 0,
       "inlineStyleRanges": [
         {
-          "offset": 0,
-          "length": 84,
-          "style": "BOLD"
-        },
-        {
           "offset": 73,
-          "length": 4,
+          "length": 11,
           "style": "HIGHLIGHT"
         }
       ],
@@ -675,11 +665,13 @@
     {
       "key": "f3gea",
       "text": "Currently, the toolbar that appears when text is selected needs to be fixed regrading its position in the viewport.",
-      "type": "blockquote",
+      "type": "todo",
       "depth": 0,
       "inlineStyleRanges": [],
       "entityRanges": [],
-      "data": {}
+      "data": {
+        "checked": true
+      }
     }
   ]
 }

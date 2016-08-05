@@ -12,7 +12,7 @@ import InlineToolbar from './inlinetoolbar';
 import { getSelection, getSelectionRect } from 'util/index';
 import { getCurrentBlock } from 'model/index';
 
-window.getVisibleSelectionRect = getVisibleSelectionRect;
+// window.getVisibleSelectionRect = getVisibleSelectionRect;
 
 export default class Toolbar extends React.Component {
 
@@ -21,19 +21,11 @@ export default class Toolbar extends React.Component {
     this.state = {
       showURLInput: false,
       urlInputValue: '',
-      style: {
-        top: 0,
-        left: 0
-      }
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.showLinkInput = this.showLinkInput.bind(this);
-
-    this.hasDimension = false;
-    this.rect = {};
-    this.forceHide = false;
+    this.handleLinkInput = this.handleLinkInput.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -50,43 +42,45 @@ export default class Toolbar extends React.Component {
       }
       return;
     }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.editorEnabled || this.state.showURLInput) {
+      return;
+    }
+    const selectionState = this.props.editorState.getSelection();
+    if (selectionState.isCollapsed()) {
+      return;
+    }
     const nativeSelection = getSelection(window);
     if (!nativeSelection.rangeCount) {
       return;
     }
-    const node = nativeSelection.getRangeAt(0).startContainer.parentNode;
-    const rect = getSelectionRect(nativeSelection);
-    if (this.hasDimension) {
-      let left = rect.left - this.rect.width;
-      if (rect.width >= this.rect.width) {
-        left = (rect.width - this.rect.width) / 2;
-      }
-      this.setState({
-        style: {
-          top: rect.top - this.rect.height - 50,
-          width: this.rect.width,
-          left
-        }
-      });
-    } else {
-      this.setState({
-        style: {
-          top: rect.top - 100,
-          left: (rect.left + rect.width - 341) / 2,
-          width: 341
-        }
-      });
-    }
-  }
+    const selectionBoundary = getSelectionRect(nativeSelection);
 
-  componentDidUpdate() {
-    this.forceHide = false;
-    const node = ReactDOM.findDOMNode(this);
-    if (!node) {
-      return;
+    const toolbarNode = ReactDOM.findDOMNode(this);
+    const toolbarBoundary = toolbarNode.getBoundingClientRect();
+    
+    const parent = ReactDOM.findDOMNode(this.props.editorNode);
+    const parentBoundary = parent.getBoundingClientRect();
+
+    /*
+    * Main logic for setting the toolbar position.
+    */
+    toolbarNode.style.top = (selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5) + 'px';
+    toolbarNode.style.width = toolbarBoundary.width + 'px';
+    const widthDiff = selectionBoundary.width - toolbarBoundary.width;
+    if (widthDiff >= 0) {
+      toolbarNode.style.left = (widthDiff / 2) + 'px';
+    } else {
+      const left = (selectionBoundary.left - parentBoundary.left);
+      if (left + toolbarBoundary.width > parentBoundary.width) {
+        toolbarNode.style.right = '0px';
+        toolbarNode.style.left = '';
+      } else {
+        toolbarNode.style.left = (left + widthDiff / 2) + 'px';
+      }
     }
-    this.rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-    this.hasDimension = true;
   }
 
   onKeyDown(e) {
@@ -114,7 +108,7 @@ export default class Toolbar extends React.Component {
     });
   }
 
-  showLinkInput(e, direct=false) {
+  handleLinkInput(e, direct=false) {
     if (!direct) {
       e.preventDefault();
       e.stopPropagation();   
@@ -152,8 +146,6 @@ export default class Toolbar extends React.Component {
           }, 0);
         });
       }
-      // console.log(start, end);
-      // console.log(selection.toJS());
     });
     if (!linkFound) {
       this.setState({
@@ -193,13 +185,13 @@ export default class Toolbar extends React.Component {
         <BlockToolbar
           editorState={editorState}
           onToggle={this.props.toggleBlockType}
-          buttons={BLOCK_BUTTONS} />
+          buttons={this.props.blockButtons} />
         <InlineToolbar
           editorState={editorState}
           onToggle={this.props.toggleInlineStyle}
-          buttons={INLINE_BUTTONS} />
+          buttons={this.props.inlineButtons} />
         <div className="RichEditor-controls">
-          <a className="RichEditor-linkButton" href="#" onClick={this.showLinkInput}>#</a>
+          <a className="RichEditor-linkButton" href="#" onClick={this.handleLinkInput}>#</a>
         </div>
       </div>
     );
@@ -217,9 +209,15 @@ const BLOCK_BUTTONS = [
 ];
 
 const INLINE_BUTTONS = [
-  {label: <b>B</b>, style: 'BOLD'},
-  {label: <i>I</i>, style: 'ITALIC'},
-  {label: <u>U</u>, style: 'UNDERLINE'},
+  // {label: <b>B</b>, style: 'BOLD'},
+  // {label: <i>I</i>, style: 'ITALIC'},
+  // {label: <u>U</u>, style: 'UNDERLINE'},
   {label: <strike>S</strike>, style: 'STRIKETHROUGH'},
   {label: 'Hi', style: 'HIGHLIGHT'},
+  {label: 'Code', style: 'CODE'},
 ];
+
+Toolbar.defaultProps = {
+  blockButtons: BLOCK_BUTTONS,
+  inlineButtons: INLINE_BUTTONS,
+};

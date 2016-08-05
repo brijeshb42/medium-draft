@@ -237,6 +237,8 @@ class MyEditor extends React.Component {
         case Block.BLOCKQUOTE:
         case Block.BLOCKQUOTE_CAPTION:
         case Block.CAPTION:
+        case Block.TODO:
+        case Block.H2:
           this.onChange(resetBlockWithType(this.state.editorState, Block.UNSTYLED));
           return true;
         default:
@@ -273,7 +275,6 @@ class MyEditor extends React.Component {
   loadSavedData() {
     const data = window.localStorage.getItem('editor');
     if (data === null) {
-      console.log('No data found.');
       return;
     }
     try {
@@ -287,13 +288,11 @@ class MyEditor extends React.Component {
       }, () => this.refs.editor.focus());
     } catch(e) {
       console.log(e);
-      console.log('Could not load data.');
     }
   }
 
   render() {
     const { editorState, showURLInput, editorEnabled, urlValue } = this.state;
-    // console.log(this.props);
     return (
       <div className="RichEditor-root">
         <div className="RichEditor-editor">
@@ -317,6 +316,7 @@ class MyEditor extends React.Component {
           { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
           <Toolbar
             ref="toolbar"
+            editorNode={this.refs.editor}
             editorState={editorState}
             toggleBlockType={this.toggleBlockType}
             toggleInlineStyle={this.toggleInlineStyle}

@@ -17,10 +17,9 @@ export const getCurrentBlock = (editorState) => {
   return block;
 };
 
-export const addNewBlock = (newType=Block.UNSTYLED) => {
+export const addNewBlock = (editorState, newType=Block.UNSTYLED) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
-    console.log('selection not collapsed');
     return editorState;
   }
   const contentState = editorState.getCurrentContent();
@@ -28,12 +27,10 @@ export const addNewBlock = (newType=Block.UNSTYLED) => {
   const blockMap = contentState.getBlockMap();
   const currentBlock = getCurrentBlock(editorState);
   if (!currentBlock) {
-    console.log('no current block');
     return editorState;
   }
   if (currentBlock.getLength() == 0) {
     if (currentBlock.getType() == newType) {
-      console.log('same block types');
       return editorState;
     }
     const newBlock = currentBlock.merge({
@@ -45,10 +42,7 @@ export const addNewBlock = (newType=Block.UNSTYLED) => {
       selectionAfter: selectionState
     });
     return EditorState.push(editorState, newContentState, 'change-block-type');
-  } else {
-    
   }
-  console.log('block length > 0');
   return editorState;
 };
 
