@@ -65,47 +65,18 @@ class MyEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
-    ]);
-    this.state = {
-      editorState: EditorState.createEmpty(decorator),
-      showURLInput: false,
-      editorEnabled: true,
-      urlValue: ''
-    };
-    if (props.value) {
-      this.state.editorState = EditorState.push(this.state.editorState, convertFromRaw(props.value));
-    }
     this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
-      if (this.state.editorEnabled) {
-        this.setState({ editorState });        
-      }
+      this.props.onChange(editorState);
     };
 
-    this.onClick = () => {
-      if (!this.state.editorEnabled) {
-        this.setState({
-          editorEnabled: true
-        }, () => {
-          this.focus();
-        });
-      }
-    };
-
-    this.logData = this.logData.bind(this);
-    this.onClick = this.onClick.bind(this);
     this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.handleReturn = this.handleReturn.bind(this);
+    this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
     this.setLink = this.setLink.bind(this);
     this.addMedia = this.addMedia.bind(this);
@@ -118,39 +89,25 @@ class MyEditor extends React.Component {
   }
 
   onTab(e) {
-    const { editorState } = this.state;
+    const { editorState } = this.props;
     const newEditorState = RichUtils.onTab(e, editorState, 2);
     if (newEditorState !== editorState) {
       this.onChange(newEditorState);
     }
   };
 
-  logData(e) {
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
-    console.log(this.state.editorState.getSelection().toJS());
-    window.sel = this.state.editorState.getSelection();
-  }
-
   setLink(url) {
-    const { editorState } = this.state;
+    const { editorState } = this.props;
     const selection = editorState.getSelection();
     let entityKey = null;
     if (url !== '') {
       entityKey = Entity.create(E.LINK, 'MUTABLE', { url });
     }
-    this.setState({
-      editorState: RichUtils.toggleLink(
-        editorState,
-        selection,
-        entityKey
-      ),
-    }, () => {
-      setTimeout(() => this.refs.editor.focus(), 0);
-    });
+    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
   onChangeData(block, newData) {
-    this.onChange(updateDataOfBlock(this.state.editorState, block, newData));
+    this.onChange(updateDataOfBlock(this.props.editorState, block, newData));
   }
 
   addMedia() {
@@ -161,7 +118,7 @@ class MyEditor extends React.Component {
     const entityKey = Entity.create('image', 'IMMUTABLE', {src});
     this.onChange(
       AtomicBlockUtils.insertAtomicBlock(
-        this.state.editorState,
+        this.props.editorState,
         entityKey,
         ' '
       )
@@ -169,15 +126,14 @@ class MyEditor extends React.Component {
   }
 
   handleDroppedFiles(selection, files) {
-    console.log(selection.toJS());
-    console.log(files);
+    this.props.onFileDrop(files);
   }
 
   handleKeyCommand(command) {
     // console.log(command);
     if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-      window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.props.editorState.getCurrentContent()));
+      window.localStorage['tmp'] = JSON.stringify(convertToRaw(this.props.editorState.getCurrentContent()));
       return true;
     } else if (command === 'showlinkinput') {
       if (this.refs.toolbar) {
@@ -185,14 +141,14 @@ class MyEditor extends React.Component {
       }
       return true;
     } else if (command === 'add-new-block') {
-      const { editorState } = this.state;
+      const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return true;
     } else if (command === 'load-saved-data') {
       this.loadSavedData();
       return true;
     }
-    const { editorState } = this.state;
+    const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
     if (command.indexOf('changetype:') == 0) {
       let newBlockType = command.split(':')[1];
@@ -217,16 +173,16 @@ class MyEditor extends React.Component {
   }
 
   handleBeforeInput(str) {
-    return this.props.beforeInput(this.state.editorState, str, this.onChange, this.props.stringToTypeMap);
+    return this.props.beforeInput(this.props.editorState, str, this.onChange, this.props.stringToTypeMap);
   }
 
   handleReturn(e) {
     if (e.shiftKey) {
-      this.onChange(RichUtils.insertSoftNewline(this.state.editorState));
+      this.onChange(RichUtils.insertSoftNewline(this.props.editorState));
       return true;
     }
     if (!e.altKey && !e.metaKey && !e.ctrlKey) {
-      const currentBlock = getCurrentBlock(this.state.editorState);
+      const currentBlock = getCurrentBlock(this.props.editorState);
       const blockType = currentBlock.getType();
       if (currentBlock.getLength() > 0) {
         return false;
@@ -239,7 +195,7 @@ class MyEditor extends React.Component {
         case Block.CAPTION:
         case Block.TODO:
         case Block.H2:
-          this.onChange(resetBlockWithType(this.state.editorState, Block.UNSTYLED));
+          this.onChange(resetBlockWithType(this.props.editorState, Block.UNSTYLED));
           return true;
         default:
           return false;
@@ -251,7 +207,7 @@ class MyEditor extends React.Component {
   _toggleBlockType(blockType) {
     this.onChange(
       RichUtils.toggleBlockType(
-        this.state.editorState,
+        this.props.editorState,
         blockType
       )
     );
@@ -260,16 +216,10 @@ class MyEditor extends React.Component {
   _toggleInlineStyle(inlineStyle) {
     this.onChange(
       RichUtils.toggleInlineStyle(
-        this.state.editorState,
+        this.props.editorState,
         inlineStyle
       )
     );
-  }
-
-  toggleEdit(e) {
-    this.setState({
-      editorEnabled: !this.state.editorEnabled
-    });
   }
 
   loadSavedData() {
@@ -280,19 +230,14 @@ class MyEditor extends React.Component {
     try {
       const blockData = JSON.parse(data);
       console.log(blockData);
-      this.setState({
-        editorState: EditorState.push(
-          this.state.editorState,
-          convertFromRaw(blockData)
-        )
-      }, () => this.refs.editor.focus());
+      this.onChange( EditorState.push(this.props.editorState, convertFromRaw(blockData)), () => this.refs.editor.focus());
     } catch(e) {
       console.log(e);
     }
   }
 
   render() {
-    const { editorState, showURLInput, editorEnabled, urlValue } = this.state;
+    const { editorState, editorEnabled } = this.props;
     return (
       <div className="RichEditor-root">
         <div className="RichEditor-editor">
@@ -323,10 +268,6 @@ class MyEditor extends React.Component {
             editorEnabled={editorEnabled}
             setLink={this.setLink}
             focus={this.focus} />
-        </div>
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
         </div>
       </div>
     );
