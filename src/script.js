@@ -142,6 +142,6 @@ ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
-window.ga = function() {
-  console.log(arguments);
-};
+// window.ga = function() {
+//   console.log(arguments);
+// };
