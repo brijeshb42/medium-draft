@@ -181,7 +181,7 @@ class MyEditor extends React.Component {
       return true;
     } else if (command === 'showlinkinput') {
       if (this.refs.toolbar) {
-        this.refs.toolbar.showLinkInput(null, true);
+        this.refs.toolbar.handleLinkInput(null, true);
       }
       return true;
     } else if (command === 'add-new-block') {
