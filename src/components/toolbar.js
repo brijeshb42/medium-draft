@@ -209,9 +209,9 @@ const BLOCK_BUTTONS = [
 ];
 
 const INLINE_BUTTONS = [
-  // {label: <b>B</b>, style: 'BOLD'},
-  // {label: <i>I</i>, style: 'ITALIC'},
-  // {label: <u>U</u>, style: 'UNDERLINE'},
+  {label: <b>B</b>, style: 'BOLD'},
+  {label: <i>I</i>, style: 'ITALIC'},
+  {label: <u>U</u>, style: 'UNDERLINE'},
   {label: <strike>S</strike>, style: 'STRIKETHROUGH'},
   {label: 'Hi', style: 'HIGHLIGHT'},
   {label: 'Code', style: 'CODE'},
