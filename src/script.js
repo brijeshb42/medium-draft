@@ -53,7 +53,7 @@ class App extends React.Component {
   fetchData() {
     window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
     const req = new XMLHttpRequest();
-    req.open('GET', '/data.json', true);
+    req.open('GET', 'data.json', true);
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
