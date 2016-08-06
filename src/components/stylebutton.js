@@ -14,10 +14,10 @@ export default class StyleButton extends React.Component {
     if (this.props.active) {
       className += ' RichEditor-activeButton';
     }
-
+    className += ' RichEditor-styleButton-' + this.props.style.toLowerCase();
     return (
       <span className={className} onMouseDown={this.onToggle}>
-        {this.props.label}
+        {this.props.icon ? <i className={"fa fa-" + this.props.icon} /> : this.props.label}
       </span>
     );
   }

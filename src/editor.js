@@ -1,4 +1,5 @@
 import 'draft-js/dist/Draft.css';
+import 'hint.css/src/hint.scss';
 import './index.scss';
 import './components/blocks/text.scss';
 
@@ -19,7 +20,7 @@ import {
 import { Map } from 'immutable';
 
 import AddButton from 'components/addbutton';
-import Toolbar from 'components/toolbar';
+import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from 'components/toolbar';
 
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
@@ -30,7 +31,7 @@ import beforeInput, { StringToTypeMap } from 'util/beforeinput';
 import { getCurrentBlock, addNewBlock, updateDataOfBlock, resetBlockWithType } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
-const styleMap = {
+const customStyleMap = {
    [Inline.HIGHLIGHT]: {
       backgroundColor: 'yellow',
    },
@@ -99,8 +100,14 @@ class MyEditor extends React.Component {
     const { editorState } = this.props;
     const selection = editorState.getSelection();
     let entityKey = null;
+    let newUrl = url;
     if (url !== '') {
-      entityKey = Entity.create(E.LINK, 'MUTABLE', { url });
+      if (url.indexOf('@') >= 0) {
+        newUrl = 'mailto:' + newUrl;
+      } else if (url.indexOf('http') === -1) {
+        newUrl = 'http://' + newUrl;
+      }
+      entityKey = Entity.create(E.LINK, 'MUTABLE', { url: newUrl });
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
@@ -132,6 +139,9 @@ class MyEditor extends React.Component {
 
   handleKeyCommand(command) {
     // console.log(command);
+    if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
+      return true;
+    }
     if (command === 'showlinkinput') {
       if (this.refs.toolbar) {
         this.refs.toolbar.handleLinkInput(null, true);
@@ -142,12 +152,9 @@ class MyEditor extends React.Component {
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return true;
     }
-    if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
-      return true;
-    }
     const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
-    if (command.indexOf('changetype:') == 0) {
+    if (command.indexOf('changetype:') === 0) {
       let newBlockType = command.split(':')[1];
       const currentBlockType = block.getType();
       if (currentBlockType == Block.ATOMIC || currentBlockType == 'media') {
@@ -159,6 +166,10 @@ class MyEditor extends React.Component {
         newBlockType = Block.BLOCKQUOTE;
       }
       this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
+      return true;
+    } else if (command.indexOf('toggleinline:') === 0) {
+      const inline = command.split(':')[1];
+      this._toggleInlineStyle(inline);
       return true;
     }
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -179,9 +190,12 @@ class MyEditor extends React.Component {
       return true;
     }
     if (!e.altKey && !e.metaKey && !e.ctrlKey) {
-      const currentBlock = getCurrentBlock(this.props.editorState);
-      const blockType = currentBlock.getType();
-      if (currentBlock.getLength() > 0) {
+      // const currentBlock = getCurrentBlock(this.props.editorState);
+      // const blockType = currentBlock.getType();
+      // const selection = this.props.editorState.getSelection();
+      if (currentBlock.getLength() > 0 /* && currentBlock.getLength() === selection.getStartOffset() */) {
+        // this.onChange(addNewBlockAt(this.props.editorState, selection.getStartKey()));
+        // return true;
         return false;
       }
       switch(blockType) {
@@ -192,6 +206,8 @@ class MyEditor extends React.Component {
         case Block.CAPTION:
         case Block.TODO:
         case Block.H2:
+        case Block.H3:
+        case Block.H1:
           this.onChange(resetBlockWithType(this.props.editorState, Block.UNSTYLED));
           return true;
         default:
@@ -226,6 +242,7 @@ class MyEditor extends React.Component {
         <div className="RichEditor-editor">
           <Editor
             ref="editor"
+            {...this.props}
             editorState={editorState}
             blockRendererFn={this.blockRendererFn}
             blockStyleFn={getBlockStyle}
@@ -236,9 +253,9 @@ class MyEditor extends React.Component {
             handleBeforeInput={this.handleBeforeInput}
             handleDroppedFiles={this.handleDroppedFiles}
             handleReturn={this.handleReturn}
-            customStyleMap={styleMap}
+            customStyleMap={this.props.customStyleMap}
             readOnly={!editorEnabled}
-            keyBindingFn={keyBindingFn}
+            keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
             spellCheck={false} />
           { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
@@ -250,7 +267,9 @@ class MyEditor extends React.Component {
             toggleInlineStyle={this.toggleInlineStyle}
             editorEnabled={editorEnabled}
             setLink={this.setLink}
-            focus={this.focus} />
+            focus={this.focus}
+            blockButtons={this.props.blockButtons}
+            inlineButtons={this.props.inlineButtons} />
         </div>
       </div>
     );
@@ -261,8 +280,12 @@ const renderMap = Map();
 
 MyEditor.defaultProps = {
   beforeInput,
+  keyBindingFn,
+  customStyleMap,
   stringToTypeMap: StringToTypeMap,
   blockRenderMap: RenderMap,
+  blockButtons: BLOCK_BUTTONS,
+  inlineButtons: INLINE_BUTTONS,
 };
 
 

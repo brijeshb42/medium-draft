@@ -18,6 +18,6 @@ export const findLinkEntities = (contentBlock, callback) => {
 export default (props) => {
   const { url } = Entity.get(props.entityKey).getData();
   return (
-    <a className="draft-link hint--bottom" href={url} target="_blank">{props.children}</a>
+    <a className="draft-link hint--top hint--rounded" href={url} target="_blank" aria-label={url}>{props.children}</a>
   );
 };

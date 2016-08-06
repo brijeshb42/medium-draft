@@ -4,15 +4,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Entity } from 'draft-js';
 
-import { getVisibleSelectionRect } from 'draft-js';
-
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
 import { getSelection, getSelectionRect } from 'util/index';
 import { getCurrentBlock } from 'model/index';
-
-// window.getVisibleSelectionRect = getVisibleSelectionRect;
+import { Entity as CEntity } from 'util/constants';
 
 export default class Toolbar extends React.Component {
 
@@ -74,12 +71,7 @@ export default class Toolbar extends React.Component {
       toolbarNode.style.left = (widthDiff / 2) + 'px';
     } else {
       const left = (selectionBoundary.left - parentBoundary.left);
-      if (left + toolbarBoundary.width > parentBoundary.width) {
-        toolbarNode.style.right = '0px';
-        toolbarNode.style.left = '';
-      } else {
-        toolbarNode.style.left = (left + widthDiff / 2) + 'px';
-      }
+      toolbarNode.style.left = (left + widthDiff / 2) + 'px';
     }
   }
 
@@ -119,13 +111,16 @@ export default class Toolbar extends React.Component {
       this.props.focus();
       return;
     }
+    // const toolbarNode = ReactDOM.findDOMNode(this);
+    // const toolbarBoundary = toolbarNode.getBoundingClientRect();
+    // toolbarNode.style.width = toolbarBoundary.width + 'px';
     const currentBlock = getCurrentBlock(editorState);
     let selectedEntity = '';
     let linkFound = false;
     currentBlock.findEntityRanges((character) => {
       const entityKey = character.getEntity();
       selectedEntity = entityKey;
-      return entityKey !== null && Entity.get(entityKey).getType() === 'LINK';
+      return entityKey !== null && Entity.get(entityKey).getType() === CEntity.LINK;
     }, (start, end) => {
       let selStart = selection.getAnchorOffset();
       let selEnd = selection.getFocusOffset();
@@ -160,14 +155,15 @@ export default class Toolbar extends React.Component {
 
   render() {
     const { editorState, editorEnabled } = this.props;
-    const { showURLInput, urlInputValue, style } = this.state;
+    const { showURLInput, urlInputValue } = this.state;
+    const style = { display: 'block' };
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
-      return null;
+      style.display = 'none';
     }
     if (showURLInput) {
       return (
         <div className="editor-toolbar" style={style}>
-          <div className="RichEditor-controls" style={{display: 'block'}}>
+          <div className="RichEditor-controls RichEditor-show-link-input" style={{display: 'block'}}>
             <input
               ref="urlinput"
               type="text"
@@ -191,30 +187,71 @@ export default class Toolbar extends React.Component {
           onToggle={this.props.toggleInlineStyle}
           buttons={this.props.inlineButtons} />
         <div className="RichEditor-controls">
-          <a className="RichEditor-linkButton" href="#" onClick={this.handleLinkInput}>#</a>
+          <a className="RichEditor-styleButton RichEditor-linkButton" href="#" onClick={this.handleLinkInput}>
+            #
+          </a>
         </div>
       </div>
     );
   }
 }
 
-const BLOCK_BUTTONS = [
-  // {label: 'H1', style: 'header-one'},
-  // {label: 'H2', style: 'header-two'},
-  {label: 'T', style: 'header-three'},
-  {label: 'N', style: 'unstyled'},
-  {label: 'Q', style: 'blockquote'},
-  {label: 'UL', style: 'unordered-list-item'},
-  {label: 'OL', style: 'ordered-list-item'},
+export const BLOCK_BUTTONS = [
+  {
+    label: 'H3',
+    style: 'header-three',
+    icon: 'header',
+  },
+  {
+    label: 'P',
+    style: 'unstyled'
+  },
+  {
+    label: 'Q',
+    style: 'blockquote',
+    icon: 'quote-right',
+  },
+  {
+    label: 'UL',
+    style: 'unordered-list-item',
+    icon: 'list-ul',
+  },
+  {
+    label: 'OL',
+    style: 'ordered-list-item',
+    icon: 'list-ol',
+  }
 ];
 
-const INLINE_BUTTONS = [
-  {label: <b>B</b>, style: 'BOLD'},
-  {label: <i>I</i>, style: 'ITALIC'},
-  {label: <u>U</u>, style: 'UNDERLINE'},
-  {label: <strike>S</strike>, style: 'STRIKETHROUGH'},
-  {label: 'Hi', style: 'HIGHLIGHT'},
-  {label: 'Code', style: 'CODE'},
+export const INLINE_BUTTONS = [
+  {
+    label: 'B',
+    style: 'BOLD',
+    icon: 'bold',
+  },
+  {
+    label: 'I',
+    style: 'ITALIC',
+    icon: 'italic',
+  },
+  {
+    label: 'U',
+    style: 'UNDERLINE',
+    icon: 'underline',
+  },
+  {
+    label: 'S',
+    style: 'STRIKETHROUGH',
+    icon: 'strikethrough'
+  },
+  {
+    label: 'Hi',
+    style: 'HIGHLIGHT',
+  },
+  {
+    label: 'Code',
+    style: 'CODE',
+  },
 ];
 
 Toolbar.defaultProps = {

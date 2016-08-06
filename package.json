@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -45,5 +45,9 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/brijeshb42/medium-draft/issues"
+  },
+  "homepage": "http://bitwiser.in/medium-draft/"
 }

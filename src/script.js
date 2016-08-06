@@ -1,12 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { EditorState, convertToRaw, convertFromRaw, CompositeDecorator } from 'draft-js';
+import {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  CompositeDecorator,
+  KeyBindingUtil,
+} from 'draft-js';
 
-import { Editor, StringToTypeMap, Block, Link, findLinkEntities } from './index';
+import {
+  Editor,
+  StringToTypeMap,
+  Block,
+  Link,
+  findLinkEntities,
+  keyBindingFn,
+} from './index';
 
 
 const newTypeMap = StringToTypeMap;
 newTypeMap['2.'] = Block.OL
+
+const { hasCommandModifier } = KeyBindingUtil;
+
 
 class App extends React.Component {
   constructor(props) {
@@ -41,6 +57,7 @@ class App extends React.Component {
     this.loadSavedData = this.loadSavedData.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
+    this.keyBinding = this.keyBinding.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +65,40 @@ class App extends React.Component {
       placeholder: 'Loading content...',
     });
     setTimeout(this.fetchData, 1000);
+  }
+
+  keyBinding(e) {
+    if(hasCommandModifier(e) && e.which == 83 /* Key S */) {
+      return 'editor-save';
+    }
+    if (e.altKey === true) {
+      if (e.shiftKey === true) {
+        switch(e.which) {
+          /* Alt + Shift + L */
+          case 76: return 'load-saved-data';
+          /* Key E */
+          // case 69: return 'toggle-edit-mode';
+        }
+      }
+      if (e.which === 72 /* Key H */) {
+        return 'toggleinline:HIGHLIGHT';
+      }
+    }
+    return keyBindingFn(e);
+  }
+
+  handleKeyCommand(command) {
+    if (command === 'editor-save') {
+      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.ga('send', 'event', 'draftjs', command);
+      return true;
+    } else if (command === 'load-saved-data') {
+      this.loadSavedData();
+      return true;
+    } else if (command === 'toggle-edit-mode') {
+      this.toggleEdit();
+    }
+    return false;
   }
 
   fetchData() {
@@ -73,18 +124,6 @@ class App extends React.Component {
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
-  }
-
-  handleKeyCommand(command) {
-    if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-      window.ga('send', 'event', 'draftjs', command);
-      return true;
-    } else if (command === 'load-saved-data') {
-      this.loadSavedData();
-      return true;
-    }
-    return false;
   }
 
   loadSavedData() {
@@ -128,6 +167,7 @@ class App extends React.Component {
           handleDroppedFiles={this.handleDroppedFiles}
           handleKeyCommand={this.handleKeyCommand}
           placeholder={this.state.placeholder}
+          keyBindingFn={this.keyBinding}
         />
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>
@@ -142,6 +182,6 @@ ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
-// window.ga = function() {
-//   console.log(arguments);
-// };
+window.ga = function() {
+  console.log(arguments);
+};

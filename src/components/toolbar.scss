@@ -2,11 +2,21 @@
   background: #000;
   color: #fff;
   cursor: auto;
-  // padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 2px;
   z-index: 2;
   position: absolute;
-  // transition: all 0.2s ease;
+  transition: all 0.1s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -5px;
+    border-top: 5px solid #000;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+  }
 
   .url-input {
     box-sizing: border-box;
@@ -18,8 +28,8 @@
 
     &:focus {
       outline: none;
-      border-color: #50FF4D;
-      background-color: #eee;
+      // border-color: #50FF4D;
+      // background-color: #eee;
     }
   }
 }
@@ -27,34 +37,55 @@
 .RichEditor-controls {
   font-family: 'Helvetica', sans-serif;
   font-size: 14px;
-  // margin-bottom: 5px;
-  user-select: none;
   display: inline-block;
-  padding: 10px 15px;
   border-right: 1px solid #555;
-  // border-right: 1px solid #222;
-  // margin-left: 10px;
+
+  &.RichEditor-show-link-input {
+    padding: 4px 10px;
+  }
 
   &:last-child {
     border-right: none;
   }
-}
 
-a.RichEditor-linkButton {
-  color: #fff;
+  .RichEditor-linkButton {
+    color: #fff;
+    text-decoration: none;
+  }
 }
 
 .RichEditor-styleButton {
   color: #fff;
   cursor: pointer;
-  margin-right: 16px;
-  padding: 2px 0;
+  display: inline-block;
+  padding: 4px 10px;
+
+  &:hover {
+    color: yellow;
+  }
 
   &:last-child {
     margin-right: 0;
+  }
+
+  &.RichEditor-styleButton-bold {
+    font-weight: bold;
+  }
+  &.RichEditor-styleButton-italic {
+    font-style: italic;
+  }
+  &.RichEditor-styleButton-underline {
+    text-decoration: underline;
+  }
+  &.RichEditor-styleButton-strikethrough {
+    text-decoration: line-through;
   }
 }
 
 .RichEditor-activeButton {
   color: #50FF4D;
+
+  &:hover {
+    color: #08c;
+  }
 }

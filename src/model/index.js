@@ -85,3 +85,10 @@ export const updateDataOfBlock = (editorState, block, newData) => {
   return EditorState.push(editorState, newContentState, 'change-block-type');
   // return editorState;
 };
+
+const BEFORE = -1;
+const AFTER = 1;
+
+export const addNewBlockAt = (editorState, pivotBlockKey, newBlockType=Block.UNSTYLED, dir=AFTER) => {
+
+};

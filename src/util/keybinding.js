@@ -2,21 +2,15 @@ import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
 
 export default (e) => {
-  if(hasCommandModifier(e) && e.keyCode == 83) {
-    return 'editor-save';
-  }
   if (e.altKey === true) {
     if (e.shiftKey === true) {
-      switch (e.keyCode) {
+      switch (e.which) {
         // Alt + Shift + A
         case 65: return 'add-new-block';
-        // Alt + Shift + D
-        case 68: return 'load-saved-data';
-        case 69: return 'toggle-edit-mode';
         default: return getDefaultKeyBinding(e);
       }
     }
-    switch(e.keyCode) {
+    switch(e.which) {
       // 1
       case 49: return 'changetype:ordered-list-item';
       // @
@@ -37,9 +31,7 @@ export default (e) => {
       // >
       case 190: return 'changetype:unstyled';
       // "
-      case 222: return 'changetype:blockquote';
-      
-      default: return getDefaultKeyBinding(e);
+      case 222: return 'changetype:blockquote';      
     }
   }
   return getDefaultKeyBinding(e);
