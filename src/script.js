@@ -182,6 +182,9 @@ ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
-window.ga = function() {
-  console.log(arguments);
-};
+
+if (!__PROD__) {
+  window.ga = function() {
+    console.log(arguments);
+  };
+}
