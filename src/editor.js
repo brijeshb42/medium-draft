@@ -190,8 +190,8 @@ class MyEditor extends React.Component {
       return true;
     }
     if (!e.altKey && !e.metaKey && !e.ctrlKey) {
-      // const currentBlock = getCurrentBlock(this.props.editorState);
-      // const blockType = currentBlock.getType();
+      const currentBlock = getCurrentBlock(this.props.editorState);
+      const blockType = currentBlock.getType();
       // const selection = this.props.editorState.getSelection();
       if (currentBlock.getLength() > 0 /* && currentBlock.getLength() === selection.getStartOffset() */) {
         // this.onChange(addNewBlockAt(this.props.editorState, selection.getStartKey()));
