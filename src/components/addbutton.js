@@ -1,6 +1,7 @@
 import './addbutton.scss';
 
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { getSelectedBlockNode } from 'util/index';
 
@@ -10,6 +11,7 @@ export default class AddButton extends React.Component {
     this.state = {
       style: {},
       visible: false,
+      isOpen: false,
     };
     this.node = null;
     this.blockKey = '';
@@ -18,6 +20,7 @@ export default class AddButton extends React.Component {
 
     this.findNode = this.findNode.bind(this);
     this.hideBlock = this.hideBlock.bind(this);
+    this.openToolbar = this.openToolbar.bind(this);
   }
 
   // To show + button only when text length == 0
@@ -92,9 +95,16 @@ export default class AddButton extends React.Component {
   hideBlock() {
     if (this.state.visible) {
       this.setState({
-        visible: false
+        visible: false,
+        isOpen: false,
       });
     }
+  }
+
+  openToolbar(e) {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    }, this.props.focus);
   }
 
   findNode() {
@@ -106,7 +116,8 @@ export default class AddButton extends React.Component {
     if (!node) {
       // console.log('no node');
       this.setState({
-        visible: false
+        visible: false,
+        isOpen: false,
       });
       return;
     }
@@ -115,14 +126,31 @@ export default class AddButton extends React.Component {
     this.setState({
       visible: true,
       style: {
-        top: node.offsetTop
+        top: node.offsetTop - 3
       }
     });
   }
 
   render() {
     if (this.state.visible) {
-      return <button onClick={this.props.addMedia} className="add-button" style={this.state.style}>+</button>;
+      const btns = [];
+      btns.push(<button key="img" className="md-sb-button md-sb-img-button">I</button>);
+      btns.push(<button key="embed" className="md-sb-button md-sb-img-button">E</button>);
+      return (
+        <div className="md-side-toolbar" style={this.state.style}>
+          <button onClick={this.openToolbar} className={'md-sb-button add-button' + (this.state.isOpen ? ' open-button' : '')}>+</button>
+          {this.state.isOpen ? (
+            <ReactCSSTransitionGroup
+              transitionName="example"
+              transitionEnterTimeout={200}
+              transitionLeaveTimeout={100}
+              transitionAppear={true}
+              transitionAppearTimeout={100}>
+              {btns}
+            </ReactCSSTransitionGroup>
+          ) : null}
+        </div>
+      );
     }
     return null;
   }

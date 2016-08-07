@@ -15,11 +15,12 @@
   "license": "MIT",
   "dependencies": {
     "draft-js": "",
-    "immutable": "^3.8.1"
+    "immutable": "^3.8.1",
+    "react-addons-css-transition-group": "^15.2.1"
   },
   "peerDependencies": {
-    "react": "^15.2.0",
-    "react-dom": "^15.2.0"
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

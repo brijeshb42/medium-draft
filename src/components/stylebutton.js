@@ -16,7 +16,7 @@ export default class StyleButton extends React.Component {
     }
     className += ' RichEditor-styleButton-' + this.props.style.toLowerCase();
     return (
-      <span className={className} onMouseDown={this.onToggle}>
+      <span className={className + ' hint--top'} onMouseDown={this.onToggle} aria-label={this.props.description}>
         {this.props.icon ? <i className={"fa fa-" + this.props.icon} /> : this.props.label}
       </span>
     );

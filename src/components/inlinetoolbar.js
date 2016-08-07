@@ -25,6 +25,7 @@ export default (props) => {
             active={currentStyle.has(type.style)}
             onToggle={props.onToggle}
             style={type.style}
+            description={type.description}
           />
         );
       })}

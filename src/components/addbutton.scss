@@ -1,6 +1,15 @@
-$add-btn-width: 22px;
+$add-btn-width: 30px;
 
-.add-button {
+
+.md-side-toolbar {
+    position: absolute;    
+    z-index: 1;
+    left: -35px;
+    top: 0;
+    transition: all 0.2s ease;
+}
+
+.md-sb-button {
     background-color: #EAEAEA;
     border: none;
     // border: 1px solid #A0A0A0;
@@ -9,16 +18,67 @@ $add-btn-width: 22px;
     height: $add-btn-width;
     width: $add-btn-width;
     border-radius: $add-btn-width/2;
-    position: absolute;
-    z-index: 1;
-    left: -27px;
     font-weight: bold;
+    font-size: 20px;
+    margin-right: 2px;
     text-align: center;
     transition: all 0.2s ease;
+
+    // &.md-sb-img-button {
+    //     width: inherit;
+    // }
 
     &:focus {
         outline: none;
         border-color: #08c;
         color: #08c;
     }
+
+    &:hover {
+        color: green;
+    }
+}
+
+.add-button {
+
+    &.open-button {
+        transform: rotate(45deg);
+    }
+}
+
+.example-appear {
+  // opacity: 0.01;
+  // transform: translateX(-25px) scale(0.1);
+  transform: translate3d(-38px, 0px, 0px);
+  opacity: 0;
+}
+
+.example-appear.example-appear-active {
+  // opacity: 1;
+  // transform: translate(0px, 0px) scale(1, 1) rotate(135deg);
+  // transform: translateX(0px), scale(1);
+  transform: translate3d(0px, 0px, 0px);
+  opacity: 1;
+  transition: all .5s ease-in;
+}
+
+.example-enter {
+  // opacity: 0.01;
+  transform: translate3d(-38px, 0px, 0px);
+  opacity: 0;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transform: translate3d(0px, 0px, 0px);
+  transition: all 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }

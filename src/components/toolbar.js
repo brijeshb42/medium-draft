@@ -23,6 +23,7 @@ export default class Toolbar extends React.Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleLinkInput = this.handleLinkInput.bind(this);
+    this.hideLinkInput = this.hideLinkInput.bind(this)
   }
 
   componentWillReceiveProps(newProps) {
@@ -65,7 +66,7 @@ export default class Toolbar extends React.Component {
     * Main logic for setting the toolbar position.
     */
     toolbarNode.style.top = (selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5) + 'px';
-    toolbarNode.style.width = toolbarBoundary.width + 'px';
+    // toolbarNode.style.width = toolbarBoundary.width + 'px';
     const widthDiff = selectionBoundary.width - toolbarBoundary.width;
     if (widthDiff >= 0) {
       toolbarNode.style.left = (widthDiff / 2) + 'px';
@@ -85,12 +86,7 @@ export default class Toolbar extends React.Component {
         urlInputValue: '',
       }, () => this.props.focus());
     } else if (e.which === 27) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.setState({
-        showURLInput: false,
-        urlInputValue: '',
-      }, () => this.props.focus());
+      this.hideLinkInput(e);
     }
   }
 
@@ -111,9 +107,9 @@ export default class Toolbar extends React.Component {
       this.props.focus();
       return;
     }
-    // const toolbarNode = ReactDOM.findDOMNode(this);
-    // const toolbarBoundary = toolbarNode.getBoundingClientRect();
-    // toolbarNode.style.width = toolbarBoundary.width + 'px';
+    const toolbarNode = ReactDOM.findDOMNode(this);
+    const toolbarBoundary = toolbarNode.getBoundingClientRect();
+    toolbarNode.style.width = toolbarBoundary.width + 'px';
     const currentBlock = getCurrentBlock(editorState);
     let selectedEntity = '';
     let linkFound = false;
@@ -153,17 +149,27 @@ export default class Toolbar extends React.Component {
     }
   }
 
+  hideLinkInput(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      showURLInput: false,
+      urlInputValue: '',
+    }, () => this.props.focus());
+  }
+
   render() {
     const { editorState, editorEnabled } = this.props;
     const { showURLInput, urlInputValue } = this.state;
-    const style = { display: 'block' };
+    let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
-      style.display = 'none';
+      isOpen = false;
     }
     if (showURLInput) {
       return (
-        <div className="editor-toolbar" style={style}>
+        <div className={'editor-toolbar' + (isOpen ? ' editor-toolbar--isopen' : '') + ' editor-toolbar--linkinput' }>
           <div className="RichEditor-controls RichEditor-show-link-input" style={{display: 'block'}}>
+            <span className="url-input-close" onMouseDown={this.hideLinkInput}>&times;</span>
             <input
               ref="urlinput"
               type="text"
@@ -177,7 +183,7 @@ export default class Toolbar extends React.Component {
       );
     }
     return (
-      <div className="editor-toolbar" style={style}>
+      <div className={'editor-toolbar' + (isOpen ? ' editor-toolbar--isopen' : '') }>
         <BlockToolbar
           editorState={editorState}
           onToggle={this.props.toggleBlockType}
@@ -187,7 +193,7 @@ export default class Toolbar extends React.Component {
           onToggle={this.props.toggleInlineStyle}
           buttons={this.props.inlineButtons} />
         <div className="RichEditor-controls">
-          <a className="RichEditor-styleButton RichEditor-linkButton" href="#" onClick={this.handleLinkInput}>
+          <a className="RichEditor-styleButton RichEditor-linkButton hint--top" href="#" onClick={this.handleLinkInput} aria-label="Add a link">
             #
           </a>
         </div>
@@ -201,25 +207,35 @@ export const BLOCK_BUTTONS = [
     label: 'H3',
     style: 'header-three',
     icon: 'header',
+    description: 'Heading 3',
   },
-  {
-    label: 'P',
-    style: 'unstyled'
-  },
+  // {
+  //   label: 'P',
+  //   style: 'unstyled',
+  //   description: 'Paragraph',
+  // },
   {
     label: 'Q',
     style: 'blockquote',
     icon: 'quote-right',
+    description: 'Blockquote'
   },
   {
     label: 'UL',
     style: 'unordered-list-item',
     icon: 'list-ul',
+    description: 'Unordered List',
   },
   {
     label: 'OL',
     style: 'ordered-list-item',
     icon: 'list-ol',
+    description: 'Ordered List',
+  },
+  {
+    label: '✓',
+    style: 'todo',
+    description: 'Todo List',
   }
 ];
 
@@ -228,30 +244,36 @@ export const INLINE_BUTTONS = [
     label: 'B',
     style: 'BOLD',
     icon: 'bold',
+    description: 'Bold',
   },
   {
     label: 'I',
     style: 'ITALIC',
     icon: 'italic',
+    description: 'Italic',
   },
   {
     label: 'U',
     style: 'UNDERLINE',
     icon: 'underline',
+    description: 'Underline',
   },
-  {
-    label: 'S',
-    style: 'STRIKETHROUGH',
-    icon: 'strikethrough'
-  },
+  // {
+  //   label: 'S',
+  //   style: 'STRIKETHROUGH',
+  //   icon: 'strikethrough',
+  //   description: 'Strikethrough',
+  // },
   {
     label: 'Hi',
     style: 'HIGHLIGHT',
+    description: 'Highlight selection',
   },
-  {
-    label: 'Code',
-    style: 'CODE',
-  },
+  // {
+  //   label: 'Code',
+  //   style: 'CODE',
+  //   description: 'Inline Code',
+  // },
 ];
 
 Toolbar.defaultProps = {

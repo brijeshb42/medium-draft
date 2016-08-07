@@ -258,7 +258,10 @@ class MyEditor extends React.Component {
             keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
             spellCheck={false} />
-          { editorEnabled ? <AddButton editorState={editorState} addMedia={this.addMedia} /> : null }
+          {editorEnabled ? <AddButton
+            editorState={editorState}
+            addMedia={this.addMedia}
+            focus={this.focus} /> : null}
           <Toolbar
             ref="toolbar"
             editorNode={this.refs.editor}

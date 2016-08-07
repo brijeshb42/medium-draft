@@ -1,11 +1,54 @@
+@keyframes pop-upwards{
+  0% {
+    transform:matrix(.97,0,0,1,0,12);
+    opacity:0;
+  }
+  20% {
+    transform:matrix(.99,0,0,1,0,2);
+    opacity:.7;
+  }
+  40% {
+    transform:matrix(1,0,0,1,0,-1);
+    opacity:1;
+  }
+  70% {
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1;
+    }
+  100% {
+    transform:matrix(1,0,0,1,0,0);
+    opacity:1;
+  }
+}
+
+@keyframes pop-downwards{0%{transform:matrix(.97,0,0,1,0,-12);opacity:0}20%{transform:matrix(.99,0,0,1,0,-2);opacity:.7}40%{transform:matrix(1,0,0,1,0,1);opacity:1}70%{transform:matrix(1,0,0,1,0,0);opacity:1}100%{transform:matrix(1,0,0,1,0,0);opacity:1}}
+
+
+$toolbar-color: #2b2b2b;
+
+
 .editor-toolbar {
-  background: #000;
+  background: $toolbar-color;
   color: #fff;
   cursor: auto;
-  border-radius: 2px;
+  border-radius: 5px;
   z-index: 2;
   position: absolute;
   transition: all 0.1s ease;
+  visibility: hidden;
+
+  // transition: top 75ms ease-out,left 75ms ease-out;
+
+  &.editor-toolbar--isopen {
+    visibility: visible;
+    transition: top 75ms ease-out,left 75ms ease-out;
+    animation: pop-upwards 180ms forwards linear;
+  }
+
+  &.editor-toolbar--linkinput {
+    // display:block;
+    animation: pop-downwards 200ms forwards linear;
+  }
 
   &::after {
     content: "";
@@ -24,13 +67,25 @@
     display: block;
     width: 100%;
     padding: 5px;
-    border: 1px solid #08c;
+    border: none;
+    background: $toolbar-color;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 100;
 
     &:focus {
       outline: none;
       // border-color: #50FF4D;
       // background-color: #eee;
     }
+  }
+
+  .url-input-close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 20px;
+    cursor: pointer;
   }
 }
 
@@ -39,9 +94,10 @@
   font-size: 14px;
   display: inline-block;
   border-right: 1px solid #555;
+  position: relative;
 
   &.RichEditor-show-link-input {
-    padding: 4px 10px;
+    padding: 6px 10px;
   }
 
   &:last-child {
@@ -58,7 +114,7 @@
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  padding: 4px 10px;
+  padding: 6px 10px;
 
   &:hover {
     color: yellow;

@@ -28,6 +28,7 @@ export default (props) => {
             active={type.style === blockType}
             onToggle={props.onToggle}
             style={type.style}
+            description={type.description}
           />
         );
         })}
