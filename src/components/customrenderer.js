@@ -5,7 +5,7 @@ import TodoBlock from './blocks/todo';
 
 import { Block } from 'util/constants';
 
-export default (onChangeData) => (contentBlock) => {
+export default (onChange, getEditorState) => (contentBlock) => {
   // console.log(editorState, onChange);
   const type = contentBlock.getType();
   switch (type) {
@@ -22,7 +22,8 @@ export default (onChangeData) => (contentBlock) => {
     case Block.TODO: return {
       component: TodoBlock,
       props: {
-        onChangeData,
+        onChange,
+        getEditorState,
       },
     };
     default: return null;

@@ -28,7 +28,7 @@ import RenderMap from 'model/rendermap';
 import keyBindingFn from 'util/keybinding';
 import { Block, Inline, Entity as E } from 'util/constants';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
-import { getCurrentBlock, addNewBlock, updateDataOfBlock, resetBlockWithType } from 'model';
+import { getCurrentBlock, addNewBlock, resetBlockWithType } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
 const customStyleMap = {
@@ -71,6 +71,8 @@ class MyEditor extends React.Component {
       this.props.onChange(editorState);
     };
 
+    this.getEditorState = () => this.props.editorState;
+
     this.onTab = this.onTab.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
@@ -80,8 +82,7 @@ class MyEditor extends React.Component {
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
     this.addMedia = this.addMedia.bind(this);
-    this.onChangeData = this.onChangeData.bind(this);
-    this.blockRendererFn = rendererFn(this.onChangeData);
+    this.blockRendererFn = rendererFn(this.onChange, this.getEditorState);
   }
 
   componentDidMount() {
@@ -110,10 +111,6 @@ class MyEditor extends React.Component {
       entityKey = Entity.create(E.LINK, 'MUTABLE', { url: newUrl });
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
-  }
-
-  onChangeData(block, newData) {
-    this.onChange(updateDataOfBlock(this.props.editorState, block, newData));
   }
 
   addMedia() {
@@ -205,6 +202,7 @@ class MyEditor extends React.Component {
         case Block.BLOCKQUOTE_CAPTION:
         case Block.CAPTION:
         case Block.TODO:
+        // case Block.CODE:
         case Block.H2:
         case Block.H3:
         case Block.H1:
@@ -285,10 +283,12 @@ MyEditor.defaultProps = {
   beforeInput,
   keyBindingFn,
   customStyleMap,
+  editorEnabled: true,
   stringToTypeMap: StringToTypeMap,
   blockRenderMap: RenderMap,
   blockButtons: BLOCK_BUTTONS,
   inlineButtons: INLINE_BUTTONS,
+  placeholder: 'Write your story...'
 };
 
 

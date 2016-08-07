@@ -1,5 +1,4 @@
 {
   "presets": ["es2015", "react"],
-  "ignore": ["*.scss", "*.css"],
-  "plugins": [["resolver", { "resolveDirs": ["src"] }]]
+  "ignore": ["*.scss", "*.css"]
 }

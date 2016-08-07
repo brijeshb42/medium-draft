@@ -15,11 +15,11 @@ export default class TodoBlock extends React.Component {
 
   updateData(e) {
     const { block, blockProps } = this.props;
-    const { onChangeData } = blockProps;
+    const { onChange, getEditorState } = blockProps;
     const data = block.getData();
     const checked = (data.has('checked') && data.get('checked') === true);
     const newData = data.set('checked', !checked);
-    onChangeData(block, newData);
+    onChange(updateDataOfBlock(getEditorState(), block, newData));
   }
 
   render() {
