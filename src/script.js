@@ -60,12 +60,12 @@ class App extends React.Component {
     this.keyBinding = this.keyBinding.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.setState({
-  //     placeholder: 'Loading content...',
-  //   });
-  //   setTimeout(this.fetchData, 1000);
-  // }
+  componentDidMount() {
+    this.setState({
+      placeholder: 'Loading content...',
+    });
+    setTimeout(this.fetchData, 1000);
+  }
 
   keyBinding(e) {
     if(hasCommandModifier(e) && e.which == 83 /* Key S */) {
