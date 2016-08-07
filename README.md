@@ -46,6 +46,64 @@ These commands are not a part of the core editor but has been implemeted in the 
 *   `[]` - `todo`.
 *   `==` - `unstyled`.
 
+### Usage
+
+`medium-draft` sits on top of `draft-js` with some built in functionalities and blocks. Its API is almost the same as that of `draft-js`. You can take a look at [the demo editor's code](https://github.com/brijeshb42/medium-draft/tree/master/src/example.js) to see the implemetation.
+
+At the minimum, you need to provide `editorState` and `onChange` props, the same as `draft-js`.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  EditorState,
+  CompositeDecorator,
+} from 'draft-js';
+
+import {
+  Editor,
+  Link,
+  findLinkEntities,
+} from './index';
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      },
+    ]);
+
+    this.state = {
+      editorState: EditorState.createEmpty(decorator),
+    };
+
+    this.onChange = (editorState) => {
+      this.setState({ editorState });
+    };
+  }
+
+  render() {
+    const { editorState } = this.state;
+    return (
+      <Editor
+        ref="editor"
+        editorState={editorState}
+        onChange={this.onChange} />
+    );
+  }
+};
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('app')
+);
+```
+
 ### Issues
 
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
