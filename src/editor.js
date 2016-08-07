@@ -240,7 +240,6 @@ class MyEditor extends React.Component {
         <div className="RichEditor-editor">
           <Editor
             ref="editor"
-            {...this.props}
             editorState={editorState}
             blockRendererFn={this.blockRendererFn}
             blockStyleFn={getBlockStyle}
