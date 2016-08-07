@@ -37,7 +37,7 @@ These commands are not a part of the core editor but has been implemeted in the 
 ##### Special characters while typing: While typing in an empty block, if the content matches one of the following, that particular block's type and look will be changed to the corresponding block specified below
 
 *   `--` - If current block is `blockquote`, it will be changed to `block-quote-caption`, else `caption`.
-*   `''` or `""` or `><SPACE>` - `blockquote`.
+*   `''` or `""` or `> ` - `blockquote`.
 *   `*.` `(An asterisk and a period)` - `unordered-list-item`.
 *   `*<SPACE>` `(An asterisk and a space)` - `unordered-list-item`.
 *   `-<SPACE>` `(A hyphen and a space)` - `unordered-list-item`.
