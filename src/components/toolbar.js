@@ -66,7 +66,7 @@ export default class Toolbar extends React.Component {
     * Main logic for setting the toolbar position.
     */
     toolbarNode.style.top = (selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5) + 'px';
-    // toolbarNode.style.width = toolbarBoundary.width + 'px';
+    toolbarNode.style.width = toolbarBoundary.width + 'px';
     const widthDiff = selectionBoundary.width - toolbarBoundary.width;
     if (widthDiff >= 0) {
       toolbarNode.style.left = (widthDiff / 2) + 'px';

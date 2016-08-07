@@ -2,6 +2,8 @@
 
 A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 
+> Current development is using the latest master branch of `draft-js` for using block level metadata support to add implement Todo lists inside the editor.
+
 ### Fetures
 
 - Focus on keyboard shortucts and auto transform of text blocks.
@@ -23,11 +25,14 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
     *   <kbd>#</kbd> - Toggle Header-three.
     *   <kbd><</kbd> - Toggle Caption block.
     *   <kbd>></kbd> - Toggle unstyled or paragraph block.
+    *   <kbd>H</kbd> - Highlight selection.
 
 ##### Editor level commands
 
+These commands are not a part of the core editor but has been implemeted in the example code that uses the `medium-draft` editor.
+
 *   <kbd>Command/CTRL</kbd> + <kbd>S</kbd> - Save current data to `localstorage`.
-*   <kbd>Alt + Shift</kbd> + <kbd>D</kbd> - Load previously saved data from `localstorage`.
+*   <kbd>Alt + Shift</kbd> + <kbd>L</kbd> - Load previously saved data from `localstorage`.
 
 ##### Special characters while typing: While typing in an empty block, if the content matches one of the following, that particular block's type and look will be changed to the corresponding block specified below
 
@@ -44,6 +49,13 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 ### Issues
 
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
+
+### Developer
+
+- Clone this repo `git clone https://github.com/brijeshb42/medium-draft.git`.
+- Install node packages `npm install`.
+- Start local demo `npm run build`. This will start a local server on port `8080`.
+- Build using `npm run build`.
 
 #### LICENSE
 
