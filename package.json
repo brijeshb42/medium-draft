@@ -14,7 +14,7 @@
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "",
+    "draft-js": "^0.8.0",
     "immutable": "^3.8.1",
     "react-addons-css-transition-group": "^15.2.1"
   },

@@ -41,8 +41,8 @@ $toolbar-color: #2b2b2b;
 
   &.editor-toolbar--isopen {
     visibility: visible;
-    transition: top 75ms ease-out,left 75ms ease-out;
-    animation: pop-upwards 180ms forwards linear;
+    // transition: top 75ms ease-out,left 75ms ease-out;
+    // animation: pop-upwards 180ms forwards linear;
   }
 
   &.editor-toolbar--linkinput {

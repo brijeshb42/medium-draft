@@ -1,3 +1,8 @@
+import 'draft-js/dist/Draft.css';
+// import 'hint.css/src/hint.scss';
+import './index.scss';
+import './components/blocks/text.scss';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {

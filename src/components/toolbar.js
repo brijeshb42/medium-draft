@@ -73,6 +73,16 @@ export default class Toolbar extends React.Component {
     } else {
       const left = (selectionBoundary.left - parentBoundary.left);
       toolbarNode.style.left = (left + widthDiff / 2) + 'px';
+      // toolbarNode.style.width = toolbarBoundary.width + 'px';
+      // if (left + toolbarBoundary.width > parentBoundary.width) {
+        // toolbarNode.style.right = '0px';
+        // toolbarNode.style.left = '';
+        // toolbarNode.style.width = toolbarBoundary.width + 'px';
+      // }
+      // else {
+      //   toolbarNode.style.left = (left + widthDiff / 2) + 'px';
+      //   toolbarNode.style.right = '';
+      // }
     }
   }
 
@@ -107,9 +117,9 @@ export default class Toolbar extends React.Component {
       this.props.focus();
       return;
     }
-    const toolbarNode = ReactDOM.findDOMNode(this);
-    const toolbarBoundary = toolbarNode.getBoundingClientRect();
-    toolbarNode.style.width = toolbarBoundary.width + 'px';
+    // const toolbarNode = ReactDOM.findDOMNode(this);
+    // const toolbarBoundary = toolbarNode.getBoundingClientRect();
+    // toolbarNode.style.width = toolbarBoundary.width + 'px';
     const currentBlock = getCurrentBlock(editorState);
     let selectedEntity = '';
     let linkFound = false;
@@ -205,9 +215,9 @@ export default class Toolbar extends React.Component {
 export const BLOCK_BUTTONS = [
   {
     label: 'H3',
-    style: 'header-two',
+    style: 'header-three',
     icon: 'header',
-    description: 'Heading 2',
+    description: 'Heading 3',
   },
   // {
   //   label: 'P',
