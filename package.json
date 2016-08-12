@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist/static/",
-    "dev": "NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
+    "dev": "mkdir -p dist && cp index.html dist/index.html && NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
     "build": "NODE_ENV=production webpack",
     "babel": "NODE_ENV=production babel ./src --out-dir lib --copy-files --ignore 'script.js'"
   },
