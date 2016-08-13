@@ -112,7 +112,7 @@ ReactDOM.render(
 
 - Clone this repo `git clone https://github.com/brijeshb42/medium-draft.git`.
 - Install node packages `npm install`.
-- Start local demo `npm run build`. This will start a local server on port `8080`.
+- Start local demo `npm run dev`. This will start a local server on port `8080`.
 - Build using `npm run build`.
 
 #### LICENSE
