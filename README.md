@@ -29,7 +29,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 ##### Editor level commands
 
-These commands are not a part of the core editor but has been implemeted in the example code that uses the `medium-draft` editor.
+These commands are not a part of the core editor but has been implemented in the example code that uses the `medium-draft` editor.
 
 *   <kbd>Command/CTRL</kbd> + <kbd>S</kbd> - Save current data to `localstorage`.
 *   <kbd>Alt + Shift</kbd> + <kbd>L</kbd> - Load previously saved data from `localstorage`.
