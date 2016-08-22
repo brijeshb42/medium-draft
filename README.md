@@ -6,7 +6,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 ### Features
 
-- Focus on keyboard shortucts and auto transform of text blocks.
+- Focus on keyboard shortcuts and auto transform of text blocks.
 - Image addition via URL.
 - Minimize mouse usage
 - Autolists
