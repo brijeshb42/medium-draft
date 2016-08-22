@@ -4,7 +4,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 > Current development is using the latest master branch of `draft-js` for using block level metadata support to implement Todo lists inside the editor.
 
-### Fetures
+### Features
 
 - Focus on keyboard shortucts and auto transform of text blocks.
 - Image addition via URL.
