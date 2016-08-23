@@ -59,4 +59,4 @@ node_modules
 
 dist/
 hash.json
-lib
+lib/

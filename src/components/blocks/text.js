@@ -1,4 +1,4 @@
-import './text.scss';
+// import './text.scss';
 
 import React, {Component, PropTypes} from "react";
 import { EditorBlock } from 'draft-js';

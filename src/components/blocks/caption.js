@@ -1,4 +1,4 @@
-import './caption.scss';
+// import './caption.scss';
 
 import React from "react";
 import { EditorBlock } from 'draft-js';

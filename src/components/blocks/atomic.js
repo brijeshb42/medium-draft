@@ -1,4 +1,4 @@
-import './atomic.scss';
+// import './atomic.scss';
 
 import React from 'react';
 import { Entity } from 'draft-js';

@@ -3,7 +3,7 @@ import CaptionComponent from './blocks/caption';
 import AtomicBlock from './blocks/atomic';
 import TodoBlock from './blocks/todo';
 
-import { Block } from 'util/constants';
+import { Block } from '../util/constants';
 
 export default (onChange, getEditorState) => (contentBlock) => {
   // console.log(editorState, onChange);

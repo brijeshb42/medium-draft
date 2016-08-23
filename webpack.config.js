@@ -81,7 +81,7 @@ function getEntry(env) {
   // entries.push('babel-polyfill');
   entries.push('./index');
   entry['medium-draft'] = entries;
-  entry.script = './example';
+  entry.example = './example';
   return entry;
 }
 

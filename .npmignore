@@ -1,7 +1,7 @@
 dist/
 node_modules/
-.babelrc/
-.gitignore/
+.babelrc
+.gitignore
 hash.json
 webpack.*.js
 lib/

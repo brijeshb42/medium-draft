@@ -1,6 +1,6 @@
 import { RichUtils, EditorState, ContentBlock, Modifier } from 'draft-js'
 
-import { Block } from 'util/constants';
+import { Block } from '../util/constants';
 
 export const getDefaultBlockData = (blockType, initialData={}) => {
   switch(blockType) {

@@ -1,4 +1,4 @@
-import './toolbar.scss';
+// import './toolbar.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,9 +7,9 @@ import { Entity } from 'draft-js';
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
-import { getSelection, getSelectionRect } from 'util/index';
-import { getCurrentBlock } from 'model/index';
-import { Entity as CEntity } from 'util/constants';
+import { getSelection, getSelectionRect } from '../util/index';
+import { getCurrentBlock } from '../model/index';
+import { Entity as CEntity } from '../util/constants';
 
 export default class Toolbar extends React.Component {
 

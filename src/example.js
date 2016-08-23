@@ -1,7 +1,13 @@
 import 'draft-js/dist/Draft.css';
-// import 'hint.css/src/hint.scss';
+import 'hint.css/src/hint.scss';
 import './index.scss';
+import './components/addbutton.scss';
+import './components/toolbar.scss';
 import './components/blocks/text.scss';
+import './components/blocks/atomic.scss';
+import './components/blocks/blockquotecaption.scss';
+import './components/blocks/caption.scss';
+import './components/blocks/todo.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
