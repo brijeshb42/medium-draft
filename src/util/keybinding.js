@@ -1,6 +1,11 @@
 import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
 
+
+/*
+Emits various key commands to be used by `handleKeyCommand` in `Editor` based
+on various key combos.
+*/
 export default (e) => {
   if (e.altKey === true) {
     if (e.shiftKey === true) {

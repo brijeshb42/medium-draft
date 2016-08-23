@@ -26,6 +26,9 @@ import beforeInput, { StringToTypeMap } from 'util/beforeinput';
 import { getCurrentBlock, addNewBlock, resetBlockWithType } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
 
+/*
+Custom style map for custom entities like Hihglight.
+*/
 const customStyleMap = {
    [Inline.HIGHLIGHT]: {
       backgroundColor: 'yellow',
@@ -44,6 +47,10 @@ const customStyleMap = {
    }
 };
 
+
+/*
+Get custom classnames for each of the different block types supported.
+*/
 function getBlockStyle(block) {
   switch (block.getType()) {
     case Block.BLOCKQUOTE: return 'block block-quote RichEditor-blockquote';
@@ -56,6 +63,11 @@ function getBlockStyle(block) {
   }
 }
 
+/*
+A wrapper over `draft-js`'s default **Editor*component which provides
+some built-in customisations like custom blocks (todo, caption, etc) and
+some key handling for ease of use so that users' mouse usage is minimum.
+*/
 class MyEditor extends React.Component {
 
   constructor(props) {
@@ -84,6 +96,10 @@ class MyEditor extends React.Component {
     this.focus();
   }
 
+
+  /*
+  Implemented to provide nesting of upto 2 levels in ULs or OLs.
+  */
   onTab(e) {
     const { editorState } = this.props;
     const newEditorState = RichUtils.onTab(e, editorState, 2);
@@ -92,6 +108,10 @@ class MyEditor extends React.Component {
     }
   };
 
+
+  /*
+  Adds a hyperlink on the selected text with some basic checks.
+  */
   setLink(url) {
     const { editorState } = this.props;
     const selection = editorState.getSelection();
@@ -123,12 +143,31 @@ class MyEditor extends React.Component {
     );
   }
 
+
+  /*
+  Implemented to just pass it on to the parent component. Will add some
+  customizations later or as when needed.
+  */
   handleDroppedFiles(selection, files) {
     if (this.props.handleDroppedFiles) {
       this.props.handleDroppedFiles(selection, files);
     }
   }
 
+  /*
+  Handles custom commands based on various key combinations. First checks
+  for some built-in commands. If found, that command's function is apllied and returns.
+  If not found, it checks whether parent component handles that command or not.
+  Some of the internal commands are:
+
+  - showlinkinput -> Opens up the link input tooltip if some text is selected.
+  - add-new-block -> Adds a new block at the current cursor position.
+  - changetype:block-type -> If the command starts with `changetype:` and
+    then succeeded by the block type, the current block will be converted to that particular type.
+  - toggleinline:inlint-type -> If the command starts with `toggleinline:` and
+    then succeeded by the inline type, the current selection's inline type will be
+    togglled.
+  */
   handleKeyCommand(command) {
     // console.log(command);
     if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
@@ -172,10 +211,20 @@ class MyEditor extends React.Component {
     return false;
   }
 
+  /*
+  This command is responsible for emmitting various commands based on various key combos.
+  */
   handleBeforeInput(str) {
     return this.props.beforeInput(this.props.editorState, str, this.onChange, this.props.stringToTypeMap);
   }
 
+  /*
+  By default, it handles return key for inserting soft breaks (BRs in HTML) and
+  also instead of inserting a new empty block after current empty block, it first check
+  whether the current block is of a type other than `unstyled`. If yes, current block is
+  simply converted to an unstyled empty block. If RETURN is pressed on an unstyled block
+  default behavior is executed.
+  */
   handleReturn(e) {
     if (e.shiftKey) {
       this.onChange(RichUtils.insertSoftNewline(this.props.editorState));
@@ -185,7 +234,7 @@ class MyEditor extends React.Component {
       const currentBlock = getCurrentBlock(this.props.editorState);
       const blockType = currentBlock.getType();
       // const selection = this.props.editorState.getSelection();
-      if (currentBlock.getLength() > 0 /* && currentBlock.getLength() === selection.getStartOffset() */) {
+      if (currentBlock.getLength() > 0 /*&& currentBlock.getLength() === selection.getStartOffset() */) {
         // this.onChange(addNewBlockAt(this.props.editorState, selection.getStartKey()));
         // return true;
         return false;
@@ -210,6 +259,11 @@ class MyEditor extends React.Component {
     return false;
   }
 
+
+  /*
+  The function documented in `draft-js` to be used to toggle block types (mainly
+  for some key combinations handled by default inside draft-js).
+  */
   _toggleBlockType(blockType) {
     this.onChange(
       RichUtils.toggleBlockType(
@@ -219,6 +273,10 @@ class MyEditor extends React.Component {
     );
   }
 
+  /*
+  The function documented in `draft-js` to be used to toggle inline styles of selection (mainly
+  for some key combinations handled by default inside draft-js).
+  */
   _toggleInlineStyle(inlineStyle) {
     this.onChange(
       RichUtils.toggleInlineStyle(
@@ -228,6 +286,10 @@ class MyEditor extends React.Component {
     );
   }
 
+
+  /*
+  Renders the `Editor`, `Toolbar` and the side `AddButton`.
+  */
   render() {
     const { editorState, editorEnabled } = this.props;
     return (

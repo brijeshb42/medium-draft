@@ -1,3 +1,7 @@
+/*
+Some of the constants which are used throughout this project instead of directly using the string.
+*/
+
 export const Block = {
   UNSTYLED: 'unstyled',
   OL: 'ordered-list-item',

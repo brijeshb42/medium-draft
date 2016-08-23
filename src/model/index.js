@@ -2,6 +2,10 @@ import { RichUtils, EditorState, ContentBlock, Modifier } from 'draft-js'
 
 import { Block } from '../util/constants';
 
+
+/*
+Returns default block-level metadata for various block type. Empty object otherwise.
+*/
 export const getDefaultBlockData = (blockType, initialData={}) => {
   switch(blockType) {
     case Block.TODO: return { checked: false };
@@ -10,6 +14,9 @@ export const getDefaultBlockData = (blockType, initialData={}) => {
 };
 
 
+/*
+Get currentBlock in the editorState.
+*/
 export const getCurrentBlock = (editorState) => {
   const selectionState = editorState.getSelection();
   const contentState = editorState.getCurrentContent();
@@ -17,6 +24,10 @@ export const getCurrentBlock = (editorState) => {
   return block;
 };
 
+/*
+Adds a new block (currently replaces an empty block) at the current cursor position
+of the given `newType`.
+*/
 export const addNewBlock = (editorState, newType=Block.UNSTYLED) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
@@ -46,6 +57,10 @@ export const addNewBlock = (editorState, newType=Block.UNSTYLED) => {
   return editorState;
 };
 
+
+/*
+Changes the block type of the current block.
+*/
 export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
   const contentState = editorState.getCurrentContent();
   const selectionState = editorState.getSelection();
@@ -73,6 +88,9 @@ export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
 };
 
 
+/*
+Update block-level metadata of the given `block` to the `newData`/
+*/
 export const updateDataOfBlock = (editorState, block, newData) => {
   const contentState = editorState.getCurrentContent();
   const blockMap = contentState.getBlockMap();

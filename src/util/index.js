@@ -1,3 +1,6 @@
+/*
+Returns the `boundingClientRect` of the passed selection.
+*/
 export const getSelectionRect = (selected) => {
    var _rect = selected.getRangeAt(0).getBoundingClientRect();
    var rect = _rect && _rect.top ? _rect : selected.getRangeAt(0).getClientRects()[0];//selected.getRangeAt(0).getBoundingClientRect()
@@ -13,8 +16,9 @@ export const getSelectionRect = (selected) => {
    return rect;
 }
 
-// export const getSelectedNode = (selection) => {};
-
+/*
+Returns the native selection node.
+*/
 export const getSelection = (root) => {
    let t = null;
    if (root.getSelection) {
@@ -27,7 +31,10 @@ export const getSelection = (root) => {
    return t;
 }
 
-
+/*
+Recursively finds the DOM Element of the block where the cursor is currently present.
+If not found, returns null.
+*/
 export const getSelectedBlockNode = (root) => {
   const selection = root.getSelection();
   if (selection.rangeCount == 0) {

@@ -5,6 +5,10 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { getSelectedBlockNode } from 'util/index';
 
+/*
+Implementation of the medium-link side `+` button to insert various rich blocks
+like Images/Embeds/Videos.
+*/
 export default class AddButton extends React.Component {
   constructor(props) {
     super(props);
