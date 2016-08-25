@@ -1,5 +1,6 @@
-import { RichUtils, EditorState, ContentBlock, Modifier } from 'draft-js'
+import { Map } from 'immutable';
 
+import { RichUtils, EditorState, ContentBlock, Modifier, genKey } from 'draft-js'
 import { Block } from '../util/constants';
 
 
@@ -28,7 +29,7 @@ export const getCurrentBlock = (editorState) => {
 Adds a new block (currently replaces an empty block) at the current cursor position
 of the given `newType`.
 */
-export const addNewBlock = (editorState, newType=Block.UNSTYLED) => {
+export const addNewBlock = (editorState, newType=Block.UNSTYLED, initialData={}) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
     return editorState;
@@ -46,7 +47,7 @@ export const addNewBlock = (editorState, newType=Block.UNSTYLED) => {
     }
     const newBlock = currentBlock.merge({
       type: newType,
-      data: getDefaultBlockData(newType),
+      data: getDefaultBlockData(newType, initialData),
     });
     const newContentState = contentState.merge({
       blockMap: blockMap.set(key, newBlock),
@@ -107,6 +108,44 @@ export const updateDataOfBlock = (editorState, block, newData) => {
 const BEFORE = -1;
 const AFTER = 1;
 
-export const addNewBlockAt = (editorState, pivotBlockKey, newBlockType=Block.UNSTYLED, dir=AFTER) => {
+/*
+Used from [react-rte](https://github.com/sstur/react-rte/blob/master/src/lib/insertBlockAfter.js)
+by [sstur](https://github.com/sstur)
+*/
+export const addNewBlockAt = (editorState, pivotBlockKey, newBlockType=Block.UNSTYLED, initialData={}, dir=AFTER) => {
+  const content = editorState.getCurrentContent();
+  const blockMap = content.getBlockMap();
+  const block = blockMap.get(pivotBlockKey);
+  const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
+  const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
+  const newBlockKey = genKey();
 
+  const newBlock = new ContentBlock({
+    key: newBlockKey,
+    type: newBlockType,
+    text: '',
+    characterList: block.getCharacterList().slice(0, 0),
+    depth: 0,
+    data: Map(getDefaultBlockData(newBlockType, initialData)),
+  });
+
+  const newBlockMap = blocksBefore.concat(
+    [[pivotBlockKey, block], [newBlockKey, newBlock]],
+    blocksAfter
+  ).toOrderedMap();
+
+  const selection = editorState.getSelection();
+
+  const newContent = content.merge({
+    blockMap: newBlockMap,
+    selectionBefore: selection,
+    selectionAfter: selection.merge({
+      anchorKey: newBlockKey,
+      anchorOffset: 0,
+      focusKey: newBlockKey,
+      focusOffset: 0,
+      isBackward: false,
+    }),
+  });
+  return EditorState.push(editorState, newContent, 'split-block');
 };

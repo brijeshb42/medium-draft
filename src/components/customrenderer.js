@@ -2,6 +2,8 @@ import QuoteCaptionComponent from './blocks/blockquotecaption';
 import CaptionComponent from './blocks/caption';
 import AtomicBlock from './blocks/atomic';
 import TodoBlock from './blocks/todo';
+import ImageBlock from './blocks/image';
+import BreakBlock from './blocks/break';
 
 import { Block } from '../util/constants';
 
@@ -25,6 +27,13 @@ export default (onChange, getEditorState) => (contentBlock) => {
         onChange,
         getEditorState,
       },
+    };
+    case Block.IMAGE: return {
+      component: ImageBlock,
+    };
+    case Block.BREAK: return {
+      component: BreakBlock,
+      editable: false,
     };
     default: return null;
   }

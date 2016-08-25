@@ -10,7 +10,8 @@ $add-btn-width: 30px;
 }
 
 .md-sb-button {
-    background-color: #EAEAEA;
+    background: none;
+    // background-color: #EAEAEA;
     border: none;
     // border: 1px solid #A0A0A0;
     color: #6D6D6D;
@@ -36,6 +37,11 @@ $add-btn-width: 30px;
 
     &:hover {
         color: green;
+    }
+
+    &.md-sb-img-button {
+      background: none;
+      background-color: white;
     }
 }
 

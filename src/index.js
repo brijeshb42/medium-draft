@@ -4,7 +4,7 @@ export { BLOCK_BUTTONS, INLINE_BUTTONS } from 'components/toolbar';
 
 import Editor from 'editor';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
-import RenderMap from 'model/rendermap';
+import RenderMap from 'util/rendermap';
 import Link from 'components/entities/link';
 import keyBindingFn from 'util/keybinding';
 

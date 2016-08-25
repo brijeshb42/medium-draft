@@ -18,21 +18,7 @@
       "type": "LINK",
       "mutability": "MUTABLE",
       "data": {
-        "url": "https://facebook.github.io/draft-js/"
-      }
-    },
-    "3": {
-      "type": "image",
-      "mutability": "IMMUTABLE",
-      "data": {
-        "src": "http://www.virtualizationsoftware.com/wp-content/uploads/2013/07/horizon-700x325.jpg"
-      }
-    },
-    "4": {
-      "type": "LINK",
-      "mutability": "MUTABLE",
-      "data": {
-        "url": "http://www.virtualizationsoftware.com/wp-content/uploads/2013/07/horizon-700x325.jpg"
+        "url": "https://500px.com/photo/169455423/wassertropfen-by-zoom-3"
       }
     }
   },
@@ -72,41 +58,16 @@
       "text": "The keyboard shortcuts are mentioned below.",
       "type": "blockquote",
       "depth": 0,
-      "inlineStyleRanges": [],
-      "entityRanges": [],
-      "data": {}
-    },
-    {
-      "key": "4ru0a",
-      "text": "This demo is using the latest draft-js version which does not have a stable release yet.",
-      "type": "unstyled",
-      "depth": 0,
       "inlineStyleRanges": [
         {
-          "offset": 0,
-          "length": 88,
-          "style": "HIGHLIGHT"
-        }
-      ],
-      "entityRanges": [
+          "offset": 13,
+          "length": 9,
+          "style": "BOLD"
+        },
         {
-          "offset": 30,
-          "length": 8,
-          "key": 2
-        }
-      ],
-      "data": {}
-    },
-    {
-      "key": "999uj",
-      "text": "I just wanted to play with the block level metadata feature to implement TODO block.",
-      "type": "unstyled",
-      "depth": 0,
-      "inlineStyleRanges": [
-        {
-          "offset": 73,
-          "length": 11,
-          "style": "HIGHLIGHT"
+          "offset": 27,
+          "length": 9,
+          "style": "BOLD"
         }
       ],
       "entityRanges": [],
@@ -155,7 +116,62 @@
       "data": {}
     },
     {
-      "key": "88dhk",
+      "key": "5lq83",
+      "text": "Image Block",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {}
+    },
+    {
+      "key": "375gj",
+      "text": "This is an Image block. Images can be added by going to a new empty line and then clicking the (+) button that appears on the left of the cursor.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 0,
+          "length": 145,
+          "style": "HIGHLIGHT"
+        },
+        {
+          "offset": 95,
+          "length": 3,
+          "style": "BOLD"
+        }
+      ],
+      "entityRanges": [],
+      "data": {}
+    },
+    {
+      "key": "fb5f8",
+      "text": "Wassertropen by Zoom3",
+      "type": "atomic:image",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [
+        {
+          "offset": 16,
+          "length": 5,
+          "key": 2
+        }
+      ],
+      "data": {
+        "src": "https://drscdn.500px.org/photo/169455423/m%3D900/9d9ce3ea1cc9e1646a032fd0b576013c"
+      }
+    },
+    {
+      "key": "5dlgm",
+      "text": "Todo Block",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {}
+    },
+    {
+      "key": "m0a7",
       "text": "This is an uncomplete todo block. To add a todo block, type [] in a new line.",
       "type": "todo",
       "depth": 0,
@@ -177,7 +193,7 @@
       }
     },
     {
-      "key": "d9nlo",
+      "key": "eocb8",
       "text": "This is a completed todo block.",
       "type": "todo",
       "depth": 0,
@@ -186,65 +202,6 @@
       "data": {
         "checked": true
       }
-    },
-    {
-      "key": "eq01v",
-      "text": "",
-      "type": "unstyled",
-      "depth": 0,
-      "inlineStyleRanges": [],
-      "entityRanges": [],
-      "data": {}
-    },
-    {
-      "key": "4jprg",
-      "text": "This is a caption block. It is an opinionated block that can be added after special atomic blocks (image, video, embed) to be used as their captions when exporting to HTML or other formats instead of adding nested draft-js editors for simplicity.",
-      "type": "caption",
-      "depth": 0,
-      "inlineStyleRanges": [
-        {
-          "offset": 10,
-          "length": 7,
-          "style": "BOLD"
-        },
-        {
-          "offset": 214,
-          "length": 8,
-          "style": "BOLD"
-        }
-      ],
-      "entityRanges": [],
-      "data": {}
-    },
-    {
-      "key": "2pig1",
-      "text": " ",
-      "type": "atomic",
-      "depth": 0,
-      "inlineStyleRanges": [],
-      "entityRanges": [
-        {
-          "offset": 0,
-          "length": 1,
-          "key": 3
-        }
-      ],
-      "data": {}
-    },
-    {
-      "key": "7jnpl",
-      "text": "This is the image caption.",
-      "type": "caption",
-      "depth": 0,
-      "inlineStyleRanges": [],
-      "entityRanges": [
-        {
-          "offset": 12,
-          "length": 5,
-          "key": 4
-        }
-      ],
-      "data": {}
     },
     {
       "key": "7qp46",

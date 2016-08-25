@@ -14,20 +14,26 @@ a, a:visited {
   padding: 15px 30px;
   position: relative;
 
-  max-width: 700px;
-  margin: 0 auto;
+  // max-width: 700px;
+  // margin: 0 auto;
   line-height: 1.4em;
 }
+
+// .RichEditor-editor {
+
+// }
 
 .RichEditor-editor {
   // border-top: 1px solid #ddd;
   cursor: text;
   margin-top: 10px;
   position: relative;
+  max-width: 700px;
+  margin: 0 auto;
 
   h3 {
     font-size: 1.3em;
-    margin: 0.6em 0;
+    margin: 1.2em 0;
   }
 }
 

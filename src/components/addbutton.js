@@ -5,6 +5,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { getSelectedBlockNode } from 'util/index';
 
+import ImageButton from './sides/image';
+import BreakButton from './sides/break';
+
 /*
 Implementation of the medium-link side `+` button to insert various rich blocks
 like Images/Embeds/Videos.
@@ -125,12 +128,12 @@ export default class AddButton extends React.Component {
       });
       return;
     }
-    const rect = node.getBoundingClientRect();
+    // const rect = node.getBoundingClientRect();
     this.node = node;
     this.setState({
       visible: true,
       style: {
-        top: node.offsetTop - 3
+        top: node.offsetTop - 3,
       }
     });
   }
@@ -138,11 +141,28 @@ export default class AddButton extends React.Component {
   render() {
     if (this.state.visible) {
       const btns = [];
-      btns.push(<button key="img" className="md-sb-button md-sb-img-button">I</button>);
-      btns.push(<button key="embed" className="md-sb-button md-sb-img-button">E</button>);
+      btns.push(
+        <ImageButton
+          key="img"
+          getEditorState={this.props.getEditorState}
+          setEditorState={this.props.setEditorState}
+          close={this.openToolbar}
+        />
+      );
+      // btns.push(
+      //   <BreakButton
+      //     key="break"
+      //     getEditorState={this.props.getEditorState}
+      //     setEditorState={this.props.setEditorState}
+      //     close={this.openToolbar}
+      //   />
+      // );
+      // btns.push(<button key="embed" className="md-sb-button md-sb-img-button">E</button>);
       return (
         <div className="md-side-toolbar" style={this.state.style}>
-          <button onClick={this.openToolbar} className={'md-sb-button add-button' + (this.state.isOpen ? ' open-button' : '')}>+</button>
+          <button onClick={this.openToolbar} className={'md-sb-button add-button' + (this.state.isOpen ? ' open-button' : '')}>
+            <i className="fa fa-plus-circle fa-lg" />
+          </button>
           {this.state.isOpen ? (
             <ReactCSSTransitionGroup
               transitionName="example"
@@ -150,7 +170,18 @@ export default class AddButton extends React.Component {
               transitionLeaveTimeout={100}
               transitionAppear={true}
               transitionAppearTimeout={100}>
-              {btns}
+              {this.props.sideButtons.map((button) => {
+                console.log(button);
+                const Button = button.component;
+                return (
+                  <Button
+                    key={button.title}
+                    getEditorState={this.props.getEditorState}
+                    setEditorState={this.props.setEditorState}
+                    close={this.openToolbar}
+                  />
+                );
+              })}
             </ReactCSSTransitionGroup>
           ) : null}
         </div>

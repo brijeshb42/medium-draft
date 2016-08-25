@@ -1,20 +1,27 @@
 import { Map } from 'immutable';
 import { DefaultDraftBlockRenderMap } from 'draft-js';
 
+import { Block } from './constants';
 
 /*
 Mapping that returns containers for the various block types.
 */
 const RenderMap = Map({
-  caption: {
+  [Block.CAPTION]: {
     element: 'cite',
   },
-  'block-quote-caption': {
+  [Block.BLOCKQUOTE_CAPTION]: {
     element: 'blockquote',
   },
-  todo: {
+  [Block.TODO]: {
     element: 'div',
-  }
+  },
+  [Block.IMAGE]: {
+    element: 'figure',
+  },
+  [Block.BREAK]: {
+    element: 'div',
+  },
 }).merge(DefaultDraftBlockRenderMap);
 
 

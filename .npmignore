@@ -4,4 +4,4 @@ node_modules/
 .gitignore
 hash.json
 webpack.*.js
-lib/
+src/

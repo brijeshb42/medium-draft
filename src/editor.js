@@ -12,6 +12,7 @@ import {
   AtomicBlockUtils,
   DefaultDraftBlockRenderMap
 } from 'draft-js';
+import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 import { Map } from 'immutable';
 
 import AddButton from 'components/addbutton';
@@ -19,12 +20,15 @@ import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from 'components/toolbar';
 
 import rendererFn from 'components/customrenderer';
 import { getSelectionRect, getSelection } from 'util';
-import RenderMap from 'model/rendermap';
+import RenderMap from 'util/rendermap';
 import keyBindingFn from 'util/keybinding';
 import { Block, Inline, Entity as E } from 'util/constants';
 import beforeInput, { StringToTypeMap } from 'util/beforeinput';
-import { getCurrentBlock, addNewBlock, resetBlockWithType } from 'model';
+import blockStyleFn from 'util/blockStyleFn';
+import { getCurrentBlock, addNewBlock, resetBlockWithType, addNewBlockAt } from 'model';
 import Link, { findLinkEntities } from 'components/entities/link';
+
+import ImageButton from 'components/sides/image';
 
 /*
 Custom style map for custom entities like Hihglight.
@@ -46,22 +50,6 @@ const customStyleMap = {
       boxShadow: 'inset 0 -1px 0 #bbb',
    }
 };
-
-
-/*
-Get custom classnames for each of the different block types supported.
-*/
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case Block.BLOCKQUOTE: return 'block block-quote RichEditor-blockquote';
-    case Block.UNSTYLED: return 'block block-paragraph';
-    case Block.ATOMIC: return 'block block-atomic';
-    case Block.CAPTION: return 'block block-caption';
-    case Block.TODO: return 'block block-paragraph block-todo';
-    case Block.BLOCKQUOTE_CAPTION: return 'block block-quote RichEditor-blockquote block-quote-caption';
-    default: return 'block';
-  }
-}
 
 /*
 A wrapper over `draft-js`'s default **Editor*component which provides
@@ -226,36 +214,50 @@ class MyEditor extends React.Component {
   default behavior is executed.
   */
   handleReturn(e) {
-    if (e.shiftKey) {
-      this.onChange(RichUtils.insertSoftNewline(this.props.editorState));
+    const { editorState } = this.props;
+    if (isSoftNewlineEvent(e)) {
+      this.onChange(RichUtils.insertSoftNewline(editorState));
       return true;
     }
     if (!e.altKey && !e.metaKey && !e.ctrlKey) {
-      const currentBlock = getCurrentBlock(this.props.editorState);
+      const currentBlock = getCurrentBlock(editorState);
       const blockType = currentBlock.getType();
-      // const selection = this.props.editorState.getSelection();
-      if (currentBlock.getLength() > 0 /*&& currentBlock.getLength() === selection.getStartOffset() */) {
-        // this.onChange(addNewBlockAt(this.props.editorState, selection.getStartKey()));
-        // return true;
+
+      if (blockType.indexOf('atomic') === 0) {
+        this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
+        return true;
+      }
+
+      if (currentBlock.getLength() === 0) {
+        switch(blockType) {
+          case Block.UL:
+          case Block.OL:
+          case Block.BLOCKQUOTE:
+          case Block.BLOCKQUOTE_CAPTION:
+          case Block.CAPTION:
+          case Block.TODO:
+          case Block.H2:
+          case Block.H3:
+          case Block.H1:
+            this.onChange(resetBlockWithType(editorState, Block.UNSTYLED));
+            return true;
+          // default:
+            // return false;
+        }
+      }
+
+      const selection = editorState.getSelection();
+
+      if (selection.isCollapsed() && currentBlock.getLength() === selection.getStartOffset()) {
+        // if (currentBlock.getLength() > 0) {
+        if (this.props.continuousBlocks.indexOf(blockType) < 0) {
+          this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
+          return true;
+        }
         return false;
       }
-      switch(blockType) {
-        case Block.UL:
-        case Block.OL:
-        case Block.BLOCKQUOTE:
-        case Block.BLOCKQUOTE_CAPTION:
-        case Block.CAPTION:
-        case Block.TODO:
-        // case Block.CODE:
-        case Block.H2:
-        case Block.H3:
-        case Block.H1:
-          this.onChange(resetBlockWithType(this.props.editorState, Block.UNSTYLED));
-          return true;
-        default:
-          return false;
-      }
-    } 
+      return false;
+    }
     return false;
   }
 
@@ -265,6 +267,10 @@ class MyEditor extends React.Component {
   for some key combinations handled by default inside draft-js).
   */
   _toggleBlockType(blockType) {
+    const type = RichUtils.getCurrentBlockType(this.props.editorState);
+    if (type.indexOf('atomic:') === 0) {
+      return;
+    }
     this.onChange(
       RichUtils.toggleBlockType(
         this.props.editorState,
@@ -292,6 +298,8 @@ class MyEditor extends React.Component {
   */
   render() {
     const { editorState, editorEnabled } = this.props;
+    const currentBlockType = RichUtils.getCurrentBlockType(this.props.editorState);
+    const showAddButton = editorEnabled; // && currentBlockType.indexOf('atomic:') < 0;
     return (
       <div className="RichEditor-root">
         <div className="RichEditor-editor">
@@ -299,7 +307,7 @@ class MyEditor extends React.Component {
             ref="editor"
             editorState={editorState}
             blockRendererFn={this.blockRendererFn}
-            blockStyleFn={getBlockStyle}
+            blockStyleFn={this.props.blockStyleFn}
             onChange={this.onChange}
             onTab={this.onTab}
             blockRenderMap={this.props.blockRenderMap}
@@ -311,11 +319,18 @@ class MyEditor extends React.Component {
             readOnly={!editorEnabled}
             keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
-            spellCheck={false} />
-          {editorEnabled ? <AddButton
-            editorState={editorState}
-            addMedia={this.addMedia}
-            focus={this.focus} /> : null}
+            spellCheck={false}
+          />
+          {showAddButton ? (
+            <AddButton
+              addMedia={this.addMedia}
+              editorState={editorState}
+              getEditorState={this.getEditorState}
+              setEditorState={this.onChange}
+              focus={this.focus}
+              sideButtons={this.props.sideButtons}
+            />
+          ) : null}
           <Toolbar
             ref="toolbar"
             editorNode={this.refs.editor}
@@ -339,12 +354,27 @@ MyEditor.defaultProps = {
   beforeInput,
   keyBindingFn,
   customStyleMap,
+  blockStyleFn,
   editorEnabled: true,
   stringToTypeMap: StringToTypeMap,
   blockRenderMap: RenderMap,
   blockButtons: BLOCK_BUTTONS,
   inlineButtons: INLINE_BUTTONS,
-  placeholder: 'Write your story...'
+  placeholder: 'Write your story...',
+  continuousBlocks: [
+    Block.UNSTYLED,
+    Block.BLOCKQUOTE,
+    Block.OL,
+    Block.UL,
+    Block.CODE,
+    Block.TODO,
+  ],
+  sideButtons: [
+    {
+      title: 'Image',
+      component: ImageButton,
+    }
+  ],
 };
 
 

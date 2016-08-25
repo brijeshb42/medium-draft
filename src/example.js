@@ -8,6 +8,7 @@ import './components/blocks/atomic.scss';
 import './components/blocks/blockquotecaption.scss';
 import './components/blocks/caption.scss';
 import './components/blocks/todo.scss';
+import './components/blocks/image.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -76,11 +77,16 @@ class App extends React.Component {
       placeholder: 'Loading content...',
     });
     setTimeout(this.fetchData, 1000);
+    // this.fetchData();
   }
 
   keyBinding(e) {
-    if(hasCommandModifier(e) && e.which == 83 /* Key S */) {
-      return 'editor-save';
+    if(hasCommandModifier(e)) {
+      if (e.which == 83) {  /* Key S */
+        return 'editor-save';
+      } else if (e.which == 74 /* Key J */) {
+        return 'do-nothing';
+      }
     }
     if (e.altKey === true) {
       if (e.shiftKey === true) {
@@ -189,13 +195,12 @@ class App extends React.Component {
   }
 };
 
+// if (__DEV__) {
+  window.ga = function() {
+    console.log(arguments);
+  };
+// }
 ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
-
-if (!__PROD__) {
-  window.ga = function() {
-    console.log(arguments);
-  };
-}

@@ -19,6 +19,8 @@ export const Block = {
   BLOCKQUOTE_CAPTION: 'block-quote-caption',
   CAPTION: 'caption',
   TODO: 'todo',
+  IMAGE: 'atomic:image',
+  BREAK: 'atomic:break',
 };
 
 export const Inline = {
