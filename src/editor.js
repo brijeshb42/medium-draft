@@ -13,7 +13,6 @@ import {
   DefaultDraftBlockRenderMap
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
-import { Map } from 'immutable';
 
 import AddButton from 'components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from 'components/toolbar';
@@ -347,8 +346,6 @@ class MyEditor extends React.Component {
     );
   }
 }
-
-const renderMap = Map();
 
 MyEditor.defaultProps = {
   beforeInput,
