@@ -19,9 +19,9 @@ var isTest = env === ENV_TEST;
 console.log(env);
 
 var definePlugin = new webpack.DefinePlugin({
-  __DEV__: env === ENV_DEV,
-  __PROD__: env === ENV_PROD,
-  __TEST__: env === ENV_TEST,
+  __DEV__: JSON.stringify(env === ENV_DEV),
+  __PROD__: JSON.stringify(env === ENV_PROD),
+  __TEST__: JSON.stringify(env === ENV_TEST),
   __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
   'process.env.NODE_ENV': '"' +env+ '"'
 });

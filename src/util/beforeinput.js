@@ -36,6 +36,9 @@ const beforeInput = (editorState, inputString, onChange, mapping=StringToTypeMap
   const selection = editorState.getSelection();
   const block = getCurrentBlock(editorState);
   const blockType = block.getType();
+  if (blockType.indexOf('atomic') === 0) {
+    return false;
+  }
   const blockLength = block.getLength();
   if (selection.getAnchorOffset() > 1 || blockLength > 1) {
     return false;

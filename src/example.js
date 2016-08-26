@@ -195,11 +195,11 @@ class App extends React.Component {
   }
 };
 
-// if (__DEV__) {
+if (!__PROD__) {
   window.ga = function() {
     console.log(arguments);
   };
-// }
+}
 ReactDOM.render(
   <App />,
   document.getElementById('app')
