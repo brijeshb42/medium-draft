@@ -15,6 +15,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
     - `caption` - Can be used as a caption for media blocks like image or video instead of nested `draft-js` instances for simplicity.
     - `block-quote-caption` - Caption for `blockquote`s.
     - `todo` - Todo text with a checkbox.
+    - `image` - Image block with support for rich text captioning.
 
 ##### Following are the keyboard shortcuts to toggle block types (<kbd>Alt and CTRL</kbd> for Windows/Linux and <kbd>Option and Command</kbd> for OSX)
 *   <kbd>Alt/Option</kbd> +
@@ -29,7 +30,7 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 ##### Editor level commands
 
-These commands are not a part of the core editor but has been implemented in the example code that uses the `medium-draft` editor.
+These commands are not a part of the core editor but have been implemented in the example code that uses the `medium-draft` editor.
 
 *   <kbd>Command/CTRL</kbd> + <kbd>S</kbd> - Save current data to `localstorage`.
 *   <kbd>Alt + Shift</kbd> + <kbd>L</kbd> - Load previously saved data from `localstorage`.
@@ -45,6 +46,12 @@ These commands are not a part of the core editor but has been implemented in the
 *   `##` - `header-two`.
 *   `[]` - `todo`.
 *   `==` - `unstyled`.
+
+### Installation
+
+- Installation is currently supported only through **npm** right now.
+    - `npm install medium-draft`.
+    - `import Editor from 'medium-draft'`
 
 ### Usage
 
@@ -64,7 +71,7 @@ import {
   Editor,
   Link,
   findLinkEntities,
-} from './index';
+} from 'medium-draft';
 
 
 class App extends React.Component {
@@ -106,6 +113,7 @@ ReactDOM.render(
 
 ### Issues
 
+- [] Figure out a way to show placeholder text for empty image captions.
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
 
 ### Developer
