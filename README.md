@@ -49,9 +49,12 @@ These commands are not a part of the core editor but have been implemented in th
 
 ### Installation
 
-- Installation is currently supported only through **npm** right now.
+- **npm**.
     - `npm install medium-draft`.
     - `import Editor from 'medium-draft'`
+- **Browser**
+    - Include `<link rel="stylesheet" type="text/css" href="https://npmcdn.com/medium-draft/dist/static/medium-draft.css">` in `<head>`
+    - Include `<script src="https://npmcdn.com/medium-draft@0.3.2/dist/static/medium-draft.js"></script>`. **medium-draft** is available in the global object as `MediumDraft`.
 
 ### Usage
 
