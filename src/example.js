@@ -16,7 +16,6 @@ import {
   EditorState,
   convertToRaw,
   convertFromRaw,
-  CompositeDecorator,
   KeyBindingUtil,
 } from 'draft-js';
 
@@ -24,9 +23,9 @@ import {
   Editor,
   StringToTypeMap,
   Block,
-  Link,
-  findLinkEntities,
   keyBindingFn,
+  createEmptyContent,
+  createWithContent,
 } from './index';
 
 
@@ -40,15 +39,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
-    ]);
-
     this.state = {
-      editorState: EditorState.createEmpty(decorator),
+      editorState: createEmptyContent(),
       editorEnabled: true,
       placeholder: 'Write your story...'
     };
@@ -126,7 +118,7 @@ class App extends React.Component {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
         this.setState({
-          editorState: EditorState.push(this.state.editorState, convertFromRaw(data)),
+          editorState: createWithContent(data),
           placeholder: 'Write your story...'
         }, () => {
           this.refs.editor.focus();

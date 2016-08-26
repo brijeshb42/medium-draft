@@ -60,17 +60,14 @@ These commands are not a part of the core editor but have been implemented in th
 At the minimum, you need to provide `editorState` and `onChange` props, the same as `draft-js`.
 
 ```javascript
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  EditorState,
-  CompositeDecorator,
-} from 'draft-js';
 
 import {
   Editor,
-  Link,
-  findLinkEntities,
+  createEmptyContent,
+  createWithContent,
 } from 'medium-draft';
 
 
@@ -78,20 +75,17 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
-    ]);
-
     this.state = {
-      editorState: EditorState.createEmpty(decorator),
+      editorState: createEmptyContent(),
     };
 
     this.onChange = (editorState) => {
       this.setState({ editorState });
     };
+  }
+
+  componentDidMount() {
+    this.refs.editor.focus();
   }
 
   render() {

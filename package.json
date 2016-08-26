@@ -1,15 +1,15 @@
 {
   "name": "medium-draft",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist/static/ && rm -rf lib",
     "dev": "mkdir -p dist && cp index.html dist/index.html && NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
-    "build": "NODE_ENV=production webpack",
+    "build": "npm run clean && NODE_ENV=production webpack",
     "babel": "NODE_ENV=production babel ./src --out-dir lib --copy-files --ignore 'script.js'",
-    "npm": "npm run clean && npm run build && ./node_modules/.bin/babel ./src -d lib --ignore 'example.js' && cp dist/static/example.*.css ./lib/index.css"
+    "npm": "npm run build && ./node_modules/.bin/babel ./src -d lib --ignore 'example.js' && cp dist/static/example.*.css ./lib/index.css"
   },
   "keywords": [],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",

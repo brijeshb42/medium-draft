@@ -1,4 +1,6 @@
-dist/
+dist/index.html
+dist/data.json
+dist/static/example.js
 node_modules/
 .babelrc
 .gitignore

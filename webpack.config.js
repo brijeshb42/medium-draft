@@ -33,7 +33,8 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
 var vendorPlugin = new webpack.optimize.CommonsChunkPlugin({
   names: ['vendor-react'],
   minChunks: Infinity,
-  filename: isDev ? '[name].js' : '[name].[hash].js'
+  filename: '[name].js',
+  // filename: isDev ? '[name].js' : '[name].[hash].js'
 });
 
 var hashJsonPlugin = function() {
@@ -45,18 +46,22 @@ var hashJsonPlugin = function() {
 };
 
 function getPlugins(env) {
-  var plugins = [definePlugin, vendorPlugin, commonsPlugin];
+  var plugins = [definePlugin];
   if (env !== ENV_PROD) {
-    // plugins.push(new webpack.HotModuleReplacementPlugin());
     plugins.push(new webpack.NoErrorsPlugin());
+    plugins.push(vendorPlugin);
+    plugins.push(commonsPlugin);
   } else {
-    // plugins.push(new ExtractTextPlugin('css/' + (isDev ? '[name].css' : '[name].[hash].css')));
-    plugins.push(new ExtractTextPlugin(isDev ? '[name].css' : '[name].[hash].css'));
+    plugins.push(new ExtractTextPlugin('[name].css'));
+    // plugins.push(new ExtractTextPlugin(isDev ? '[name].css' : '[name].[hash].css'));
     plugins.push(hashJsonPlugin);
     plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
       output: {comments: false},
-      compress: {warnings: false}
+      compress: {
+        warnings: false,
+        dead_code: true,
+      },
     }));
   }
   return plugins;
@@ -64,22 +69,24 @@ function getPlugins(env) {
 
 
 function getEntry(env) {
-  var entry = {
-    'vendor-react': [
+  var entry = {};
+  var entries = [];
+  if (env !== ENV_PROD) {
+    entry['vendor-react'] = [
       'babel-polyfill',
       'react',
       'react-dom',
       'immutable',
       'draft-js',
     ]
-  };
-  var entries = [];
-  if (env !== ENV_PROD) {
     entries.push('webpack-dev-server/client?http://localhost:8080/');
     entries.push('webpack/hot/only-dev-server');
+    entries.push('./index');
+  } else {
+    entries = ['./index'];
   }
   // entries.push('babel-polyfill');
-  entries.push('./index');
+  
   entry['medium-draft'] = entries;
   entry.example = './example';
   return entry;
@@ -117,17 +124,20 @@ function getLoaders(env) {
 var options = {
   context: APP_DIR,
   debug: true,
-  devtool: env === ENV_PROD  ? 'source-map' : 'cheap-module-eval-source-map',
+  devtool: env === ENV_PROD  ? '' : 'cheap-module-eval-source-map',
   entry: getEntry(env),
   target: 'web',
   output: {
     path: BUILD_DIR,
     publicPath: '/static/',
-    filename: env === ENV_DEV ? '[name].js' : '[name].[hash].js',
+    filename: '[name].js',
+    // filename: env === ENV_DEV ? '[name].js' : '[name].[hash].js',
     chunkFilename: '[id].[hash].bundle.js',
     sourceMapFile: '[file].map',
     hotUpdateChunkFilename: 'hot/[id].[hash].hot-update.js',
-    hotUpdateMainFilename: 'hot/[hash].hot-update.json'
+    hotUpdateMainFilename: 'hot/[hash].hot-update.json',
+    library: ['MediumDraft'],
+    libraryTarget: 'umd'
   },
   plugins: getPlugins(env),
   module: {
@@ -140,15 +150,48 @@ var options = {
   }
 };
 
-// if (isProd) {
-//   options.externals = {
-//     'draft-js': 'draft-js',
-//     react: 'react',
-//     'immutable-js': 'immutable-js',
-//     'react-dom': 'react-dom',
-//   };
-//   options.library = 'medium-draft';
-//   options.libraryTarget = 'umd';
-// }
+if (isProd) {
+  options.externals = [{
+      react: {
+        root: 'React',
+        commonjs2: 'react',
+        commonjs: 'react',
+        amd: 'react'
+      }
+    },
+    {
+      'react-dom': {
+        root: 'ReactDOM',
+        commonjs2: 'react-dom',
+        commonjs: 'react-dom',
+        amd: 'react-dom'
+      }
+    },
+    {
+      'react-addons-css-transition-group': {
+        root: ['React','addons','CSSTransitionGroup'],
+        commonjs2: 'react-addons-css-transition-group',
+        commonjs: 'react-addons-css-transition-group',
+        amd: 'react-addons-css-transition-group',
+      }
+    },
+    {
+      immutable: {
+        root: 'Immutable',
+        commonjs2: 'immutable',
+        commonjs: 'immutable',
+        amd: 'immutable'
+      }
+    },
+    {
+      'draft-js': {
+        root: 'Draft',
+        commonjs2: 'draft-js',
+        commonjs: 'draft-js',
+        amd: 'draft-js'
+      }
+    }
+  ];
+}
 
 module.exports = options;

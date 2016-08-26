@@ -1,5 +1,5 @@
-import QuoteCaptionComponent from './blocks/blockquotecaption';
-import CaptionComponent from './blocks/caption';
+import QuoteCaptionBlock from './blocks/blockquotecaption';
+import CaptionBlock from './blocks/caption';
 import AtomicBlock from './blocks/atomic';
 import TodoBlock from './blocks/todo';
 import ImageBlock from './blocks/image';
@@ -12,10 +12,10 @@ export default (onChange, getEditorState) => (contentBlock) => {
   const type = contentBlock.getType();
   switch (type) {
     case Block.BLOCKQUOTE_CAPTION: return {
-      component: QuoteCaptionComponent,
+      component: QuoteCaptionBlock,
     };
     case Block.CAPTION: return {
-      component: CaptionComponent,
+      component: CaptionBlock,
     };
     case Block.ATOMIC: return {
       component: AtomicBlock,

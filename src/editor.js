@@ -76,7 +76,7 @@ class MyEditor extends React.Component {
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
     this.addMedia = this.addMedia.bind(this);
-    this.blockRendererFn = rendererFn(this.onChange, this.getEditorState);
+    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
   }
 
   componentDidMount() {
@@ -304,6 +304,7 @@ class MyEditor extends React.Component {
         <div className="RichEditor-editor">
           <Editor
             ref="editor"
+            {...this.props}
             editorState={editorState}
             blockRendererFn={this.blockRendererFn}
             blockStyleFn={this.props.blockStyleFn}
@@ -318,7 +319,7 @@ class MyEditor extends React.Component {
             readOnly={!editorEnabled}
             keyBindingFn={this.props.keyBindingFn}
             placeholder={this.props.placeholder}
-            spellCheck={false}
+            spellCheck={editorEnabled && this.props.spellCheck}
           />
           {showAddButton ? (
             <AddButton
@@ -352,7 +353,9 @@ MyEditor.defaultProps = {
   keyBindingFn,
   customStyleMap,
   blockStyleFn,
+  rendererFn,
   editorEnabled: true,
+  spellCheck: true,
   stringToTypeMap: StringToTypeMap,
   blockRenderMap: RenderMap,
   blockButtons: BLOCK_BUTTONS,
