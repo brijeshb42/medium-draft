@@ -113,7 +113,7 @@ ReactDOM.render(
 
 ### Issues
 
-- [] Figure out a way to show placeholder text for empty image captions.
+- [ ] Figure out a way to show placeholder text for empty image captions.
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
 
 ### Developer
