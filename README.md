@@ -2,8 +2,6 @@
 
 A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 
-> Current development is using the latest master branch of `draft-js` for using block level metadata support to implement Todo lists inside the editor.
-
 ### Features
 
 - Focus on keyboard shortcuts and auto transform of text blocks.
