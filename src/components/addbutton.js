@@ -1,12 +1,11 @@
 // import './addbutton.scss';
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import { getSelectedBlockNode } from 'util/index';
+import { getSelectedBlockNode } from '../util';
 
 import ImageButton from './sides/image';
-import BreakButton from './sides/break';
 
 /*
 Implementation of the medium-link side `+` button to insert various rich blocks
@@ -35,7 +34,7 @@ export default class AddButton extends React.Component {
     const { editorState } = newProps;
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
-    if (!selectionState.isCollapsed() || selectionState.anchorKey != selectionState.focusKey) {
+    if (!selectionState.isCollapsed() || selectionState.anchorKey !== selectionState.focusKey) {
       // console.log('no sel');
       this.hideBlock();
       return;
@@ -48,7 +47,7 @@ export default class AddButton extends React.Component {
     }
     if (block.getType() !== this.blockType) {
       this.blockType = block.getType();
-      if (block.getLength() == 0) {
+      if (block.getLength() === 0) {
         setTimeout(this.findNode, 0);
       }
       return;
@@ -59,7 +58,7 @@ export default class AddButton extends React.Component {
         this.hideBlock();
       } else {
         this.setState({
-          visible: true
+          visible: true,
         });
       }
       return;
@@ -108,13 +107,14 @@ export default class AddButton extends React.Component {
     }
   }
 
-  openToolbar(e) {
+  openToolbar() {
     this.setState({
       isOpen: !this.state.isOpen,
     }, this.props.focus);
   }
 
   findNode() {
+    // eslint-disable-next-line no-undef
     const node = getSelectedBlockNode(window);
     if (node === this.node) {
       // console.log('Node exists');
@@ -134,7 +134,7 @@ export default class AddButton extends React.Component {
       visible: true,
       style: {
         top: node.offsetTop - 3,
-      }
+      },
     });
   }
 
@@ -160,7 +160,10 @@ export default class AddButton extends React.Component {
       // btns.push(<button key="embed" className="md-sb-button md-sb-img-button">E</button>);
       return (
         <div className="md-side-toolbar" style={this.state.style}>
-          <button onClick={this.openToolbar} className={'md-sb-button add-button' + (this.state.isOpen ? ' open-button' : '')}>
+          <button
+            onClick={this.openToolbar}
+            className={`md-sb-button add-button${this.state.isOpen ? ' open-button' : ''}`}
+          >
             <i className="fa fa-plus-circle fa-lg" />
           </button>
           {this.state.isOpen ? (
@@ -168,8 +171,9 @@ export default class AddButton extends React.Component {
               transitionName="example"
               transitionEnterTimeout={200}
               transitionLeaveTimeout={100}
-              transitionAppear={true}
-              transitionAppearTimeout={100}>
+              transitionAppear
+              transitionAppearTimeout={100}
+            >
               {this.props.sideButtons.map((button) => {
                 const Button = button.component;
                 return (
@@ -188,4 +192,11 @@ export default class AddButton extends React.Component {
     }
     return null;
   }
+}
+
+AddButton.propTypes = {
+  focus: PropTypes.func,
+  getEditorState: PropTypes.func.isRequired,
+  setEditorState: PropTypes.func.isRequired,
+  sideButtons: PropTypes.arrayOf(PropTypes.object),
 };

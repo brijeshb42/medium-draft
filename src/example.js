@@ -1,14 +1,4 @@
-import 'draft-js/dist/Draft.css';
-import 'hint.css/src/hint.scss';
-import './index.scss';
-import './components/addbutton.scss';
-import './components/toolbar.scss';
-import './components/blocks/text.scss';
-import './components/blocks/atomic.scss';
-import './components/blocks/blockquotecaption.scss';
-import './components/blocks/caption.scss';
-import './components/blocks/todo.scss';
-import './components/blocks/image.scss';
+/* eslint-disable */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -18,6 +8,19 @@ import {
   convertFromRaw,
   KeyBindingUtil,
 } from 'draft-js';
+
+import 'draft-js/dist/Draft.css';
+import 'hint.css/src/hint.scss';
+
+import './index.scss';
+import './components/addbutton.scss';
+import './components/toolbar.scss';
+import './components/blocks/text.scss';
+import './components/blocks/atomic.scss';
+import './components/blocks/blockquotecaption.scss';
+import './components/blocks/caption.scss';
+import './components/blocks/todo.scss';
+import './components/blocks/image.scss';
 
 import {
   Editor,
@@ -30,7 +33,7 @@ import {
 
 
 const newTypeMap = StringToTypeMap;
-newTypeMap['2.'] = Block.OL
+newTypeMap['2.'] = Block.OL;
 
 const { hasCommandModifier } = KeyBindingUtil;
 
@@ -42,7 +45,7 @@ class App extends React.Component {
     this.state = {
       editorState: createEmptyContent(),
       editorEnabled: true,
-      placeholder: 'Write your story...'
+      placeholder: 'Write your story...',
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -65,24 +68,24 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      placeholder: 'Loading content...',
-    });
+    // this.setState({
+    //   placeholder: 'Loading content...',
+    // });
     setTimeout(this.fetchData, 1000);
     // this.fetchData();
   }
 
   keyBinding(e) {
-    if(hasCommandModifier(e)) {
-      if (e.which == 83) {  /* Key S */
+    if (hasCommandModifier(e)) {
+      if (e.which === 83) {  /* Key S */
         return 'editor-save';
-      } else if (e.which == 74 /* Key J */) {
+      } else if (e.which === 74 /* Key J */) {
         return 'do-nothing';
       }
     }
     if (e.altKey === true) {
       if (e.shiftKey === true) {
-        switch(e.which) {
+        switch (e.which) {
           /* Alt + Shift + L */
           case 76: return 'load-saved-data';
           /* Key E */

@@ -1,6 +1,6 @@
 // import './todo.scss';
 
-import React from "react";
+import React, { PropTypes } from 'react';
 import { EditorBlock } from 'draft-js';
 
 import { updateDataOfBlock } from '../../model/index';
@@ -13,7 +13,7 @@ export default class TodoBlock extends React.Component {
     this.updateData = this.updateData.bind(this);
   }
 
-  updateData(e) {
+  updateData() {
     const { block, blockProps } = this.props;
     const { onChange, getEditorState } = blockProps;
     const data = block.getData();
@@ -24,12 +24,18 @@ export default class TodoBlock extends React.Component {
 
   render() {
     const data = this.props.block.getData();
-    const checked = data.get('checked') === true ? true : false;
+    const checked = data.get('checked') === true;
     return (
       <div className={checked ? 'block-todo-completed' : ''}>
-        <input type="checkbox" checked={ checked } onChange={this.updateData} />
+        <input type="checkbox" checked={checked} onChange={this.updateData} />
         <EditorBlock {...this.props} />
       </div>
-    )
+    );
   }
+}
+
+
+TodoBlock.propTypes = {
+  block: PropTypes.object,
+  blockProps: PropTypes.object,
 };

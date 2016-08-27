@@ -11,7 +11,8 @@ export default (block) => {
     case Block.CAPTION: return 'block block-caption';
     case Block.TODO: return 'block block-paragraph block-todo';
     case Block.IMAGE: return 'block block-image';
-    case Block.BLOCKQUOTE_CAPTION: return 'block block-quote RichEditor-blockquote block-quote-caption';
+    case Block.BLOCKQUOTE_CAPTION:
+      return 'block block-quote RichEditor-blockquote block-quote-caption';
     default: return 'block';
   }
-}
+};

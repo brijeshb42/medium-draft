@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { addNewBlock } from '../../model';
 import { Block } from '../../util/constants';
@@ -11,7 +11,7 @@ export default class BreakButton extends React.Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClick(e) {
+  onClick() {
     this.props.setEditorState(addNewBlock(
       this.props.getEditorState(),
       Block.BREAK
@@ -23,6 +23,12 @@ export default class BreakButton extends React.Component {
       <button className="md-sb-button" onClick={this.onClick}>
         <i className="fa fa-minus" />
       </button>
-    )
+    );
   }
 }
+
+BreakButton.propTypes = {
+  setEditorState: PropTypes.func,
+  getEditorState: PropTypes.func,
+  close: PropTypes.func,
+};

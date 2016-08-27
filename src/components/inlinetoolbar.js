@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import StyleButton from './stylebutton';
 
 
-export default (props) => {
+const InlineToolbar = (props) => {
   if (props.buttons.length < 1) {
     return null;
   }
-  let currentStyle = props.editorState.getCurrentInlineStyle();
+  const currentStyle = props.editorState.getCurrentInlineStyle();
   return (
     <div className="RichEditor-controls">
       {props.buttons.map(type => {
@@ -32,3 +32,11 @@ export default (props) => {
     </div>
   );
 };
+
+InlineToolbar.propTypes = {
+  buttons: PropTypes.array,
+  editorState: PropTypes.object.isRequired,
+  onToggle: PropTypes.func,
+};
+
+export default InlineToolbar;

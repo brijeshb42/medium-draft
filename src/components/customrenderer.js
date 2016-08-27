@@ -37,4 +37,4 @@ export default (onChange, getEditorState) => (contentBlock) => {
     };
     default: return null;
   }
-}
+};

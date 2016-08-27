@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export default class StyleButton extends React.Component {
   constructor() {
@@ -14,11 +14,25 @@ export default class StyleButton extends React.Component {
     if (this.props.active) {
       className += ' RichEditor-activeButton';
     }
-    className += ' RichEditor-styleButton-' + this.props.style.toLowerCase();
+    className += ` RichEditor-styleButton-${this.props.style.toLowerCase()}`;
     return (
-      <span className={className + ' hint--top'} onMouseDown={this.onToggle} aria-label={this.props.description}>
-        {this.props.icon ? <i className={"fa fa-" + this.props.icon} /> : this.props.label}
+      <span
+        className={`${className} hint--top`}
+        onMouseDown={this.onToggle}
+        aria-label={this.props.description}
+      >
+        {this.props.icon ? <i className={`fa fa-${this.props.icon}`} /> : this.props.label}
       </span>
     );
   }
 }
+
+
+StyleButton.propTypes = {
+  onToggle: PropTypes.func,
+  style: PropTypes.string,
+  active: PropTypes.bool,
+  icon: PropTypes.string,
+  label: PropTypes.string,
+  description: PropTypes.string,
+};

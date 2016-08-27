@@ -1,0 +1,12 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "no-underscore-dangle": [0],
+    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
+    "new-cap": [0]
+  }
+}

@@ -1,6 +1,4 @@
-import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
-const { hasCommandModifier } = KeyBindingUtil;
-
+import { getDefaultKeyBinding } from 'draft-js';
 
 /*
 Emits various key commands to be used by `handleKeyCommand` in `Editor` based
@@ -15,7 +13,7 @@ export default (e) => {
         default: return getDefaultKeyBinding(e);
       }
     }
-    switch(e.which) {
+    switch (e.which) {
       // 1
       case 49: return 'changetype:ordered-list-item';
       // @
@@ -24,11 +22,6 @@ export default (e) => {
       case 51: return 'changetype:header-three';
       // *
       case 56: return 'changetype:unordered-list-item';
-      
-      //S
-      // case 83: return 'editor-save';
-      // = +
-      // case 187: return 'add-new-block';
       // <
       case 188: return 'changetype:caption';
       // // -
@@ -36,8 +29,9 @@ export default (e) => {
       // >
       case 190: return 'changetype:unstyled';
       // "
-      case 222: return 'changetype:blockquote';      
+      case 222: return 'changetype:blockquote';
+      default: return getDefaultKeyBinding(e);
     }
   }
   return getDefaultKeyBinding(e);
-}
+};

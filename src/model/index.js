@@ -1,14 +1,14 @@
 import { Map } from 'immutable';
 
-import { RichUtils, EditorState, ContentBlock, Modifier, genKey } from 'draft-js'
+import { EditorState, ContentBlock, genKey } from 'draft-js';
 import { Block } from '../util/constants';
 
 
 /*
 Returns default block-level metadata for various block type. Empty object otherwise.
 */
-export const getDefaultBlockData = (blockType, initialData={}) => {
-  switch(blockType) {
+export const getDefaultBlockData = (blockType, initialData = {}) => {
+  switch (blockType) {
     case Block.TODO: return { checked: false };
     default: return initialData;
   }
@@ -29,7 +29,7 @@ export const getCurrentBlock = (editorState) => {
 Adds a new block (currently replaces an empty block) at the current cursor position
 of the given `newType`.
 */
-export const addNewBlock = (editorState, newType=Block.UNSTYLED, initialData={}) => {
+export const addNewBlock = (editorState, newType = Block.UNSTYLED, initialData = {}) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
     return editorState;
@@ -41,8 +41,8 @@ export const addNewBlock = (editorState, newType=Block.UNSTYLED, initialData={})
   if (!currentBlock) {
     return editorState;
   }
-  if (currentBlock.getLength() == 0) {
-    if (currentBlock.getType() == newType) {
+  if (currentBlock.getLength() === 0) {
+    if (currentBlock.getType() === newType) {
       return editorState;
     }
     const newBlock = currentBlock.merge({
@@ -51,7 +51,7 @@ export const addNewBlock = (editorState, newType=Block.UNSTYLED, initialData={})
     });
     const newContentState = contentState.merge({
       blockMap: blockMap.set(key, newBlock),
-      selectionAfter: selectionState
+      selectionAfter: selectionState,
     });
     return EditorState.push(editorState, newContentState, 'change-block-type');
   }
@@ -62,14 +62,14 @@ export const addNewBlock = (editorState, newType=Block.UNSTYLED, initialData={})
 /*
 Changes the block type of the current block.
 */
-export const resetBlockWithType = (editorState, newType=Block.UNSTYLED) => {
+export const resetBlockWithType = (editorState, newType = Block.UNSTYLED) => {
   const contentState = editorState.getCurrentContent();
   const selectionState = editorState.getSelection();
   const key = selectionState.getStartKey();
   const blockMap = contentState.getBlockMap();
   const block = blockMap.get(key);
-  let newText = "";
-  let text = block.getText();
+  let newText = '';
+  const text = block.getText();
   if (block.getLength() >= 2) {
     newText = text.substr(1);
   }
@@ -94,9 +94,8 @@ Update block-level metadata of the given `block` to the `newData`/
 */
 export const updateDataOfBlock = (editorState, block, newData) => {
   const contentState = editorState.getCurrentContent();
-  const blockMap = contentState.getBlockMap();
   const newBlock = block.merge({
-    data: newData
+    data: newData,
   });
   const newContentState = contentState.merge({
     blockMap: contentState.getBlockMap().set(block.getKey(), newBlock),
@@ -105,14 +104,19 @@ export const updateDataOfBlock = (editorState, block, newData) => {
   // return editorState;
 };
 
-const BEFORE = -1;
-const AFTER = 1;
+// const BEFORE = -1;
+// const AFTER = 1;
 
 /*
 Used from [react-rte](https://github.com/sstur/react-rte/blob/master/src/lib/insertBlockAfter.js)
 by [sstur](https://github.com/sstur)
 */
-export const addNewBlockAt = (editorState, pivotBlockKey, newBlockType=Block.UNSTYLED, initialData={}, dir=AFTER) => {
+export const addNewBlockAt = (
+    editorState,
+    pivotBlockKey,
+    newBlockType = Block.UNSTYLED,
+    initialData = {}
+  ) => {
   const content = editorState.getCurrentContent();
   const blockMap = content.getBlockMap();
   const block = blockMap.get(pivotBlockKey);

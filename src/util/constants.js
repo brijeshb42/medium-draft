@@ -33,7 +33,7 @@ export const Inline = {
 };
 
 export const Entity = {
-  LINK: 'LINK'
+  LINK: 'LINK',
 };
 
 export default {

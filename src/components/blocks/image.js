@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { EditorBlock } from 'draft-js';
 
@@ -15,7 +15,7 @@ class ImageBlock extends React.Component {
     // this.enableEditable = this.enableEditable.bind(this);
   }
 
-  onClick(e) {
+  onClick() {
     this.setState({
       selected: !this.state.selected,
     });
@@ -42,16 +42,20 @@ class ImageBlock extends React.Component {
     if (src !== null) {
       return (
         <div>
-          <img onClick={this.onClick} className={className} src={src} />
+          <img role="presentation" onClick={this.onClick} className={className} src={src} />
           <figcaption>
             <EditorBlock {...this.props} />
           </figcaption>
         </div>
       );
     }
-    return <EditorBlock {...this.props} />
+    return <EditorBlock {...this.props} />;
   }
 }
+
+ImageBlock.propTypes = {
+  block: PropTypes.object,
+};
 
 
 export default ImageBlock;

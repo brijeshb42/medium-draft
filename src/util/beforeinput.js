@@ -1,4 +1,4 @@
-import { resetBlockWithType, getCurrentBlock } from 'model/index';
+import { resetBlockWithType, getCurrentBlock } from '../model/index';
 import { Block } from './constants';
 
 
@@ -32,7 +32,7 @@ mapping or not. If present, it converts the current block's type and called the 
 is passed. In custom implementation, users can pass their own mapping or extend
 the current one.
 */
-const beforeInput = (editorState, inputString, onChange, mapping=StringToTypeMap) => {
+const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeMap) => {
   const selection = editorState.getSelection();
   const block = getCurrentBlock(editorState);
   const blockType = block.getType();
@@ -52,22 +52,22 @@ const beforeInput = (editorState, inputString, onChange, mapping=StringToTypeMap
     return false;
   }
   let fType = finalType[0];
-  if (finalType.length == 1) {
-    if (blockType == finalType[0]) {
+  if (finalType.length === 1) {
+    if (blockType === finalType[0]) {
       return false;
     }
-  } else if (finalType.length == 2) {
-    if (blockType == finalType[1]) {
+  } else if (finalType.length === 2) {
+    if (blockType === finalType[1]) {
       return false;
     }
-    if (blockType == finalType[0]) {
+    if (blockType === finalType[0]) {
       fType = finalType[1];
     }
-  } else if (finalType.length == 3) {
-    if (blockType == finalType[2]) {
+  } else if (finalType.length === 3) {
+    if (blockType === finalType[2]) {
       return false;
     }
-    if (blockType == finalType[0]) {
+    if (blockType === finalType[0]) {
       fType = finalType[1];
     } else {
       fType = finalType[2];
@@ -75,7 +75,7 @@ const beforeInput = (editorState, inputString, onChange, mapping=StringToTypeMap
   }
   onChange(resetBlockWithType(editorState, fType));
   return true;
-}
+};
 
 
 export default beforeInput;

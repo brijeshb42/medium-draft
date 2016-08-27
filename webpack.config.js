@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var path = require('path');
 var fs = require('fs');
 var webpack = require('webpack');
@@ -137,11 +139,18 @@ var options = {
     hotUpdateChunkFilename: 'hot/[id].[hash].hot-update.js',
     hotUpdateMainFilename: 'hot/[hash].hot-update.json',
     library: ['MediumDraft'],
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
   },
   plugins: getPlugins(env),
   module: {
     loaders: getLoaders(env),
+    preLoaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['eslint'],
+        include: APP_DIR,
+      }
+    ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

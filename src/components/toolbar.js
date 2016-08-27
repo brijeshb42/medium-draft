@@ -1,6 +1,6 @@
 // import './toolbar.scss';
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Entity } from 'draft-js';
 
@@ -23,7 +23,7 @@ export default class Toolbar extends React.Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleLinkInput = this.handleLinkInput.bind(this);
-    this.hideLinkInput = this.hideLinkInput.bind(this)
+    this.hideLinkInput = this.hideLinkInput.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -35,7 +35,7 @@ export default class Toolbar extends React.Component {
     if (selectionState.isCollapsed()) {
       if (this.state.showURLInput) {
         this.setState({
-          showURLInput: false
+          showURLInput: false,
         });
       }
       return;
@@ -50,29 +50,33 @@ export default class Toolbar extends React.Component {
     if (selectionState.isCollapsed()) {
       return;
     }
+    // eslint-disable-next-line no-undef
     const nativeSelection = getSelection(window);
     if (!nativeSelection.rangeCount) {
       return;
     }
     const selectionBoundary = getSelectionRect(nativeSelection);
 
+    // eslint-disable-next-line react/no-find-dom-node
     const toolbarNode = ReactDOM.findDOMNode(this);
     const toolbarBoundary = toolbarNode.getBoundingClientRect();
-    
+
+    // eslint-disable-next-line react/no-find-dom-node
     const parent = ReactDOM.findDOMNode(this.props.editorNode);
     const parentBoundary = parent.getBoundingClientRect();
 
     /*
     * Main logic for setting the toolbar position.
     */
-    toolbarNode.style.top = (selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5) + 'px';
-    toolbarNode.style.width = toolbarBoundary.width + 'px';
+    toolbarNode.style.top =
+      `${(selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5)}px`;
+    toolbarNode.style.width = `${toolbarBoundary.width}px`;
     const widthDiff = selectionBoundary.width - toolbarBoundary.width;
     if (widthDiff >= 0) {
-      toolbarNode.style.left = (widthDiff / 2) + 'px';
+      toolbarNode.style.left = `${widthDiff / 2}px`;
     } else {
       const left = (selectionBoundary.left - parentBoundary.left);
-      toolbarNode.style.left = (left + widthDiff / 2) + 'px';
+      toolbarNode.style.left = `${left + (widthDiff / 2)}px`;
       // toolbarNode.style.width = toolbarBoundary.width + 'px';
       // if (left + toolbarBoundary.width > parentBoundary.width) {
         // toolbarNode.style.right = '0px';
@@ -100,16 +104,16 @@ export default class Toolbar extends React.Component {
     }
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
-      urlInputValue: e.target.value
+      urlInputValue: e.target.value,
     });
   }
 
-  handleLinkInput(e, direct=false) {
+  handleLinkInput(e, direct = false) {
     if (!direct) {
       e.preventDefault();
-      e.stopPropagation();   
+      e.stopPropagation();
     }
     const { editorState } = this.props;
     const selection = editorState.getSelection();
@@ -134,26 +138,26 @@ export default class Toolbar extends React.Component {
         selStart = selection.getFocusOffset();
         selEnd = selection.getAnchorOffset();
       }
-      if (start == selStart && end == selEnd) {
+      if (start === selStart && end === selEnd) {
         linkFound = true;
         const { url } = Entity.get(selectedEntity).getData();
         this.setState({
           showURLInput: true,
-          urlInputValue: url
+          urlInputValue: url,
         }, () => {
           setTimeout(() => {
-            this.refs.urlinput.focus();
-            this.refs.urlinput.select();
+            this.urlinput.focus();
+            this.urlinput.select();
           }, 0);
         });
       }
     });
     if (!linkFound) {
       this.setState({
-        showURLInput: true
+        showURLInput: true,
       }, () => {
         setTimeout(() => {
-          this.refs.urlinput.focus();
+          this.urlinput.focus();
         }, 0);
       });
     }
@@ -177,33 +181,49 @@ export default class Toolbar extends React.Component {
     }
     if (showURLInput) {
       return (
-        <div className={'editor-toolbar' + (isOpen ? ' editor-toolbar--isopen' : '') + ' editor-toolbar--linkinput' }>
-          <div className="RichEditor-controls RichEditor-show-link-input" style={{display: 'block'}}>
+        <div
+          className={
+            `editor-toolbar${(isOpen ? ' editor-toolbar--isopen' : '')} editor-toolbar--linkinput`
+          }
+        >
+          <div
+            className="RichEditor-controls RichEditor-show-link-input"
+            style={{ display: 'block' }}
+          >
             <span className="url-input-close" onMouseDown={this.hideLinkInput}>&times;</span>
             <input
-              ref="urlinput"
+              ref={node => { this.urlinput = node; }}
               type="text"
               className="url-input"
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
-              placeholder='Press ENTER or ESC'
-              value={urlInputValue} />
+              placeholder="Press ENTER or ESC"
+              value={urlInputValue}
+            />
           </div>
         </div>
       );
     }
     return (
-      <div className={'editor-toolbar' + (isOpen ? ' editor-toolbar--isopen' : '') }>
+      <div
+        className={`editor-toolbar${(isOpen ? ' editor-toolbar--isopen' : '')}`}
+      >
         <BlockToolbar
           editorState={editorState}
           onToggle={this.props.toggleBlockType}
-          buttons={this.props.blockButtons} />
+          buttons={this.props.blockButtons}
+        />
         <InlineToolbar
           editorState={editorState}
           onToggle={this.props.toggleInlineStyle}
-          buttons={this.props.inlineButtons} />
+          buttons={this.props.inlineButtons}
+        />
         <div className="RichEditor-controls">
-          <a className="RichEditor-styleButton RichEditor-linkButton hint--top" href="#" onClick={this.handleLinkInput} aria-label="Add a link">
+          <a
+            className="RichEditor-styleButton RichEditor-linkButton hint--top"
+            href="#open-link-input"
+            onClick={this.handleLinkInput} aria-label="Add a link"
+          >
             #
           </a>
         </div>
@@ -228,7 +248,7 @@ export const BLOCK_BUTTONS = [
     label: 'Q',
     style: 'blockquote',
     icon: 'quote-right',
-    description: 'Blockquote'
+    description: 'Blockquote',
   },
   {
     label: 'UL',
@@ -246,7 +266,7 @@ export const BLOCK_BUTTONS = [
     label: '✓',
     style: 'todo',
     description: 'Todo List',
-  }
+  },
 ];
 
 export const INLINE_BUTTONS = [
@@ -285,6 +305,18 @@ export const INLINE_BUTTONS = [
   //   description: 'Inline Code',
   // },
 ];
+
+Toolbar.propTypes = {
+  editorEnabled: PropTypes.bool,
+  editorState: PropTypes.object,
+  toggleBlockType: PropTypes.func,
+  toggleInlineStyle: PropTypes.func,
+  inlineButtons: PropTypes.arrayOf(PropTypes.object),
+  blockButtons: PropTypes.arrayOf(PropTypes.object),
+  editorNode: PropTypes.object,
+  setLink: PropTypes.func,
+  focus: PropTypes.func,
+};
 
 Toolbar.defaultProps = {
   blockButtons: BLOCK_BUTTONS,
