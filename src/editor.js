@@ -49,9 +49,9 @@ class MediumDraftEditor extends React.Component {
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
   }
 
-  componentDidMount() {
-    this.focus();
-  }
+  // componentDidMount() {
+  //   this.focus();
+  // }
 
 
   /*
