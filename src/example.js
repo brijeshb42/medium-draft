@@ -7,6 +7,7 @@ import {
   convertToRaw,
   convertFromRaw,
   KeyBindingUtil,
+  Modifier,
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
@@ -30,6 +31,8 @@ import {
   createEmptyContent,
   createWithContent,
   addNewBlockAt,
+  beforeInput,
+  getCurrentBlock,
 } from './index';
 
 
@@ -37,6 +40,38 @@ const newTypeMap = StringToTypeMap;
 newTypeMap['2.'] = Block.OL;
 
 const { hasCommandModifier } = KeyBindingUtil;
+
+/*
+A demo for example editor. (Feature not built into medium-draft as too specific.)
+Convert quotes to curly quotes.
+*/
+const DQUOTE_START = '“';
+const DQUOTE_END = '”';
+const SQUOTE_START = '‘';
+const SQUOTE_END = '’';
+
+const handleBeforeInput = (editorState, str, onChange) => {
+  if (str === '"' || str === '\'') {
+    const currentBlock = getCurrentBlock(editorState);
+    const selectionState = editorState.getSelection();
+    const contentState = editorState.getCurrentContent();
+    const text = currentBlock.getText();
+    const len = text.length;
+    if (selectionState.getAnchorOffset() === 0 && len === 0) {
+      onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+      return true;
+    } else if (len > 0) {
+      const lastChar = text[len - 1];
+      if (lastChar !== ' ') {
+        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_END : SQUOTE_END)), 'transpose-characters'));
+      } else {
+        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+      }
+      return true;
+    }
+  }
+  return beforeInput(editorState, str, onChange, newTypeMap);
+};
 
 
 class App extends React.Component {
@@ -72,8 +107,9 @@ class App extends React.Component {
     // this.setState({
     //   placeholder: 'Loading content...',
     // });
-    setTimeout(this.fetchData, 1000);
+    // setTimeout(this.fetchData, 1000);
     // this.fetchData();
+    this.refs.editor.focus();
   }
 
   keyBinding(e) {
@@ -134,6 +170,7 @@ class App extends React.Component {
   }
 
   logData(e) {
+    window.es = this.state.editorState;
     console.log(convertToRaw(this.state.editorState.getCurrentContent()));
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
@@ -191,6 +228,7 @@ class App extends React.Component {
           handleKeyCommand={this.handleKeyCommand}
           placeholder={this.state.placeholder}
           keyBindingFn={this.keyBinding}
+          beforeInput={handleBeforeInput}
         />
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>

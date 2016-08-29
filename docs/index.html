@@ -67,196 +67,232 @@
     <script type="text/javascript" src="https://npmcdn.com/immutable@3.8.1/dist/immutable.min.js"></script>
     <script type="text/javascript" src="https://npmcdn.com/draft-js@0.8.1/dist/Draft.min.js"></script>
     <script type="text/javascript" src="https://npmcdn.com/medium-draft@0.3.3/dist/static/medium-draft.js"></script>
-    <script type="text/babel">
-        const {
-          EditorState,
-          convertToRaw,
-          convertFromRaw,
-          KeyBindingUtil,
-        } = Draft;
+<script type="text/babel">
+const {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  KeyBindingUtil,
+  Modifier,
+} = Draft;
 
-        const {
-          Editor,
-          StringToTypeMap,
-          Block,
-          keyBindingFn,
-          createEmptyContent,
-          createWithContent,
-          addNewBlockAt,
-        } = MediumDraft;
-
-
-        const newTypeMap = StringToTypeMap;
-        newTypeMap['2.'] = Block.OL;
-
-        const { hasCommandModifier } = KeyBindingUtil;
+const {
+  Editor,
+  StringToTypeMap,
+  Block,
+  keyBindingFn,
+  createEmptyContent,
+  createWithContent,
+  addNewBlockAt,
+  beforeInput,
+  getCurrentBlock,
+} = MediumDraft;
 
 
-        class App extends React.Component {
-          constructor(props) {
-            super(props);
+const newTypeMap = StringToTypeMap;
+newTypeMap['2.'] = Block.OL;
 
-            this.state = {
-              editorState: createEmptyContent(),
-              editorEnabled: true,
-              placeholder: 'Write your story...'
-            };
+const { hasCommandModifier } = KeyBindingUtil;
 
-            this.onChange = (editorState, callback = null) => {
-              if (this.state.editorEnabled) {
-                this.setState({ editorState }, () => {
-                  if (callback) {
-                    callback();
-                  }
-                });
-              }
-            };
+/*
+A demo for example editor. (Feature not built into medium-draft as too specific.)
+Convert quotes to curly quotes.
+*/
+const DQUOTE_START = '“';
+const DQUOTE_END = '”';
+const SQUOTE_START = '‘';
+const SQUOTE_END = '’';
 
-            this.logData = this.logData.bind(this);
-            this.toggleEdit = this.toggleEdit.bind(this);
-            this.fetchData = this.fetchData.bind(this);
-            this.loadSavedData = this.loadSavedData.bind(this);
-            this.handleKeyCommand = this.handleKeyCommand.bind(this);
-            this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
-            this.keyBinding = this.keyBinding.bind(this);
+const handleBeforeInput = (editorState, str, onChange) => {
+  if (str === '"' || str === '\'') {
+    const currentBlock = getCurrentBlock(editorState);
+    const selectionState = editorState.getSelection();
+    const contentState = editorState.getCurrentContent();
+    const text = currentBlock.getText();
+    const len = text.length;
+    if (selectionState.getAnchorOffset() === 0 && len === 0) {
+      onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+      return true;
+    } else if (len > 0) {
+      const lastChar = text[len - 1];
+      if (lastChar !== ' ') {
+        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_END : SQUOTE_END)), 'transpose-characters'));
+      } else {
+        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+      }
+      return true;
+    }
+  }
+  return beforeInput(editorState, str, onChange, newTypeMap);
+};
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editorState: createEmptyContent(),
+      editorEnabled: true,
+      placeholder: 'Write your story...'
+    };
+
+    this.onChange = (editorState, callback = null) => {
+      if (this.state.editorEnabled) {
+        this.setState({ editorState }, () => {
+          if (callback) {
+            callback();
           }
+        });
+      }
+    };
 
-          componentDidMount() {
-            this.setState({
-              placeholder: 'Loading content...',
-            });
-            setTimeout(this.fetchData, 1000);
-            // this.fetchData();
-          }
+    this.logData = this.logData.bind(this);
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    this.loadSavedData = this.loadSavedData.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
+    this.keyBinding = this.keyBinding.bind(this);
+  }
 
-          keyBinding(e) {
-            if(hasCommandModifier(e)) {
-              if (e.which == 83) {  /* Key S */
-                return 'editor-save';
-              } else if (e.which == 74 /* Key J */) {
-                return 'do-nothing';
-              }
-            }
-            if (e.altKey === true) {
-              if (e.shiftKey === true) {
-                switch(e.which) {
-                  /* Alt + Shift + L */
-                  case 76: return 'load-saved-data';
-                  /* Key E */
-                  // case 69: return 'toggle-edit-mode';
-                }
-              }
-              if (e.which === 72 /* Key H */) {
-                return 'toggleinline:HIGHLIGHT';
-              }
-            }
-            return keyBindingFn(e);
-          }
+  componentDidMount() {
+    this.setState({
+      placeholder: 'Loading content...',
+    });
+    setTimeout(this.fetchData, 1000);
+    // this.fetchData();
+  }
 
-          handleKeyCommand(command) {
-            if (command === 'editor-save') {
-              window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-              window.ga('send', 'event', 'draftjs', command);
-              return true;
-            } else if (command === 'load-saved-data') {
-              this.loadSavedData();
-              return true;
-            } else if (command === 'toggle-edit-mode') {
-              this.toggleEdit();
-            }
-            return false;
-          }
+  keyBinding(e) {
+    if(hasCommandModifier(e)) {
+      if (e.which == 83) {  /* Key S */
+        return 'editor-save';
+      } else if (e.which == 74 /* Key J */) {
+        return 'do-nothing';
+      }
+    }
+    if (e.altKey === true) {
+      if (e.shiftKey === true) {
+        switch(e.which) {
+          /* Alt + Shift + L */
+          case 76: return 'load-saved-data';
+          /* Key E */
+          // case 69: return 'toggle-edit-mode';
+        }
+      }
+      if (e.which === 72 /* Key H */) {
+        return 'toggleinline:HIGHLIGHT';
+      }
+    }
+    return keyBindingFn(e);
+  }
 
-          fetchData() {
-            window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
-            const req = new XMLHttpRequest();
-            req.open('GET', 'data.json', true);
-            req.onreadystatechange = () => {
-              if (req.readyState === 4) {
-                const data = JSON.parse(req.responseText);
-                this.setState({
-                  editorState: createWithContent(data),
-                  placeholder: 'Write your story...'
-                }, () => {
-                  this.refs.editor.focus();
-                });
-                window.ga('send', 'event', 'draftjs', 'data-success');
-              }
-            };
-            req.send();
-          }
+  handleKeyCommand(command) {
+    if (command === 'editor-save') {
+      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.ga('send', 'event', 'draftjs', command);
+      return true;
+    } else if (command === 'load-saved-data') {
+      this.loadSavedData();
+      return true;
+    } else if (command === 'toggle-edit-mode') {
+      this.toggleEdit();
+    }
+    return false;
+  }
 
-          logData(e) {
-            console.log(convertToRaw(this.state.editorState.getCurrentContent()));
-            console.log(this.state.editorState.getSelection().toJS());
-            window.ga('send', 'event', 'draftjs', 'log-data');
-          }
+  fetchData() {
+    window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
+    const req = new XMLHttpRequest();
+    req.open('GET', 'data.json', true);
+    req.onreadystatechange = () => {
+      if (req.readyState === 4) {
+        const data = JSON.parse(req.responseText);
+        this.setState({
+          editorState: createWithContent(data),
+          placeholder: 'Write your story...'
+        }, () => {
+          this.refs.editor.focus();
+        });
+        window.ga('send', 'event', 'draftjs', 'data-success');
+      }
+    };
+    req.send();
+  }
 
-          loadSavedData() {
-            const data = window.localStorage.getItem('editor');
-            if (data === null) {
-              return;
-            }
-            try {
-              const blockData = JSON.parse(data);
-              console.log(blockData);
-              this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this.refs.editor.focus);
-            } catch(e) {
-              console.log(e);
-            }
-            window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
-          }
+  logData(e) {
+    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+    console.log(this.state.editorState.getSelection().toJS());
+    window.ga('send', 'event', 'draftjs', 'log-data');
+  }
 
-          toggleEdit(e) {
-            this.setState({
-              editorEnabled: !this.state.editorEnabled
-            }, () => {
-              window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
-            });
-          }
+  loadSavedData() {
+    const data = window.localStorage.getItem('editor');
+    if (data === null) {
+      return;
+    }
+    try {
+      const blockData = JSON.parse(data);
+      console.log(blockData);
+      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this.refs.editor.focus);
+    } catch(e) {
+      console.log(e);
+    }
+    window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
+  }
 
-          handleDroppedFiles(selection, files) {
-            const file = files[0];
-            if (file.type.indexOf('image/') === 0) {
-              // eslint-disable-next-line no-undef
-              const src = URL.createObjectURL(file);
-              this.onChange(addNewBlockAt(
-                this.state.editorState,
-                selection.getAnchorKey(),
-                Block.IMAGE, {
-                  src,
-                }
-              ));
-            }
-            window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
-          }
+  toggleEdit(e) {
+    this.setState({
+      editorEnabled: !this.state.editorEnabled
+    }, () => {
+      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
+    });
+  }
 
-          render() {
-            const { editorState, editorEnabled } = this.state;
-            return (
-              <div>
-                <Editor
-                  ref="editor"
-                  editorState={editorState}
-                  onChange={this.onChange}
-                  editorEnabled={editorEnabled}
-                  handleDroppedFiles={this.handleDroppedFiles}
-                  handleKeyCommand={this.handleKeyCommand}
-                  placeholder={this.state.placeholder}
-                  keyBindingFn={this.keyBinding}
-                />
-                <div className="editor-action">
-                  <button onClick={this.logData}>Log State</button>
-                  <button onClick={this.toggleEdit}>Toggle Edit</button>
-                </div>
-              </div>
-            );
-          }
-        };
-        ReactDOM.render(
-          <App />,
-          document.getElementById('app')
-        );
-    </script>
+  handleDroppedFiles(selection, files) {
+    const file = files[0];
+    if (file.type.indexOf('image/') === 0) {
+      // eslint-disable-next-line no-undef
+      const src = URL.createObjectURL(file);
+      this.onChange(addNewBlockAt(
+        this.state.editorState,
+        selection.getAnchorKey(),
+        Block.IMAGE, {
+          src,
+        }
+      ));
+    }
+    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+  }
+
+  render() {
+    const { editorState, editorEnabled } = this.state;
+    return (
+      <div>
+        <Editor
+          ref="editor"
+          editorState={editorState}
+          onChange={this.onChange}
+          editorEnabled={editorEnabled}
+          handleDroppedFiles={this.handleDroppedFiles}
+          handleKeyCommand={this.handleKeyCommand}
+          placeholder={this.state.placeholder}
+          keyBindingFn={this.keyBinding}
+          beforeInput={handleBeforeInput}
+        />
+        <div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+        </div>
+      </div>
+    );
+  }
+};
+ReactDOM.render(
+  <App />,
+  document.getElementById('app')
+);
+</script>
 </body>
 </html>
