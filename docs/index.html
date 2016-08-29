@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>medium-draft - a rich text editor built using draft-js - Bitwiser.in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/medium-draft@0.3.3/dist/static/medium-draft.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+    <!--[if lt IE 9]>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+    <![endif]-->
+    <meta name="description" content="A medium like rich text editor built using draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts. It also has implementations of some custom blocks like caption and todo." />
+    <meta property="fb:admins" content="1554290006" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://bitwiser.in/medium-draft/" />
+    <meta property="og:site_name" content="medium-draft - Bitwiser.in" />
+    <meta name="og:image" content="http://i1051.photobucket.com/albums/s432/brijeshb42/ghost-blog/draft-logo.png" />
+    <meta name="article:publisher" content="https://www.facebook.com/brijeshb42">
+    <meta name="twitter:image" content="http://i1051.photobucket.com/albums/s432/brijeshb42/ghost-blog/draft-logo.png" />
+    <style type="text/css">
+    body {
+        padding-top: 40px;
+    }
+    .github-fork-ribbon:before {
+        background-color: #090;
+    }
+    .editor-action {
+        bottom: 5px;
+        top: auto;
+    }
+    .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 20px;
+        background: #eee;
+        z-index: 100;
+        color: #555;
+        font-family: Hoefler Text,Georgia,serif;
+        font-size: 1.2em;
+    }
+    </style>
+    <script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-47902363-1', 'bitwiser.in');
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview');
+    </script>
+</head>
+<body>
+    <div id="app">
+      <p>Loading...</p>
+    </div>
+    <div class="menu">
+        <a href="/">Bitwiser.in</a>
+    </div>
+    <a class="github-fork-ribbon" href="https://github.com/brijeshb42/medium-draft" title="Fork me on GitHub" target="_blank">Fork me on GitHub</a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/react@15.2.1/dist/react-with-addons.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/react-dom@15.2.1/dist/react-dom.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/immutable@3.8.1/dist/immutable.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/draft-js@0.8.1/dist/Draft.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/medium-draft@0.3.3/dist/static/medium-draft.js"></script>
+    <script type="text/babel">
+        const {
+          EditorState,
+          convertToRaw,
+          convertFromRaw,
+          KeyBindingUtil,
+        } = Draft;
+
+        const {
+          Editor,
+          StringToTypeMap,
+          Block,
+          keyBindingFn,
+          createEmptyContent,
+          createWithContent,
+          addNewBlockAt,
+        } = MediumDraft;
+
+
+        const newTypeMap = StringToTypeMap;
+        newTypeMap['2.'] = Block.OL;
+
+        const { hasCommandModifier } = KeyBindingUtil;
+
+
+        class App extends React.Component {
+          constructor(props) {
+            super(props);
+
+            this.state = {
+              editorState: createEmptyContent(),
+              editorEnabled: true,
+              placeholder: 'Write your story...'
+            };
+
+            this.onChange = (editorState, callback = null) => {
+              if (this.state.editorEnabled) {
+                this.setState({ editorState }, () => {
+                  if (callback) {
+                    callback();
+                  }
+                });
+              }
+            };
+
+            this.logData = this.logData.bind(this);
+            this.toggleEdit = this.toggleEdit.bind(this);
+            this.fetchData = this.fetchData.bind(this);
+            this.loadSavedData = this.loadSavedData.bind(this);
+            this.handleKeyCommand = this.handleKeyCommand.bind(this);
+            this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
+            this.keyBinding = this.keyBinding.bind(this);
+          }
+
+          componentDidMount() {
+            this.setState({
+              placeholder: 'Loading content...',
+            });
+            setTimeout(this.fetchData, 1000);
+            // this.fetchData();
+          }
+
+          keyBinding(e) {
+            if(hasCommandModifier(e)) {
+              if (e.which == 83) {  /* Key S */
+                return 'editor-save';
+              } else if (e.which == 74 /* Key J */) {
+                return 'do-nothing';
+              }
+            }
+            if (e.altKey === true) {
+              if (e.shiftKey === true) {
+                switch(e.which) {
+                  /* Alt + Shift + L */
+                  case 76: return 'load-saved-data';
+                  /* Key E */
+                  // case 69: return 'toggle-edit-mode';
+                }
+              }
+              if (e.which === 72 /* Key H */) {
+                return 'toggleinline:HIGHLIGHT';
+              }
+            }
+            return keyBindingFn(e);
+          }
+
+          handleKeyCommand(command) {
+            if (command === 'editor-save') {
+              window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+              window.ga('send', 'event', 'draftjs', command);
+              return true;
+            } else if (command === 'load-saved-data') {
+              this.loadSavedData();
+              return true;
+            } else if (command === 'toggle-edit-mode') {
+              this.toggleEdit();
+            }
+            return false;
+          }
+
+          fetchData() {
+            window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
+            const req = new XMLHttpRequest();
+            req.open('GET', 'data.json', true);
+            req.onreadystatechange = () => {
+              if (req.readyState === 4) {
+                const data = JSON.parse(req.responseText);
+                this.setState({
+                  editorState: createWithContent(data),
+                  placeholder: 'Write your story...'
+                }, () => {
+                  this.refs.editor.focus();
+                });
+                window.ga('send', 'event', 'draftjs', 'data-success');
+              }
+            };
+            req.send();
+          }
+
+          logData(e) {
+            console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+            console.log(this.state.editorState.getSelection().toJS());
+            window.ga('send', 'event', 'draftjs', 'log-data');
+          }
+
+          loadSavedData() {
+            const data = window.localStorage.getItem('editor');
+            if (data === null) {
+              return;
+            }
+            try {
+              const blockData = JSON.parse(data);
+              console.log(blockData);
+              this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this.refs.editor.focus);
+            } catch(e) {
+              console.log(e);
+            }
+            window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
+          }
+
+          toggleEdit(e) {
+            this.setState({
+              editorEnabled: !this.state.editorEnabled
+            }, () => {
+              window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
+            });
+          }
+
+          handleDroppedFiles(selection, files) {
+            const file = files[0];
+            if (file.type.indexOf('image/') === 0) {
+              // eslint-disable-next-line no-undef
+              const src = URL.createObjectURL(file);
+              this.onChange(addNewBlockAt(
+                this.state.editorState,
+                selection.getAnchorKey(),
+                Block.IMAGE, {
+                  src,
+                }
+              ));
+            }
+            window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+          }
+
+          render() {
+            const { editorState, editorEnabled } = this.state;
+            return (
+              <div>
+                <Editor
+                  ref="editor"
+                  editorState={editorState}
+                  onChange={this.onChange}
+                  editorEnabled={editorEnabled}
+                  handleDroppedFiles={this.handleDroppedFiles}
+                  handleKeyCommand={this.handleKeyCommand}
+                  placeholder={this.state.placeholder}
+                  keyBindingFn={this.keyBinding}
+                />
+                <div className="editor-action">
+                  <button onClick={this.logData}>Log State</button>
+                  <button onClick={this.toggleEdit}>Toggle Edit</button>
+                </div>
+              </div>
+            );
+          }
+        };
+        ReactDOM.render(
+          <App />,
+          document.getElementById('app')
+        );
+    </script>
+</body>
+</html>

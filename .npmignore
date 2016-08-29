@@ -7,3 +7,4 @@ node_modules/
 hash.json
 webpack.*.js
 src/
+docs/
