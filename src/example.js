@@ -29,6 +29,7 @@ import {
   keyBindingFn,
   createEmptyContent,
   createWithContent,
+  addNewBlockAt,
 } from './index';
 
 
@@ -162,8 +163,18 @@ class App extends React.Component {
   }
 
   handleDroppedFiles(selection, files) {
-    console.log(files);
-    console.log(selection);
+    const file = files[0];
+    if (file.type.indexOf('image/') === 0) {
+      // eslint-disable-next-line no-undef
+      const src = URL.createObjectURL(file);
+      this.onChange(addNewBlockAt(
+        this.state.editorState,
+        selection.getAnchorKey(),
+        Block.IMAGE, {
+          src,
+        }
+      ));
+    }
     window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
   }
 

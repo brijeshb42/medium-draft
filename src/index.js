@@ -14,7 +14,6 @@ import TodoBlock from './components/blocks/todo';
 import ImageBlock from './components/blocks/image';
 import BreakBlock from './components/blocks/break';
 
-
 export { Block, Inline, Entity } from './util/constants';
 export { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
 
@@ -26,8 +25,6 @@ export {
   updateDataOfBlock,
   addNewBlockAt,
 } from './model';
-
-// export Editor from './editor';
 
 export {
   createEmptyContent,
