@@ -57,7 +57,7 @@ const handleBeforeInput = (editorState, str, onChange) => {
     const contentState = editorState.getCurrentContent();
     const text = currentBlock.getText();
     const len = text.length;
-    if (selectionState.getAnchorOffset() === 0 && len === 0) {
+    if (selectionState.getAnchorOffset() === 0) {
       onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
       return true;
     } else if (len > 0) {
@@ -98,9 +98,10 @@ class App extends React.Component {
     this.toggleEdit = this.toggleEdit.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
+    this.keyBinding = this.keyBinding.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
-    this.keyBinding = this.keyBinding.bind(this);
+    this.handleReturn = this.handleReturn.bind(this);
   }
 
   componentDidMount() {
@@ -215,6 +216,12 @@ class App extends React.Component {
     window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
   }
 
+  handleReturn(e) {
+    // const currentBlock = getCurrentBlock(this.state.editorState);
+    // var text = currentBlock.getText();
+    return false;
+  }
+
   render() {
     const { editorState, editorEnabled } = this.state;
     return (
@@ -229,6 +236,7 @@ class App extends React.Component {
           placeholder={this.state.placeholder}
           keyBindingFn={this.keyBinding}
           beforeInput={handleBeforeInput}
+          handleReturn={this.handleReturn}
         />
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>

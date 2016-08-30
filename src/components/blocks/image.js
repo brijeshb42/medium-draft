@@ -42,7 +42,9 @@ class ImageBlock extends React.Component {
     if (src !== null) {
       return (
         <div>
-          <img role="presentation" onClick={this.onClick} className={className} src={src} />
+          <div className="block-image-inner-container">
+            <img role="presentation" onClick={this.onClick} className={className} src={src} />
+          </div>
           <figcaption>
             <EditorBlock {...this.props} />
           </figcaption>
@@ -59,3 +61,12 @@ ImageBlock.propTypes = {
 
 
 export default ImageBlock;
+
+/*
+
+<div
+              className="block-image-toolbar-container"
+              style={{ display: (this.state.selected ? 'block' : 'none') }}
+            >
+              <i className="fa fa-lg fa-trash" title="Remove image" />
+            </div>*/

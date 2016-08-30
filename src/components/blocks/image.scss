@@ -28,4 +28,14 @@ figure.block-image {
             text-align: center;
         }
     }
+
+    .block-image-inner-container {
+        position: relative;
+    }
+    .block-image-toolbar-container {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        cursor: pointer;
+    }
 }

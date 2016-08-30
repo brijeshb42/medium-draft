@@ -45,7 +45,6 @@ class MediumDraftEditor extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
-    this.addMedia = this.addMedia.bind(this);
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
   }
 
@@ -84,7 +83,7 @@ class MediumDraftEditor extends React.Component {
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
 
-  addMedia() {
+  // addMedia() {
     // const src = window.prompt('Enter a URL');
     // if (!src) {
     //   return;
@@ -97,7 +96,7 @@ class MediumDraftEditor extends React.Component {
     //     ' '
     //   )
     // );
-  }
+  // }
 
 
   /*
@@ -120,7 +119,7 @@ class MediumDraftEditor extends React.Component {
   - add-new-block -> Adds a new block at the current cursor position.
   - changetype:block-type -> If the command starts with `changetype:` and
     then succeeded by the block type, the current block will be converted to that particular type.
-  - toggleinline:inlint-type -> If the command starts with `toggleinline:` and
+  - toggleinline:inline-type -> If the command starts with `toggleinline:` and
     then succeeded by the inline type, the current selection's inline type will be
     togglled.
   */
@@ -168,7 +167,7 @@ class MediumDraftEditor extends React.Component {
   }
 
   /*
-  This command is responsible for emmitting various commands based on various key combos.
+  This function is responsible for emitting various commands based on various key combos.
   */
   handleBeforeInput(str) {
     return this.props.beforeInput(
@@ -183,6 +182,11 @@ class MediumDraftEditor extends React.Component {
   default behavior is executed.
   */
   handleReturn(e) {
+    if (this.props.handleReturn) {
+      if (this.props.handleReturn()) {
+        return true;
+      }
+    }
     const { editorState } = this.props;
     if (isSoftNewlineEvent(e)) {
       this.onChange(RichUtils.insertSoftNewline(editorState));
@@ -296,7 +300,6 @@ class MediumDraftEditor extends React.Component {
           />
           {showAddButton ? (
             <AddButton
-              addMedia={this.addMedia}
               editorState={editorState}
               getEditorState={this.getEditorState}
               setEditorState={this.onChange}
@@ -341,6 +344,7 @@ MediumDraftEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   handleDroppedFiles: PropTypes.func,
   handleKeyCommand: PropTypes.func,
+  handleReturn: PropTypes.func,
 };
 
 MediumDraftEditor.defaultProps = {
