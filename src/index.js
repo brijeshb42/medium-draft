@@ -6,6 +6,7 @@ import Link, { findLinkEntities } from './components/entities/link';
 import keyBindingFn from './util/keybinding';
 import rendererFn from './components/customrenderer';
 import customStyleMap from './util/customstylemap';
+import createEditorState from './model/content';
 
 import QuoteCaptionBlock from './components/blocks/blockquotecaption';
 import CaptionBlock from './components/blocks/caption';
@@ -27,12 +28,8 @@ export {
 } from './model';
 
 export {
-  createEmptyContent,
-  createWithContent,
-} from './model/content';
-
-export {
   Editor,
+  createEditorState,
   StringToTypeMap,
   RenderMap,
   Link,

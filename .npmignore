@@ -1,6 +1,6 @@
 dist/index.html
 dist/data.json
-dist/static/example.js
+dist/example.js
 node_modules/
 .babelrc
 .gitignore

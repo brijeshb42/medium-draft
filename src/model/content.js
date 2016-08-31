@@ -14,7 +14,16 @@ const decorator = new CompositeDecorator([
   },
 ]);
 
-export const createEmptyContent = () => EditorState.createEmpty(decorator);
 
-export const createWithContent = (content) =>
-  EditorState.createWithContent(convertFromRaw(content), decorator);
+const createEditorState = (content = null, decorators = null) => {
+  if (content === null) {
+    return EditorState.createEmpty(decorator);
+  }
+  let dec = decorator;
+  if (decorators !== null) {
+    dec = decorators;
+  }
+  return EditorState.createWithContent(convertFromRaw(content), dec);
+};
+
+export default createEditorState;

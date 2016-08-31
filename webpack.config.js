@@ -9,7 +9,7 @@ var ENV_DEV = 'development';
 var ENV_PROD = 'production';
 var ENV_TEST = 'test';
 
-var BUILD_DIR = path.resolve(__dirname, 'dist', 'static');
+var BUILD_DIR = path.resolve(__dirname, 'dist');
 var APP_DIR = path.resolve(__dirname, 'src');
 
 var env = process.env.NODE_ENV || ENV_DEV;

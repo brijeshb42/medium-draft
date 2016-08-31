@@ -28,8 +28,7 @@ import {
   StringToTypeMap,
   Block,
   keyBindingFn,
-  createEmptyContent,
-  createWithContent,
+  createEditorState,
   addNewBlockAt,
   beforeInput,
   getCurrentBlock,
@@ -79,7 +78,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      editorState: createEmptyContent(),
+      editorState: createEditorState(),
       editorEnabled: true,
       placeholder: 'Write your story...',
     };
@@ -105,12 +104,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // this.setState({
-    //   placeholder: 'Loading content...',
-    // });
-    // setTimeout(this.fetchData, 1000);
-    // this.fetchData();
-    this.refs.editor.focus();
+    setTimeout(this.fetchData, 1000);
   }
 
   keyBinding(e) {
@@ -159,7 +153,7 @@ class App extends React.Component {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
         this.setState({
-          editorState: createWithContent(data),
+          editorState: createEditorState(data),
           placeholder: 'Write your story...'
         }, () => {
           this.refs.editor.focus();

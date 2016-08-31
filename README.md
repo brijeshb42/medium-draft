@@ -5,15 +5,14 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 ### Features
 
 - Focus on keyboard shortcuts and auto transform of text blocks.
-- Image addition via URL.
-- Minimize mouse usage
-- Autolists
+- Image addition with support for rich text captioning.
+- Minimize mouse usage.
+- Autolists.
 - Proper handling of `RETURN` presses.
 - It also has implementations of some custom blocks like:
     - `caption` - Can be used as a caption for media blocks like image or video instead of nested `draft-js` instances for simplicity.
     - `block-quote-caption` - Caption for `blockquote`s.
     - `todo` - Todo text with a checkbox.
-    - `image` - Image block with support for rich text captioning.
 
 ##### Following are the keyboard shortcuts to toggle block types (<kbd>Alt and CTRL</kbd> for Windows/Linux and <kbd>Option and Command</kbd> for OSX)
 *   <kbd>Alt/Option</kbd> +
@@ -36,7 +35,6 @@ These commands are not a part of the core editor but have been implemented in th
 ##### Special characters while typing: While typing in an empty block, if the content matches one of the following, that particular block's type and look will be changed to the corresponding block specified below
 
 *   `--` - If current block is `blockquote`, it will be changed to `block-quote-caption`, else `caption`.
-*   `''` or `""` or `> ` - `blockquote`.
 *   `*.` `(An asterisk and a period)` - `unordered-list-item`.
 *   `*<SPACE>` `(An asterisk and a space)` - `unordered-list-item`.
 *   `-<SPACE>` `(A hyphen and a space)` - `unordered-list-item`.
@@ -67,18 +65,22 @@ import ReactDOM from 'react-dom';
 
 import {
   Editor,
-  createEmptyContent,
-  createWithContent,
+  createEditorState,
 } from 'medium-draft';
-
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      editorState: createEmptyContent(),
+      editorState: createEditorState(), // for empty content
     };
+
+    /*
+    this.state = {
+      editorState: createEditorState(data), // with content
+    };
+    */
 
     this.onChange = (editorState) => {
       this.setState({ editorState });
