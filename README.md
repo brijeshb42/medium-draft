@@ -1,6 +1,6 @@
 # medium-draft - [demo](http://bitwiser.in/medium-draft/)
 
-A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
+A medium like rich text editor npbuilt upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 
 ### Features
 
@@ -49,8 +49,8 @@ These commands are not a part of the core editor but have been implemented in th
     - `npm install medium-draft`.
     - `import Editor from 'medium-draft'`
 - **Browser**
-    - Include `<link rel="stylesheet" type="text/css" href="https://npmcdn.com/medium-draft/dist/medium-draft.css">` in `<head>`
-    - Include `<script src="https://npmcdn.com/medium-draft/dist/medium-draft.js"></script>`. **medium-draft** is available in the global object as `MediumDraft`.
+    - Include `<link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/medium-draft.css">` in `<head>`
+    - Include `<script src="https://unpkg.com/medium-draft/dist/medium-draft.js"></script>`. **medium-draft** is available in the global object as `MediumDraft`.
 
 ### Usage
 
