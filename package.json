@@ -1,7 +1,7 @@
 {
   "name": "medium-draft",
   "version": "0.3.5",
-  "description": "",
+  "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

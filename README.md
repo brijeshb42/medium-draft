@@ -1,6 +1,6 @@
 # medium-draft - [demo](http://bitwiser.in/medium-draft/)
 
-A medium like rich text editor npbuilt upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
+A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 
 ### Features
 
