@@ -42,7 +42,7 @@ class ImageBlock extends React.Component {
     if (src !== null) {
       return (
         <div>
-          <div className="block-image-inner-container">
+          <div className="md-block-image-inner-container">
             <img role="presentation" onClick={this.onClick} className={className} src={src} />
           </div>
           <figcaption>

@@ -9,9 +9,9 @@ const AtomicBlock = (props) => {
   const type = entity.getType();
   if (type === 'image') {
     return (
-      <div className="block-atomic-wrapper">
+      <div className="md-block-atomic-wrapper">
         <img role="presentation" src={data.src} />
-        <div className="block-atomic-controls">
+        <div className="md-block-atomic-controls">
           <button>&times;</button>
         </div>
       </div>

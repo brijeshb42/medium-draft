@@ -27,7 +27,7 @@
 $toolbar-color: #2b2b2b;
 
 
-.editor-toolbar {
+.md-editor-toolbar {
   background: $toolbar-color;
   color: #fff;
   cursor: auto;
@@ -40,13 +40,13 @@ $toolbar-color: #2b2b2b;
 
   // transition: top 75ms ease-out,left 75ms ease-out;
 
-  &.editor-toolbar--isopen {
+  &.md-editor-toolbar--isopen {
     visibility: visible;
     // transition: top 75ms ease-out,left 75ms ease-out;
     // animation: pop-upwards 180ms forwards linear;
   }
 
-  &.editor-toolbar--linkinput {
+  &.md-editor-toolbar--linkinput {
     // display:block;
     animation: pop-downwards 200ms forwards linear;
   }
@@ -62,7 +62,7 @@ $toolbar-color: #2b2b2b;
     border-left: 5px solid transparent;
   }
 
-  .url-input {
+  .md-url-input {
     box-sizing: border-box;
     border-radius: 2px;
     display: block;
@@ -81,7 +81,7 @@ $toolbar-color: #2b2b2b;
     }
   }
 
-  .url-input-close {
+  .md-url-input-close {
     position: absolute;
     right: 10px;
     top: 5px;

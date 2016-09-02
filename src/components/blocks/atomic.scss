@@ -1,6 +1,6 @@
 $control-btn-width: 22px;
 
-.block-atomic {
+.md-block-atomic {
     margin: 0;
     img {
         width: 100%;
@@ -9,7 +9,7 @@ $control-btn-width: 22px;
     }
 }
 
-.block-atomic-wrapper {
+.md-block-atomic-wrapper {
     position: relative;
 
     // &:hover {
@@ -19,7 +19,7 @@ $control-btn-width: 22px;
     // }
 }
 
-.block-atomic-controls {
+.md-block-atomic-controls {
     display: none;
     position: absolute;
     top: 0;

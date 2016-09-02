@@ -4,6 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 var ENV_DEV = 'development';
 var ENV_PROD = 'production';
@@ -19,6 +20,15 @@ var isProd = env === ENV_PROD;
 var isTest = env === ENV_TEST;
 
 console.log(env);
+
+var pkg = require('./package.json');
+var banner = [
+  pkg.name,
+  'Version - ' + pkg.version,
+  'Author - ' + pkg.author
+].join('\n');
+
+var bannerPlugin = new webpack.BannerPlugin(banner);
 
 var definePlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(env === ENV_DEV),
@@ -49,7 +59,8 @@ var hashJsonPlugin = function() {
 
 function getPlugins(env) {
   var plugins = [definePlugin];
-  if (env !== ENV_PROD) {
+  if (!isProd) {
+    plugins.push(new DashboardPlugin());
     plugins.push(new webpack.NoErrorsPlugin());
     plugins.push(vendorPlugin);
     plugins.push(commonsPlugin);
@@ -65,6 +76,7 @@ function getPlugins(env) {
         dead_code: true,
       },
     }));
+    plugins.push(bannerPlugin);
   }
   return plugins;
 }
@@ -125,8 +137,8 @@ function getLoaders(env) {
 
 var options = {
   context: APP_DIR,
-  debug: true,
-  devtool: env === ENV_PROD  ? '' : 'cheap-module-eval-source-map',
+  debug: !isProd,
+  devtool: isProd  ? '' : 'cheap-module-eval-source-map',
   entry: getEntry(env),
   target: 'web',
   output: {

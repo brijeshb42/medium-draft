@@ -1,12 +1,12 @@
 {
   "name": "medium-draft",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -f dist/*.js && rm -f dist/*.css && rm -rf lib",
-    "dev": "mkdir -p dist && cp index.html dist/index.html && NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
+    "dev": "mkdir -p dist && cp index.html dist/index.html && cp docs/data.json dist/data.json && NODE_ENV=development webpack-dashboard -- webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
     "build": "npm run clean && npm run test:lint && NODE_ENV=production webpack",
     "babel": "./node_modules/.bin/babel ./src -d lib --ignore 'example.js'",
     "npm": "npm run build && npm run babel && mv dist/example.css dist/medium-draft.css && cp dist/medium-draft.css ./lib/index.css",
@@ -52,6 +52,7 @@
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14",
+    "webpack-dashboard": "^0.1.8",
     "webpack-dev-server": "^1.14.1"
   },
   "bugs": {

@@ -180,21 +180,21 @@ export default class Toolbar extends React.Component {
       isOpen = false;
     }
     if (showURLInput) {
+      let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
+      className += ' md-editor-toolbar--linkinput';
       return (
         <div
-          className={
-            `editor-toolbar${(isOpen ? ' editor-toolbar--isopen' : '')} editor-toolbar--linkinput`
-          }
+          className={className}
         >
           <div
             className="RichEditor-controls RichEditor-show-link-input"
             style={{ display: 'block' }}
           >
-            <span className="url-input-close" onMouseDown={this.hideLinkInput}>&times;</span>
+            <span className="md-url-input-close" onMouseDown={this.hideLinkInput}>&times;</span>
             <input
               ref={node => { this.urlinput = node; }}
               type="text"
-              className="url-input"
+              className="md-url-input"
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
               placeholder="Press ENTER or ESC"
@@ -206,7 +206,7 @@ export default class Toolbar extends React.Component {
     }
     return (
       <div
-        className={`editor-toolbar${(isOpen ? ' editor-toolbar--isopen' : '')}`}
+        className={`md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`}
       >
         <BlockToolbar
           editorState={editorState}

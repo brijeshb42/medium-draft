@@ -1,4 +1,4 @@
-figure.block-image {
+figure.md-block-image {
     // margin: 0;
     margin: 10px 0;
     background: #fbfbfb;
@@ -29,10 +29,10 @@ figure.block-image {
         }
     }
 
-    .block-image-inner-container {
+    .md-block-image-inner-container {
         position: relative;
     }
-    .block-image-toolbar-container {
+    .md-block-image-toolbar-container {
         position: absolute;
         top: 0;
         right: 10px;
