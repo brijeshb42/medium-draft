@@ -108,6 +108,128 @@ ReactDOM.render(
 );
 ```
 
+### Customizing side buttons
+
+`medium-draft`'s `Editor` accepts a prop called `sideButtons`. By default, there is only one (image) button, but you can add more. The `sideButtons` prop must be an array of objects with each object having the following signature:
+
+```js
+{
+  "title": "unique-button-name",
+  "component": ButtonComponent
+}
+```
+
+For ex:
+
+```js
+{
+  "title": "Image",
+  "component": ImageSideButton
+}
+```
+
+Example code:
+
+Right now, the image button simply adds an image inside the editor using `URL.createObjectURL`. But if you would like to first upload the image to your server and then add that image to the editor, you can follow one of the 2 methods:
+
+1. Either extend the default `ImageSideButton` component that comes with `medium-draft`.
+
+2. Or create your own component with the complete functionality yourself.
+
+For simplicity, we will follow the first method. If you study the [implementation](src/components/sides/image.js) of `ImageSideButton`, you will see an `onChange` method that receives the file chooser event where the seleced files are available as `event.target.files`. We will simply override this method as we don't want to customize anything else. Also note that each side button component receives `getEditorState` function (returns the draft `editorState`), `setEditorState(newEditorState)` function (sets the new editorState) and `close` function which you need to call manually to close the side buttons list:
+
+```javascript
+import React from 'react';
+import {
+  ImageSideButton,
+  Block,
+  addNewBlock,
+  createEditorState,
+  Editor,
+} from 'medium-draft';
+import 'isomorphic-fetch';
+
+class CustomImageSideButton extends ImageSideButton {
+  
+  /*
+  We will only check for first file and also whether
+  it is an image or not.
+  */
+  onChange(e) {
+    const file = e.target.files[0];
+    if (file.type.indexOf('image/') === 0) {
+      // This is a post request to server endpoint with image as `image`
+      const formData = new FormData();
+      formData.append('image', file);
+      fetch('/your-server-endpoint', {
+        method: 'POST',
+        body: formData,
+      }).then((response) => {
+        if (response.status === 200) {
+          // Assuming server responds with
+          // `{ "url": "http://example-cdn.com/image.jpg"}`
+          return response.json().then(data => {
+            if (data.url) {
+              this.props.setEditorState(addNewBlock(
+                this.props.getEditorState(),
+                Block.IMAGE, {
+                  src,
+                }
+              ));
+            }  
+          });
+        }
+      });
+    }
+    this.props.close();
+  }
+
+}
+
+// Now pass this component instead of default prop to Editor example above.
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.sideButtons = [{
+      title: 'Image',
+      component: CustomImageSideButton,
+    }];
+
+    this.state = {
+      editorState: createEditorState(), // for empty content
+    };
+
+    /*
+    this.state = {
+      editorState: createEditorState(data), // with content
+    };
+    */
+
+    this.onChange = (editorState) => {
+      this.setState({ editorState });
+    };
+  }
+
+  componentDidMount() {
+    this.refs.editor.focus();
+  }
+
+  render() {
+    const { editorState } = this.state;
+    return (
+      <Editor
+        ref="editor"
+        editorState={editorState}
+        onChange={this.onChange}
+        sideButtons={this.sideButtons}
+      />
+    );
+  }
+};
+```
+
+
 ### Issues
 
 - [ ] Figure out a way to show placeholder text for empty image captions.

@@ -15,6 +15,9 @@ import TodoBlock from './components/blocks/todo';
 import ImageBlock from './components/blocks/image';
 import BreakBlock from './components/blocks/break';
 
+import ImageSideButton from './components/sides/image';
+import BreakSideButton from './components/sides/break';
+
 export { Block, Inline, Entity } from './util/constants';
 export { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
 
@@ -44,4 +47,6 @@ export {
   TodoBlock,
   ImageBlock,
   BreakBlock,
+  ImageSideButton,
+  BreakSideButton,
 };
