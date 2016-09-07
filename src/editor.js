@@ -27,6 +27,57 @@ some key handling for ease of use so that users' mouse usage is minimum.
 */
 class MediumDraftEditor extends React.Component {
 
+  static propTypes = {
+    beforeInput: PropTypes.func,
+    keyBindingFn: PropTypes.func,
+    customStyleMap: PropTypes.object,
+    blockStyleFn: PropTypes.func,
+    rendererFn: PropTypes.func,
+    editorEnabled: PropTypes.bool,
+    spellCheck: PropTypes.bool,
+    stringToTypeMap: PropTypes.object,
+    blockRenderMap: PropTypes.object,
+    blockButtons: PropTypes.array,
+    inlineButtons: PropTypes.array,
+    placeholder: PropTypes.string,
+    continuousBlocks: PropTypes.arrayOf(PropTypes.string),
+    sideButtons: PropTypes.arrayOf(PropTypes.object),
+    editorState: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    handleDroppedFiles: PropTypes.func,
+    handleKeyCommand: PropTypes.func,
+    handleReturn: PropTypes.func,
+  };
+
+  static defaultProps = {
+    beforeInput,
+    keyBindingFn,
+    customStyleMap,
+    blockStyleFn,
+    rendererFn,
+    editorEnabled: true,
+    spellCheck: true,
+    stringToTypeMap: StringToTypeMap,
+    blockRenderMap: RenderMap,
+    blockButtons: BLOCK_BUTTONS,
+    inlineButtons: INLINE_BUTTONS,
+    placeholder: 'Write your story...',
+    continuousBlocks: [
+      Block.UNSTYLED,
+      Block.BLOCKQUOTE,
+      Block.OL,
+      Block.UL,
+      Block.CODE,
+      Block.TODO,
+    ],
+    sideButtons: [
+      {
+        title: 'Image',
+        component: ImageButton,
+      },
+    ],
+  };
+
   constructor(props) {
     super(props);
 
@@ -325,56 +376,56 @@ class MediumDraftEditor extends React.Component {
   }
 }
 
-MediumDraftEditor.propTypes = {
-  beforeInput: PropTypes.func,
-  keyBindingFn: PropTypes.func,
-  customStyleMap: PropTypes.object,
-  blockStyleFn: PropTypes.func,
-  rendererFn: PropTypes.func,
-  editorEnabled: PropTypes.bool,
-  spellCheck: PropTypes.bool,
-  stringToTypeMap: PropTypes.object,
-  blockRenderMap: PropTypes.object,
-  blockButtons: PropTypes.array,
-  inlineButtons: PropTypes.array,
-  placeholder: PropTypes.string,
-  continuousBlocks: PropTypes.arrayOf(PropTypes.string),
-  sideButtons: PropTypes.arrayOf(PropTypes.object),
-  editorState: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
-  handleDroppedFiles: PropTypes.func,
-  handleKeyCommand: PropTypes.func,
-  handleReturn: PropTypes.func,
-};
+// MediumDraftEditor.propTypes = {
+//   beforeInput: PropTypes.func,
+//   keyBindingFn: PropTypes.func,
+//   customStyleMap: PropTypes.object,
+//   blockStyleFn: PropTypes.func,
+//   rendererFn: PropTypes.func,
+//   editorEnabled: PropTypes.bool,
+//   spellCheck: PropTypes.bool,
+//   stringToTypeMap: PropTypes.object,
+//   blockRenderMap: PropTypes.object,
+//   blockButtons: PropTypes.array,
+//   inlineButtons: PropTypes.array,
+//   placeholder: PropTypes.string,
+//   continuousBlocks: PropTypes.arrayOf(PropTypes.string),
+//   sideButtons: PropTypes.arrayOf(PropTypes.object),
+//   editorState: PropTypes.object.isRequired,
+//   onChange: PropTypes.func.isRequired,
+//   handleDroppedFiles: PropTypes.func,
+//   handleKeyCommand: PropTypes.func,
+//   handleReturn: PropTypes.func,
+// };
 
-MediumDraftEditor.defaultProps = {
-  beforeInput,
-  keyBindingFn,
-  customStyleMap,
-  blockStyleFn,
-  rendererFn,
-  editorEnabled: true,
-  spellCheck: true,
-  stringToTypeMap: StringToTypeMap,
-  blockRenderMap: RenderMap,
-  blockButtons: BLOCK_BUTTONS,
-  inlineButtons: INLINE_BUTTONS,
-  placeholder: 'Write your story...',
-  continuousBlocks: [
-    Block.UNSTYLED,
-    Block.BLOCKQUOTE,
-    Block.OL,
-    Block.UL,
-    Block.CODE,
-    Block.TODO,
-  ],
-  sideButtons: [
-    {
-      title: 'Image',
-      component: ImageButton,
-    },
-  ],
-};
+// MediumDraftEditor.defaultProps = {
+//   beforeInput,
+//   keyBindingFn,
+//   customStyleMap,
+//   blockStyleFn,
+//   rendererFn,
+//   editorEnabled: true,
+//   spellCheck: true,
+//   stringToTypeMap: StringToTypeMap,
+//   blockRenderMap: RenderMap,
+//   blockButtons: BLOCK_BUTTONS,
+//   inlineButtons: INLINE_BUTTONS,
+//   placeholder: 'Write your story...',
+//   continuousBlocks: [
+//     Block.UNSTYLED,
+//     Block.BLOCKQUOTE,
+//     Block.OL,
+//     Block.UL,
+//     Block.CODE,
+//     Block.TODO,
+//   ],
+//   sideButtons: [
+//     {
+//       title: 'Image',
+//       component: ImageButton,
+//     },
+//   ],
+// };
 
 
 export default MediumDraftEditor;

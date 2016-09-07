@@ -1,4 +1,5 @@
 {
   "presets": ["es2015", "react"],
-  "ignore": ["*.scss", "*.css"]
+  "ignore": ["*.scss", "*.css"],
+  "plugins": ["transform-class-properties"]
 }
