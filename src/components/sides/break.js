@@ -20,7 +20,7 @@ export default class BreakButton extends React.Component {
 
   render() {
     return (
-      <button className="md-sb-button" onClick={this.onClick}>
+      <button className="md-sb-button" onClick={this.onClick} type="button">
         <i className="fa fa-minus" />
       </button>
     );

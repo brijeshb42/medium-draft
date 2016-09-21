@@ -50,7 +50,11 @@ export default class ImageButton extends React.Component {
 
   render() {
     return (
-      <button className="md-sb-button md-sb-img-button" onClick={this.onClick}>
+      <button
+        className="md-sb-button md-sb-img-button"
+        type="button"
+        onClick={this.onClick}
+      >
         <i className="fa fa-image" />
         <input
           type="file"

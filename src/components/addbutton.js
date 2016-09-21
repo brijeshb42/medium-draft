@@ -107,7 +107,10 @@ export default class AddButton extends React.Component {
     }
   }
 
-  openToolbar() {
+  openToolbar(e) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
     this.setState({
       isOpen: !this.state.isOpen,
     }, this.props.focus);
@@ -163,6 +166,7 @@ export default class AddButton extends React.Component {
           <button
             onClick={this.openToolbar}
             className={`md-sb-button add-button${this.state.isOpen ? ' open-button' : ''}`}
+            type="button"
           >
             <i className="fa fa-plus-circle fa-lg" />
           </button>
