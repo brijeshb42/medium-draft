@@ -26,14 +26,24 @@
     a, a:visited {
       color: #08c;
     }
+
     .RichEditor-editor {
         max-width: 700px;
-        background: #fbffff;
         padding: 0 10px;
-        border: 1px solid #eee;
-        border-radius: 4px;
-        box-shadow: inset 0px 0px 10px 2px #f7f7f7;
+        background: #fbffff;
     }
+    .md-block-atomic-wrapper {
+        position: relative;
+        padding: 5px;
+        border: 1px solid #e8ebec;
+        background: #f7ffff;
+        border-radius: 2px;
+    }
+    .md-block-atomic-embed button {
+        background: #fff;
+        border: 1px solid #7d7d7d;
+    }
+
     .github-fork-ribbon:before {
         background-color: #090;
     }
@@ -144,12 +154,6 @@ const handleBeforeInput = (editorState, str, onChange) => {
 
 class EmbedSideButton extends React.Component {
 
-  static propTypes = {
-    setEditorState: React.PropTypes.func,
-    getEditorState: React.PropTypes.func,
-    close: React.PropTypes.func,
-  };
-
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -193,10 +197,6 @@ class EmbedSideButton extends React.Component {
 
 
 class AtomicEmbedComponent extends React.Component {
-
-  static propTypes = {
-    data: React.PropTypes.object.isRequired,
-  }
 
   constructor(props) {
     super(props);
@@ -255,7 +255,6 @@ class AtomicEmbedComponent extends React.Component {
 
 const AtomicBlock = (props) => {
   const { blockProps, block } = props;
-  console.log(props);
   const entity = Entity.get(block.getEntityAt(0));
   const data = entity.getData();
   const type = entity.getType();
@@ -322,7 +321,6 @@ class App extends React.Component {
     };
     const rFnOld = rendererFn(setEditorState, getEditorState);
     const rFnNew = (contentBlock) => {
-      const dt = rFnOld(contentBlock);
       const type = contentBlock.getType();
       switch(type) {
         case Block.ATOMIC:
@@ -333,7 +331,9 @@ class App extends React.Component {
               components: atomicRenderers,
             },
           };
-        default: dt;
+        default:
+          const dt = rFnOld(contentBlock);
+          return dt;
       }
     };
     return rFnNew;
