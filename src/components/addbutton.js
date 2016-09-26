@@ -107,10 +107,7 @@ export default class AddButton extends React.Component {
     }
   }
 
-  openToolbar(e) {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
+  openToolbar() {
     this.setState({
       isOpen: !this.state.isOpen,
     }, this.props.focus);
