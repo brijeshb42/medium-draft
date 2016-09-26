@@ -7,7 +7,7 @@ import BreakBlock from './blocks/break';
 
 import { Block } from '../util/constants';
 
-export default (onChange, getEditorState) => (contentBlock) => {
+export default (setEditorState, getEditorState) => (contentBlock) => {
   // console.log(editorState, onChange);
   const type = contentBlock.getType();
   switch (type) {
@@ -24,7 +24,7 @@ export default (onChange, getEditorState) => (contentBlock) => {
     case Block.TODO: return {
       component: TodoBlock,
       props: {
-        onChange,
+        setEditorState,
         getEditorState,
       },
     };

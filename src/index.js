@@ -30,6 +30,9 @@ export {
   addNewBlockAt,
 } from './model';
 
+// eslint-disable-next-line no-undef
+// export const _version = __VERSION__;
+
 export {
   Editor,
   createEditorState,
@@ -50,3 +53,5 @@ export {
   ImageSideButton,
   BreakSideButton,
 };
+
+export default Editor;
