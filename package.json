@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "scripts": {

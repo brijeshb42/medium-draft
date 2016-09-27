@@ -4,6 +4,8 @@ dist/example.js
 node_modules/
 .babelrc
 .gitignore
+.eslintcache
+.eslintrc.json
 hash.json
 webpack.*.js
 src/
