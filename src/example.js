@@ -77,6 +77,39 @@ const handleBeforeInput = (editorState, str, onChange) => {
 };
 
 
+class SeparatorSideButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick() {
+    const entityKey = Entity.create('separator', 'IMMUTABLE', {});
+    this.props.setEditorState(
+      AtomicBlockUtils.insertAtomicBlock(
+        this.props.getEditorState(),
+        entityKey,
+        '-'
+      )
+    );
+    this.props.close();
+  }
+
+  render() {
+    return (
+      <button
+        className="md-sb-button md-sb-img-button"
+        type="button"
+        title="Add a separator"
+        onClick={this.onClick}
+      >
+        <i className="fa fa-minus" />
+      </button>
+    );
+  }
+}
+
+
 class EmbedSideButton extends React.Component {
 
   static propTypes = {
@@ -203,6 +236,10 @@ class AtomicEmbedComponent extends React.Component {
   }*/
 }
 
+const AtomicSeparatorComponent = (props) => (
+  <hr />
+);
+
 const AtomicBlock = (props) => {
   const { blockProps, block } = props;
   console.log(props);
@@ -247,6 +284,9 @@ class App extends React.Component {
     }, {
       title: 'Embed',
       component: EmbedSideButton,
+    }, {
+      title: 'Separator',
+      component: SeparatorSideButton,
     }];
 
     this.getEditorState = () => this.state.editorState;
@@ -268,6 +308,7 @@ class App extends React.Component {
   getRenderer(setEditorState, getEditorState) {
     const atomicRenderers = {
       embed: AtomicEmbedComponent,
+      separator: AtomicSeparatorComponent,
     };
     const rFnOld = rendererFn(setEditorState, getEditorState);
     const rFnNew = (contentBlock) => {

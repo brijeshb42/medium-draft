@@ -34,14 +34,17 @@
     }
     .md-block-atomic-wrapper {
         position: relative;
-        /*padding: 5px;*/
         border: 1px solid #e8ebec;
-        /*background: #f7ffff;*/
-        /*border-radius: 2px;*/
     }
     .md-block-atomic-embed button {
         background: #fff;
         border: 1px solid #7d7d7d;
+    }
+    .md-block-atomic-wrapper hr {
+        border: none;
+        background: #5a5a5a;
+        min-height: 3px;
+        max-width: 50px;
     }
 
     .github-fork-ribbon:before {
@@ -150,6 +153,42 @@ const handleBeforeInput = (editorState, str, onChange) => {
   }
   return beforeInput(editorState, str, onChange, newTypeMap);
 };
+
+class SeparatorSideButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick() {
+    const entityKey = Entity.create('separator', 'IMMUTABLE', {});
+    this.props.setEditorState(
+      AtomicBlockUtils.insertAtomicBlock(
+        this.props.getEditorState(),
+        entityKey,
+        '-'
+      )
+    );
+    this.props.close();
+  }
+
+  render() {
+    return (
+      <button
+        className="md-sb-button md-sb-img-button"
+        type="button"
+        title="Add a separator"
+        onClick={this.onClick}
+      >
+        <i className="fa fa-minus" />
+      </button>
+    );
+  }
+}
+
+const AtomicSeparatorComponent = (props) => (
+  <hr />
+);
 
 
 class EmbedSideButton extends React.Component {
@@ -296,6 +335,9 @@ class App extends React.Component {
     }, {
       title: 'Embed',
       component: EmbedSideButton,
+    }, {
+      title: 'Separator',
+      component: SeparatorSideButton,
     }];
 
     this.logData = this.logData.bind(this);
@@ -318,6 +360,7 @@ class App extends React.Component {
   getRenderer(setEditorState, getEditorState) {
     const atomicRenderers = {
       embed: AtomicEmbedComponent,
+      separator: AtomicSeparatorComponent,
     };
     const rFnOld = rendererFn(setEditorState, getEditorState);
     const rFnNew = (contentBlock) => {
