@@ -242,19 +242,18 @@ const AtomicSeparatorComponent = (props) => (
 
 const AtomicBlock = (props) => {
   const { blockProps, block } = props;
-  console.log(props);
   const entity = Entity.get(block.getEntityAt(0));
   const data = entity.getData();
   const type = entity.getType();
   if (blockProps.components[type]) {
     const AtComponent = blockProps.components[type];
     return (
-      <div className="md-block-atomic-wrapper">
+      <div className={`md-block-atomic-wrapper md-block-atomic-wrapper-${type}`}>
         <AtComponent data={data} />
       </div>
     );
   }
-  return <p>Atomic block of type <b>{type}</b> is not supported.</p>;
+  return <p>Block of type <b>{type}</b> is not supported.</p>;
 };
 
 

@@ -47,6 +47,10 @@
         max-width: 50px;
     }
 
+    .md-block-atomic-wrapper.md-block-atomic-wrapper-separator {
+        border-color: transparent;
+    }
+
     .github-fork-ribbon:before {
         background-color: #090;
     }
@@ -300,12 +304,12 @@ const AtomicBlock = (props) => {
   if (blockProps.components[type]) {
     const AtComponent = blockProps.components[type];
     return (
-      <div className="md-block-atomic-wrapper">
+      <div className={`md-block-atomic-wrapper md-block-atomic-wrapper-${type}`}>
         <AtComponent data={data} />
       </div>
     );
   }
-  return <p>Atomic block of type <b>{type}</b> is not supported.</p>;
+  return <p>Block of type <b>{type}</b> is not supported.</p>;
 };
 
 
