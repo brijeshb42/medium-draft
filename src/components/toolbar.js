@@ -208,16 +208,20 @@ export default class Toolbar extends React.Component {
       <div
         className={`md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`}
       >
-        <BlockToolbar
-          editorState={editorState}
-          onToggle={this.props.toggleBlockType}
-          buttons={this.props.blockButtons}
-        />
-        <InlineToolbar
-          editorState={editorState}
-          onToggle={this.props.toggleInlineStyle}
-          buttons={this.props.inlineButtons}
-        />
+        {this.props.blockButtons.length > 0 ? (
+          <BlockToolbar
+            editorState={editorState}
+            onToggle={this.props.toggleBlockType}
+            buttons={this.props.blockButtons}
+          />
+        ) : null}
+        {this.props.inlineButtons.length > 0 ? (
+          <InlineToolbar
+            editorState={editorState}
+            onToggle={this.props.toggleInlineStyle}
+            buttons={this.props.inlineButtons}
+          />
+        ) : null}
         <div className="RichEditor-controls">
           <a
             className="RichEditor-styleButton RichEditor-linkButton hint--top"
