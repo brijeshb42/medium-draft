@@ -2,6 +2,8 @@
 
 A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 
+[Documentation](https://github.com/brijeshb42/medium-draft/wiki) in progress.
+
 ### Features
 
 - Focus on keyboard shortcuts and auto transform of text blocks.
