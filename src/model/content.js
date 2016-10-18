@@ -7,7 +7,7 @@ import {
 import Link, { findLinkEntities } from '../components/entities/link';
 
 
-const decorator = new CompositeDecorator([
+const defaultDecorators = new CompositeDecorator([
   {
     strategy: findLinkEntities,
     component: Link,
@@ -15,15 +15,11 @@ const decorator = new CompositeDecorator([
 ]);
 
 
-const createEditorState = (content = null, decorators = null) => {
+const createEditorState = (content = null, decorators = defaultDecorators) => {
   if (content === null) {
-    return EditorState.createEmpty(decorator);
+    return EditorState.createEmpty(decorators);
   }
-  let dec = decorator;
-  if (decorators !== null) {
-    dec = decorators;
-  }
-  return EditorState.createWithContent(convertFromRaw(content), dec);
+  return EditorState.createWithContent(convertFromRaw(content), decorators);
 };
 
 export default createEditorState;
