@@ -56,12 +56,30 @@ These commands are not a part of the core editor but have been implemented in th
 
 `medium-draft` sits on top of `draft-js` with some built in functionalities and blocks. Its API is almost the same as that of `draft-js`. You can take a look at [the demo editor's code](https://github.com/brijeshb42/medium-draft/tree/master/src/example.js) to see the implementation.
 
+#### CSS
+
+Include the css that comes with the library in your HTML -
+```html
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/medium-draft.css">
+```
+
+If you are using `webpack` for bundling, you can import the CSS like this in your JS code
+```javascript
+import 'medium-draft/lib/index.css';
+```
+
+
+#### JS (ES6)
+
 At the minimum, you need to provide `editorState` and `onChange` props, the same as `draft-js`.
 
 ```javascript
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+// if using webpack
+// import 'medium-draft/lib/index.css';
 
 import {
   Editor,
