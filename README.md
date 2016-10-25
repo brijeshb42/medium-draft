@@ -252,6 +252,7 @@ class App extends React.Component {
 
 ### Issues
 
+- [ ] Write an exporter to export draft data to HTML specifically for `medium-draft`.
 - [ ] Figure out a way to show placeholder text for empty image captions.
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
 
