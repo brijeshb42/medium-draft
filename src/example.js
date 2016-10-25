@@ -264,7 +264,7 @@ class App extends React.Component {
     this.state = {
       editorState: createEditorState(),
       editorEnabled: true,
-      placeholder: 'Write your story...',
+      placeholder: 'Loading...',
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -387,7 +387,11 @@ class App extends React.Component {
 
   logData(e) {
     window.es = this.state.editorState;
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+    const es = convertToRaw(this.state.editorState.getCurrentContent());
+    // this.setState({
+      // editorState: createEditorState(es),
+    // });
+    console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
   }

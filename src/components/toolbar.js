@@ -9,9 +9,26 @@ import InlineToolbar from './inlinetoolbar';
 
 import { getSelection, getSelectionRect } from '../util/index';
 import { getCurrentBlock } from '../model/index';
-import { Entity as CEntity } from '../util/constants';
+import { Entity as CEntity, HYPERLINK } from '../util/constants';
 
 export default class Toolbar extends React.Component {
+
+  static propTypes = {
+    editorEnabled: PropTypes.bool,
+    editorState: PropTypes.object,
+    toggleBlockType: PropTypes.func,
+    toggleInlineStyle: PropTypes.func,
+    inlineButtons: PropTypes.arrayOf(PropTypes.object),
+    blockButtons: PropTypes.arrayOf(PropTypes.object),
+    editorNode: PropTypes.object,
+    setLink: PropTypes.func,
+    focus: PropTypes.func,
+  };
+
+  static defaultProps = {
+    blockButtons: BLOCK_BUTTONS,
+    inlineButtons: INLINE_BUTTONS,
+  };
 
   constructor(props) {
     super(props);
@@ -121,9 +138,6 @@ export default class Toolbar extends React.Component {
       this.props.focus();
       return;
     }
-    // const toolbarNode = ReactDOM.findDOMNode(this);
-    // const toolbarBoundary = toolbarNode.getBoundingClientRect();
-    // toolbarNode.style.width = toolbarBoundary.width + 'px';
     const currentBlock = getCurrentBlock(editorState);
     let selectedEntity = '';
     let linkFound = false;
@@ -173,7 +187,7 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const { editorState, editorEnabled } = this.props;
+    const { editorState, editorEnabled, inlineButtons } = this.props;
     const { showURLInput, urlInputValue } = this.state;
     let isOpen = true;
     if (!editorEnabled || editorState.getSelection().isCollapsed()) {
@@ -204,6 +218,21 @@ export default class Toolbar extends React.Component {
         </div>
       );
     }
+    let hasHyperLink = false;
+    let hyperlinkLabel = '#';
+    let hyperlinkDescription = 'Add a link';
+    for (let cnt = 0; cnt < inlineButtons.length; cnt++) {
+      if (inlineButtons[cnt].style === HYPERLINK) {
+        hasHyperLink = true;
+        if (inlineButtons[cnt].label) {
+          hyperlinkLabel = inlineButtons[cnt].label;
+        }
+        if (inlineButtons[cnt].description) {
+          hyperlinkDescription = inlineButtons[cnt].description;
+        }
+        break;
+      }
+    }
     return (
       <div
         className={`md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`}
@@ -222,15 +251,18 @@ export default class Toolbar extends React.Component {
             buttons={this.props.inlineButtons}
           />
         ) : null}
-        <div className="RichEditor-controls">
-          <a
-            className="RichEditor-styleButton RichEditor-linkButton hint--top"
-            href="#open-link-input"
-            onClick={this.handleLinkInput} aria-label="Add a link"
-          >
-            #
-          </a>
-        </div>
+        {hasHyperLink && (
+          <div className="RichEditor-controls">
+            <a
+              className="RichEditor-styleButton RichEditor-linkButton hint--top"
+              href="#open-link-input"
+              onClick={this.handleLinkInput}
+              aria-label={hyperlinkDescription}
+            >
+              {hyperlinkLabel}
+            </a>
+          </div>
+        )}
       </div>
     );
   }
@@ -243,11 +275,6 @@ export const BLOCK_BUTTONS = [
     icon: 'header',
     description: 'Heading 3',
   },
-  // {
-  //   label: 'P',
-  //   style: 'unstyled',
-  //   description: 'Paragraph',
-  // },
   {
     label: 'Q',
     style: 'blockquote',
@@ -292,37 +319,27 @@ export const INLINE_BUTTONS = [
     icon: 'underline',
     description: 'Underline',
   },
+  {
+    label: 'Hi',
+    style: 'HIGHLIGHT',
+    description: 'Highlight selection',
+  },
+  {
+    label: '#',
+    style: HYPERLINK,
+    icon: 'link',
+    description: 'Strikethrough',
+  },
+];
   // {
   //   label: 'S',
   //   style: 'STRIKETHROUGH',
   //   icon: 'strikethrough',
   //   description: 'Strikethrough',
   // },
-  {
-    label: 'Hi',
-    style: 'HIGHLIGHT',
-    description: 'Highlight selection',
-  },
   // {
   //   label: 'Code',
   //   style: 'CODE',
   //   description: 'Inline Code',
   // },
-];
 
-Toolbar.propTypes = {
-  editorEnabled: PropTypes.bool,
-  editorState: PropTypes.object,
-  toggleBlockType: PropTypes.func,
-  toggleInlineStyle: PropTypes.func,
-  inlineButtons: PropTypes.arrayOf(PropTypes.object),
-  blockButtons: PropTypes.arrayOf(PropTypes.object),
-  editorNode: PropTypes.object,
-  setLink: PropTypes.func,
-  focus: PropTypes.func,
-};
-
-Toolbar.defaultProps = {
-  blockButtons: BLOCK_BUTTONS,
-  inlineButtons: INLINE_BUTTONS,
-};

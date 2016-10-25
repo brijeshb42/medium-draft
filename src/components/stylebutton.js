@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 
+import { HYPERLINK } from '../util/constants.js';
+
 export default class StyleButton extends React.Component {
   constructor() {
     super();
@@ -10,6 +12,9 @@ export default class StyleButton extends React.Component {
   }
 
   render() {
+    if (this.props.style === HYPERLINK) {
+      return null;
+    }
     let className = 'RichEditor-styleButton';
     if (this.props.active) {
       className += ' RichEditor-activeButton';

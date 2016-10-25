@@ -37,11 +37,24 @@ class MediumDraftEditor extends React.Component {
     spellCheck: PropTypes.bool,
     stringToTypeMap: PropTypes.object,
     blockRenderMap: PropTypes.object,
-    blockButtons: PropTypes.array,
-    inlineButtons: PropTypes.array,
+    blockButtons: PropTypes.arrayOf(PropTypes.shape({
+      label: React.PropTypes.string.isRequired,
+      style: React.PropTypes.string.isRequired,
+      icon: React.PropTypes.string,
+      description: React.PropTypes.string,
+    })),
+    inlineButtons: PropTypes.arrayOf(PropTypes.shape({
+      label: React.PropTypes.string.isRequired,
+      style: React.PropTypes.string.isRequired,
+      icon: React.PropTypes.string,
+      description: React.PropTypes.string,
+    })),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
-    sideButtons: PropTypes.arrayOf(PropTypes.object),
+    sideButtons: PropTypes.arrayOf(PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      component: PropTypes.func,
+    })),
     editorState: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     handleDroppedFiles: PropTypes.func,
@@ -133,22 +146,6 @@ class MediumDraftEditor extends React.Component {
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
-
-  // addMedia() {
-    // const src = window.prompt('Enter a URL');
-    // if (!src) {
-    //   return;
-    // }
-    // const entityKey = Entity.create('image', 'IMMUTABLE', {src});
-    // this.onChange(
-    //   AtomicBlockUtils.insertAtomicBlock(
-    //     this.props.editorState,
-    //     entityKey,
-    //     ' '
-    //   )
-    // );
-  // }
-
 
   /*
   Implemented to just pass it on to the parent component. Will add some
@@ -375,57 +372,5 @@ class MediumDraftEditor extends React.Component {
     );
   }
 }
-
-// MediumDraftEditor.propTypes = {
-//   beforeInput: PropTypes.func,
-//   keyBindingFn: PropTypes.func,
-//   customStyleMap: PropTypes.object,
-//   blockStyleFn: PropTypes.func,
-//   rendererFn: PropTypes.func,
-//   editorEnabled: PropTypes.bool,
-//   spellCheck: PropTypes.bool,
-//   stringToTypeMap: PropTypes.object,
-//   blockRenderMap: PropTypes.object,
-//   blockButtons: PropTypes.array,
-//   inlineButtons: PropTypes.array,
-//   placeholder: PropTypes.string,
-//   continuousBlocks: PropTypes.arrayOf(PropTypes.string),
-//   sideButtons: PropTypes.arrayOf(PropTypes.object),
-//   editorState: PropTypes.object.isRequired,
-//   onChange: PropTypes.func.isRequired,
-//   handleDroppedFiles: PropTypes.func,
-//   handleKeyCommand: PropTypes.func,
-//   handleReturn: PropTypes.func,
-// };
-
-// MediumDraftEditor.defaultProps = {
-//   beforeInput,
-//   keyBindingFn,
-//   customStyleMap,
-//   blockStyleFn,
-//   rendererFn,
-//   editorEnabled: true,
-//   spellCheck: true,
-//   stringToTypeMap: StringToTypeMap,
-//   blockRenderMap: RenderMap,
-//   blockButtons: BLOCK_BUTTONS,
-//   inlineButtons: INLINE_BUTTONS,
-//   placeholder: 'Write your story...',
-//   continuousBlocks: [
-//     Block.UNSTYLED,
-//     Block.BLOCKQUOTE,
-//     Block.OL,
-//     Block.UL,
-//     Block.CODE,
-//     Block.TODO,
-//   ],
-//   sideButtons: [
-//     {
-//       title: 'Image',
-//       component: ImageButton,
-//     },
-//   ],
-// };
-
 
 export default MediumDraftEditor;

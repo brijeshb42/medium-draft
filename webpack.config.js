@@ -120,6 +120,8 @@ function getLoaders(env) {
     loader: 'file'
   });
 
+  loaders.push({ test: /\.json$/, loader: 'json' });
+
   if (env === ENV_PROD ) {
     loaders.push({
       test: /(\.css|\.scss)$/,
