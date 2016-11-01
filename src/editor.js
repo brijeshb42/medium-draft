@@ -60,6 +60,7 @@ class MediumDraftEditor extends React.Component {
     handleDroppedFiles: PropTypes.func,
     handleKeyCommand: PropTypes.func,
     handleReturn: PropTypes.func,
+    disableToolbar: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -89,6 +90,7 @@ class MediumDraftEditor extends React.Component {
         component: ImageButton,
       },
     ],
+    disableToolbar: false,
   };
 
   constructor(props) {
@@ -321,9 +323,8 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled } = this.props;
-    // const currentBlockType = RichUtils.getCurrentBlockType(this.props.editorState);
-    const showAddButton = editorEnabled; // && currentBlockType.indexOf('atomic:') < 0;
+    const { editorState, editorEnabled, disableToolbar } = this.props;
+    const showAddButton = editorEnabled;
     return (
       <div className="RichEditor-root">
         <div className="RichEditor-editor">
@@ -355,7 +356,7 @@ class MediumDraftEditor extends React.Component {
               sideButtons={this.props.sideButtons}
             />
           ) : null}
-          <Toolbar
+          {!disableToolbar && <Toolbar
             ref={(c) => { this.toolbar = c; }}
             editorNode={this._editorNode}
             editorState={editorState}
@@ -367,6 +368,7 @@ class MediumDraftEditor extends React.Component {
             blockButtons={this.props.blockButtons}
             inlineButtons={this.props.inlineButtons}
           />
+          }
         </div>
       </div>
     );

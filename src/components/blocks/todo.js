@@ -9,7 +9,6 @@ import { updateDataOfBlock } from '../../model/index';
 export default class TodoBlock extends React.Component {
   constructor(props) {
     super(props);
-
     this.updateData = this.updateData.bind(this);
   }
 

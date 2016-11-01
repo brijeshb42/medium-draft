@@ -304,14 +304,13 @@ class App extends React.Component {
     setTimeout(this.fetchData, 1000);
   }
 
-  getRenderer(setEditorState, getEditorState) {
+  rendererFn(setEditorState, getEditorState) {
     const atomicRenderers = {
       embed: AtomicEmbedComponent,
       separator: AtomicSeparatorComponent,
     };
     const rFnOld = rendererFn(setEditorState, getEditorState);
     const rFnNew = (contentBlock) => {
-      const dt = rFnOld(contentBlock);
       const type = contentBlock.getType();
       switch(type) {
         case Block.ATOMIC:
@@ -322,7 +321,7 @@ class App extends React.Component {
               components: atomicRenderers,
             },
           };
-        default: dt;
+        default: return rFnOld(contentBlock);
       }
     };
     return rFnNew;
@@ -457,7 +456,7 @@ class App extends React.Component {
           beforeInput={handleBeforeInput}
           handleReturn={this.handleReturn}
           sideButtons={this.sideButtons}
-          rendererFn={this.getRenderer}
+          rendererFn={this.rendererFn}
         />
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>

@@ -328,7 +328,7 @@ export const INLINE_BUTTONS = [
     label: '#',
     style: HYPERLINK,
     icon: 'link',
-    description: 'Strikethrough',
+    description: 'Add a link',
   },
 ];
   // {

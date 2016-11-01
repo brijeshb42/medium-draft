@@ -16,8 +16,14 @@ export default (block) => {
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-atomic`;
     case Block.CAPTION:
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-caption`;
-    case Block.TODO:
-      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph ${BASE_BLOCK_CLASS}-todo`;
+    case Block.TODO: {
+      const data = block.getData();
+      const checkedClass = data.get('checked') === true ?
+        `${BASE_BLOCK_CLASS}-todo-checked` : `${BASE_BLOCK_CLASS}-todo-unchecked`;
+      let finalClass = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph `;
+      finalClass += `${BASE_BLOCK_CLASS}-todo ${checkedClass}`;
+      return finalClass;
+    }
     case Block.IMAGE:
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-image`;
     case Block.BLOCKQUOTE_CAPTION: {
