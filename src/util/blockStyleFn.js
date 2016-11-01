@@ -30,6 +30,6 @@ export default (block) => {
       const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
       return `${cls} RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
     }
-    default: return `${BASE_BLOCK_CLASS}`;
+    default: return BASE_BLOCK_CLASS;
   }
 };

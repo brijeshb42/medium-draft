@@ -347,7 +347,7 @@ class MediumDraftEditor extends React.Component {
             placeholder={this.props.placeholder}
             spellCheck={editorEnabled && this.props.spellCheck}
           />
-          {(showAddButton && this.props.sideButtons.length > 0) ? (
+          {this.props.sideButtons.length > 0 && showAddButton && (
             <AddButton
               editorState={editorState}
               getEditorState={this.getEditorState}
@@ -355,20 +355,21 @@ class MediumDraftEditor extends React.Component {
               focus={this.focus}
               sideButtons={this.props.sideButtons}
             />
-          ) : null}
-          {!disableToolbar && <Toolbar
-            ref={(c) => { this.toolbar = c; }}
-            editorNode={this._editorNode}
-            editorState={editorState}
-            toggleBlockType={this.toggleBlockType}
-            toggleInlineStyle={this.toggleInlineStyle}
-            editorEnabled={editorEnabled}
-            setLink={this.setLink}
-            focus={this.focus}
-            blockButtons={this.props.blockButtons}
-            inlineButtons={this.props.inlineButtons}
-          />
-          }
+          )}
+          {!disableToolbar && (
+            <Toolbar
+              ref={(c) => { this.toolbar = c; }}
+              editorNode={this._editorNode}
+              editorState={editorState}
+              toggleBlockType={this.toggleBlockType}
+              toggleInlineStyle={this.toggleInlineStyle}
+              editorEnabled={editorEnabled}
+              setLink={this.setLink}
+              focus={this.focus}
+              blockButtons={this.props.blockButtons}
+              inlineButtons={this.props.inlineButtons}
+            />
+          )}
         </div>
       </div>
     );

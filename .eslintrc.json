@@ -8,5 +8,10 @@
     "no-underscore-dangle": [0],
     "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
     "new-cap": [0]
+  },
+  "globals": {
+    "describe": true,
+    "it": true,
+    "expect": true
   }
 }
