@@ -1,4 +1,4 @@
-import { resetBlockWithType, getCurrentBlock } from '../model/index';
+import { resetBlockWithType, getCurrentBlock } from '../model';
 import { Block, HANDLED, NOT_HANDLED } from './constants';
 
 
