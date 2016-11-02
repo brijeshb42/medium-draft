@@ -36,6 +36,8 @@ import {
   getCurrentBlock,
   ImageSideButton,
   rendererFn,
+  HANDLED,
+  NOT_HANDLED
 } from './index';
 
 
@@ -331,9 +333,10 @@ class App extends React.Component {
     if (hasCommandModifier(e)) {
       if (e.which === 83) {  /* Key S */
         return 'editor-save';
-      } else if (e.which === 74 /* Key J */) {
-        return 'do-nothing';
       }
+      // else if (e.which === 74 /* Key J */) {
+      //  return 'do-nothing';
+      //}
     }
     if (e.altKey === true) {
       if (e.shiftKey === true) {
@@ -419,6 +422,7 @@ class App extends React.Component {
   }
 
   handleDroppedFiles(selection, files) {
+    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
     const file = files[0];
     if (file.type.indexOf('image/') === 0) {
       // eslint-disable-next-line no-undef
@@ -430,8 +434,9 @@ class App extends React.Component {
           src,
         }
       ));
+      return HANDLED;
     }
-    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+    return NOT_HANDLED
   }
 
   handleReturn(e) {

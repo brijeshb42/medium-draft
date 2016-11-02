@@ -18,7 +18,7 @@ import BreakBlock from './components/blocks/break';
 import ImageSideButton from './components/sides/image';
 import BreakSideButton from './components/sides/break';
 
-export { Block, Inline, Entity } from './util/constants';
+export { Block, Inline, Entity, HANDLED, NOT_HANDLED } from './util/constants';
 export { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
 
 export {

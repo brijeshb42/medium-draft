@@ -37,6 +37,8 @@ export const Entity = {
 };
 
 export const HYPERLINK = 'hyperlink';
+export const HANDLED = 'handled';
+export const NOT_HANDLED = 'not_handled';
 
 export default {
   Block,
