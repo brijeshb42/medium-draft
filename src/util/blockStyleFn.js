@@ -9,7 +9,7 @@ const BASE_BLOCK_CLASS = 'md-block';
 export default (block) => {
   switch (block.getType()) {
     case Block.BLOCKQUOTE:
-      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote RichEditor-blockquote`;
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote md-RichEditor-blockquote`;
     case Block.UNSTYLED:
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph`;
     case Block.ATOMIC:
@@ -28,7 +28,7 @@ export default (block) => {
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-image`;
     case Block.BLOCKQUOTE_CAPTION: {
       const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
-      return `${cls} RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
+      return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
     }
     default: return BASE_BLOCK_CLASS;
   }

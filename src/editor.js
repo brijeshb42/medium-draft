@@ -164,10 +164,11 @@ class MediumDraftEditor extends React.Component {
       return HANDLED;
     }
     if (command === 'showlinkinput') {
-      if (this.toolbar) {
+      if (!this.props.disableToolbar && this.toolbar) {
         this.toolbar.handleLinkInput(null, true);
+        return HANDLED;
       }
-      return HANDLED;
+      return NOT_HANDLED;
     } else if (command === 'add-new-block') {
       const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
@@ -310,9 +311,10 @@ class MediumDraftEditor extends React.Component {
   render() {
     const { editorState, editorEnabled, disableToolbar } = this.props;
     const showAddButton = editorEnabled;
+    const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     return (
-      <div className="RichEditor-root">
-        <div className="RichEditor-editor">
+      <div className="md-RichEditor-root">
+        <div className={editorClass}>
           <Editor
             ref={(node) => { this._editorNode = node; }}
             {...this.props}

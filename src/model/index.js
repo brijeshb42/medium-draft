@@ -101,7 +101,6 @@ export const updateDataOfBlock = (editorState, block, newData) => {
     blockMap: contentState.getBlockMap().set(block.getKey(), newBlock),
   });
   return EditorState.push(editorState, newContentState, 'change-block-type');
-  // return editorState;
 };
 
 // const BEFORE = -1;

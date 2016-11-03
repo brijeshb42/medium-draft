@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Entity } from 'draft-js';
 
+import { Entity as E } from '../../util/constants';
+
 
 export const findLinkEntities = (contentBlock, callback) => {
   contentBlock.findEntityRanges(
@@ -8,7 +10,7 @@ export const findLinkEntities = (contentBlock, callback) => {
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        Entity.get(entityKey).getType() === 'LINK'
+        Entity.get(entityKey).getType() === E.LINK
       );
     },
     callback

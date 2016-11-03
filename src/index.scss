@@ -1,4 +1,4 @@
-.RichEditor-root {
+.md-RichEditor-root {
   background: #fff;
   box-sizing: border-box;
   font-family: 'Georgia', serif;
@@ -8,7 +8,7 @@
 }
 
 
-.RichEditor-editor {
+.md-RichEditor-editor {
   cursor: text;
   margin-top: 10px;
   position: relative;
@@ -20,21 +20,21 @@
   }
 }
 
-.RichEditor-editor .public-DraftEditorPlaceholder-root,
-.RichEditor-editor .public-DraftEditor-content {
+.md-RichEditor-editor .public-DraftEditorPlaceholder-root,
+.md-RichEditor-editor .public-DraftEditor-content {
   margin: 0px -15px -15px;
   padding: 15px;
 }
 
-.RichEditor-editor .public-DraftEditor-content {
+.md-RichEditor-editor .public-DraftEditor-content {
   min-height: 100px;
 }
 
-.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+.md-RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
   display: none;
 }
 
-.RichEditor-editor .RichEditor-blockquote {
+.md-RichEditor-editor .md-RichEditor-blockquote {
   border-left: 5px solid #4CA8DE;
   color: #555;
   font-family: 'Hoefler Text', 'Georgia', serif;
@@ -44,7 +44,7 @@
   background-color: #E2F2FF;
 }
 
-.RichEditor-blockquote {
+.md-RichEditor-blockquote {
   a {
     text-decoration: underline;
   }
@@ -57,7 +57,7 @@
   }
 }
 
-.RichEditor-editor .public-DraftStyleDefault-pre {
+.md-RichEditor-editor .public-DraftStyleDefault-pre {
   background-color: rgba(0, 0, 0, 0.05);
   font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
   font-size: 16px;
