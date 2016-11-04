@@ -70,6 +70,13 @@ If you are using `webpack` for bundling, you can import the CSS like this in you
 import 'medium-draft/lib/index.css';
 ```
 
+If you are using `sideButtons`, you will also need to include the css for `font-awesome` -
+
+```html
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+```
+
+or something equivalent.
 
 #### JS (ES6)
 
