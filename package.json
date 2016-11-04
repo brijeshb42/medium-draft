@@ -6,15 +6,16 @@
   "scripts": {
     "clean": "rm -f dist/*.js && rm -f dist/*.css && rm -rf lib",
     "dev": "mkdir -p dist && cp index.html dist/index.html && cp docs/data.json dist/data.json && NODE_ENV=development webpack-dashboard -- webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
-    "build": "npm run clean && npm run test:lint && NODE_ENV=production webpack --progress --colors",
+    "build": "npm run clean && npm run test && NODE_ENV=production webpack --progress --colors && mv dist/example.css dist/medium-draft.css",
     "babel": "./node_modules/.bin/babel ./src -d lib --ignore '*.spec.js,example.js,exporter.js'",
+    "copyCss": "cp dist/medium-draft.css ./lib/index.css",
+    "npm": "npm run build && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
-    "npm": "npm run test:unit && npm run build && npm run babel && mv dist/example.css dist/medium-draft.css && cp dist/medium-draft.css ./lib/index.css",
     "test:lint": "eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
     "test:unit": "NODE_PATH=src mocha --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
     "test": "npm run test:lint && npm run test:unit"
   },
-  "keywords": [],
+  "keywords": ["rich editor", "text editor", "medium", "draft-js"],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {

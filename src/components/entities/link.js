@@ -21,7 +21,7 @@ const Link = (props) => {
   const { url } = Entity.get(props.entityKey).getData();
   return (
     <a
-      className="draft-link hint--top hint--rounded"
+      className="md-link hint--top hint--rounded"
       href={url}
       rel="noopener noreferrer"
       target="_blank"

@@ -13,7 +13,12 @@ import rendererFn from './components/customrenderer';
 import customStyleMap from './util/customstylemap';
 import RenderMap from './util/rendermap';
 import keyBindingFn from './util/keybinding';
-import { Block, Entity as E, HANDLED, NOT_HANDLED } from './util/constants';
+import {
+  Block,
+  Entity as E,
+  HANDLED,
+  NOT_HANDLED,
+  KEY_COMMANDS } from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
 import { getCurrentBlock, addNewBlock, resetBlockWithType, addNewBlockAt } from './model';
@@ -163,23 +168,23 @@ class MediumDraftEditor extends React.Component {
     if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
       return HANDLED;
     }
-    if (command === 'showlinkinput') {
+    if (command === KEY_COMMANDS.showLinkInput()) {
       if (!this.props.disableToolbar && this.toolbar) {
         this.toolbar.handleLinkInput(null, true);
         return HANDLED;
       }
       return NOT_HANDLED;
-    } else if (command === 'add-new-block') {
+    } else if (command === KEY_COMMANDS.addNewBlock()) {
       const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return HANDLED;
     }
     const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
-    if (command.indexOf('changetype:') === 0) {
+    if (command.indexOf(`${KEY_COMMANDS.changeType()}`) === 0) {
       let newBlockType = command.split(':')[1];
       const currentBlockType = block.getType();
-      if (currentBlockType === Block.ATOMIC || currentBlockType === 'media') {
+      if (currentBlockType === Block.ATOMIC) {
         return HANDLED;
       }
       if (currentBlockType === Block.BLOCKQUOTE && newBlockType === Block.CAPTION) {
@@ -189,7 +194,7 @@ class MediumDraftEditor extends React.Component {
       }
       this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
       return HANDLED;
-    } else if (command.indexOf('toggleinline:') === 0) {
+    } else if (command.indexOf(`${KEY_COMMANDS.toggleInline()}`) === 0) {
       const inline = command.split(':')[1];
       this._toggleInlineStyle(inline);
       return HANDLED;
@@ -232,7 +237,7 @@ class MediumDraftEditor extends React.Component {
       const currentBlock = getCurrentBlock(editorState);
       const blockType = currentBlock.getType();
 
-      if (blockType.indexOf('atomic') === 0) {
+      if (blockType.indexOf(Block.ATOMIC) === 0) {
         this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
         return HANDLED;
       }
@@ -276,7 +281,7 @@ class MediumDraftEditor extends React.Component {
   */
   _toggleBlockType(blockType) {
     const type = RichUtils.getCurrentBlockType(this.props.editorState);
-    if (type.indexOf('atomic:') === 0) {
+    if (type.indexOf(`${Block.ATOMIC}:`) === 0) {
       return;
     }
     this.onChange(
@@ -293,7 +298,7 @@ class MediumDraftEditor extends React.Component {
   */
   _toggleInlineStyle(inlineStyle) {
     const type = RichUtils.getCurrentBlockType(this.props.editorState);
-    if (type.indexOf('header') === 0) {
+    if (type.indexOf(Block.H1.split('-')[0]) === 0) {
       return;
     }
     this.onChange(

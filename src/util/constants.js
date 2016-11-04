@@ -4,6 +4,7 @@ Some of the constants which are used throughout this project instead of directly
 
 export const Block = {
   UNSTYLED: 'unstyled',
+  PARAGRAPH: 'unstyled',
   OL: 'ordered-list-item',
   UL: 'unordered-list-item',
   H1: 'header-one',
@@ -42,8 +43,9 @@ export const NOT_HANDLED = 'not_handled';
 
 export const KEY_COMMANDS = {
   addNewBlock: () => 'add-new-blocks',
-  changeType: (type) => `changetype:${type}`,
+  changeType: (type = '') => `changetype:${type}`,
   showLinkInput: () => 'showlinkinput',
+  toggleInline: (type = '') => `toggleinline:${type}`,
 };
 
 export default {

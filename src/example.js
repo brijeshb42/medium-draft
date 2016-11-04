@@ -13,7 +13,7 @@ import {
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
-import 'hint.css/src/hint.scss';
+import 'hint.css/hint.min.css';
 
 import './index.scss';
 import './components/addbutton.scss';
