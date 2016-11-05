@@ -181,9 +181,17 @@ class MediumDraftEditor extends React.Component {
     }
     const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
+    const currentBlockType = block.getType();
+    // if (command === KEY_COMMANDS.deleteBlock()) {
+    //   if (currentBlockType.indexOf(Block.ATOMIC) === 0 && block.getText().length === 0) {
+    //     this.onChange(resetBlockWithType(editorState, Block.UNSTYLED, { text: '' }));
+    //     return HANDLED;
+    //   }
+    //   return NOT_HANDLED;
+    // }
     if (command.indexOf(`${KEY_COMMANDS.changeType()}`) === 0) {
       let newBlockType = command.split(':')[1];
-      const currentBlockType = block.getType();
+      // const currentBlockType = block.getType();
       if (currentBlockType === Block.ATOMIC) {
         return HANDLED;
       }

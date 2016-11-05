@@ -30,6 +30,10 @@ export default (setEditorState, getEditorState) => (contentBlock) => {
     };
     case Block.IMAGE: return {
       component: ImageBlock,
+      props: {
+        setEditorState,
+        getEditorState,
+      },
     };
     case Block.BREAK: return {
       component: BreakBlock,

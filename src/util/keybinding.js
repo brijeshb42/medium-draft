@@ -37,5 +37,8 @@ export default (e) => {
       default: return getDefaultKeyBinding(e);
     }
   }
+  // if (e.keyCode === 46 && !e.ctrlKey) {
+  //   return KEY_COMMANDS.deleteBlock();
+  // }
   return getDefaultKeyBinding(e);
 };

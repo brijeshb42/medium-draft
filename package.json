@@ -15,11 +15,16 @@
     "test:unit": "NODE_PATH=src mocha --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
     "test": "npm run test:lint && npm run test:unit"
   },
-  "keywords": ["rich editor", "text editor", "medium", "draft-js"],
+  "keywords": [
+    "rich editor",
+    "text editor",
+    "medium",
+    "draft-js"
+  ],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.8.0",
+    "draft-js": "^0.9.1",
     "immutable": "^3.7.6",
     "react-addons-css-transition-group": "^15.0.0"
   },

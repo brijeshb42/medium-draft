@@ -46,6 +46,7 @@ export const KEY_COMMANDS = {
   changeType: (type = '') => `changetype:${type}`,
   showLinkInput: () => 'showlinkinput',
   toggleInline: (type = '') => `toggleinline:${type}`,
+  deleteBlock: () => 'delete-block',
 };
 
 export default {
