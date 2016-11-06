@@ -3,7 +3,7 @@ import createEditorState from '../model/content';
 import { Block, /* HANDLED,*/ NOT_HANDLED } from './constants';
 import beforeInput from './beforeinput';
 
-describe('beforeInput function', () => {
+describe('beforeInput()', () => {
   it('returns NOT_HANDLED for atomic like blocks', () => {
     const dummyData = {
       entityMap: {},

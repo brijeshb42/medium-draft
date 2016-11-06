@@ -21,12 +21,12 @@ import {
   KEY_COMMANDS } from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
-import { getCurrentBlock, addNewBlock, resetBlockWithType, addNewBlockAt } from './model';
+import { getCurrentBlock, resetBlockWithType, addNewBlockAt } from './model';
 
 import ImageButton from './components/sides/image';
 
 /*
-A wrapper over `draft-js`'s default **Editor*component which provides
+A wrapper over `draft-js`'s default **Editor** component which provides
 some built-in customisations like custom blocks (todo, caption, etc) and
 some key handling for ease of use so that users' mouse usage is minimum.
 */
@@ -174,11 +174,12 @@ class MediumDraftEditor extends React.Component {
         return HANDLED;
       }
       return NOT_HANDLED;
-    } else if (command === KEY_COMMANDS.addNewBlock()) {
+    }
+    /* else if (command === KEY_COMMANDS.addNewBlock()) {
       const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return HANDLED;
-    }
+    } */
     const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
     const currentBlockType = block.getType();

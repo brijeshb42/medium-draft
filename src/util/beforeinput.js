@@ -71,7 +71,9 @@ const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeM
       fType = finalType[2];
     }
   }
-  onChange(resetBlockWithType(editorState, fType));
+  onChange(resetBlockWithType(editorState, fType, {
+    text: '',
+  }));
   return HANDLED;
 };
 

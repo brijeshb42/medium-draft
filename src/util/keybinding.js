@@ -2,18 +2,18 @@ import { getDefaultKeyBinding } from 'draft-js';
 
 import { KEY_COMMANDS } from './constants';
 
-const { addNewBlock, changeType, showLinkInput } = KEY_COMMANDS;
+const { changeType, showLinkInput } = KEY_COMMANDS;
 
 /*
 Emits various key commands to be used by `handleKeyCommand` in `Editor` based
 on various key combos.
 */
 export default (e) => {
-  if (e.altKey === true) {
+  if (e.altKey === true && !e.ctrlKey) {
     if (e.shiftKey === true) {
       switch (e.which) {
         // Alt + Shift + A
-        case 65: return addNewBlock();
+        // case 65: return addNewBlock();
         default: return getDefaultKeyBinding(e);
       }
     }

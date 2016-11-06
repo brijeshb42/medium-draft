@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { EditorState, ContentBlock, genKey } from 'draft-js';
 import { Block } from '../util/constants';
@@ -62,19 +62,13 @@ export const addNewBlock = (editorState, newType = Block.UNSTYLED, initialData =
 /*
 Changes the block type of the current block.
 */
-export const resetBlockWithType = (editorState, newType = Block.UNSTYLED) => {
+export const resetBlockWithType = (editorState, newType = Block.UNSTYLED, overrides = {}) => {
   const contentState = editorState.getCurrentContent();
   const selectionState = editorState.getSelection();
   const key = selectionState.getStartKey();
   const blockMap = contentState.getBlockMap();
   const block = blockMap.get(key);
-  let newText = '';
-  const text = block.getText();
-  if (block.getLength() >= 2) {
-    newText = text.substr(1);
-  }
-  const newBlock = block.merge({
-    text: newText,
+  const newBlock = block.mergeDeep(overrides, {
     type: newType,
     data: getDefaultBlockData(newType),
   });
@@ -100,7 +94,7 @@ export const updateDataOfBlock = (editorState, block, newData) => {
   const newContentState = contentState.merge({
     blockMap: contentState.getBlockMap().set(block.getKey(), newBlock),
   });
-  return EditorState.push(editorState, newContentState, 'change-block-type');
+  return EditorState.push(editorState, newContentState, 'change-block-data');
 };
 
 // const BEFORE = -1;
@@ -119,6 +113,9 @@ export const addNewBlockAt = (
   const content = editorState.getCurrentContent();
   const blockMap = content.getBlockMap();
   const block = blockMap.get(pivotBlockKey);
+  if (!block) {
+    throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
+  }
   const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
   const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
   const newBlockKey = genKey();
@@ -127,7 +124,7 @@ export const addNewBlockAt = (
     key: newBlockKey,
     type: newBlockType,
     text: '',
-    characterList: block.getCharacterList().slice(0, 0),
+    characterList: List(),
     depth: 0,
     data: Map(getDefaultBlockData(newBlockType, initialData)),
   });

@@ -266,7 +266,7 @@ class App extends React.Component {
     this.state = {
       editorState: createEditorState(),
       editorEnabled: true,
-      placeholder: 'Loading...',
+      placeholder: 'Write here...',
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -303,7 +303,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(this.fetchData, 1000);
+    // setTimeout(this.fetchData, 1000);
+    this.refs.editor.focus();
   }
 
   rendererFn(setEditorState, getEditorState) {
@@ -370,6 +371,9 @@ class App extends React.Component {
 
   fetchData() {
     window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
+    this.setState({
+      placeholder: 'Loading...',
+    });
     const req = new XMLHttpRequest();
     req.open('GET', 'data.json', true);
     req.onreadystatechange = () => {
@@ -377,7 +381,7 @@ class App extends React.Component {
         const data = JSON.parse(req.responseText);
         this.setState({
           editorState: createEditorState(data),
-          placeholder: 'Write your story...'
+          placeholder: 'Write here...'
         }, () => {
           this.refs.editor.focus();
         });
@@ -449,6 +453,10 @@ class App extends React.Component {
     const { editorState, editorEnabled } = this.state;
     return (
       <div>
+        <div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+        </div>
         <Editor
           ref="editor"
           editorState={editorState}
@@ -463,10 +471,6 @@ class App extends React.Component {
           sideButtons={this.sideButtons}
           rendererFn={this.rendererFn}
         />
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-        </div>
       </div>
     );
   }

@@ -5,7 +5,7 @@ import { Block } from './constants';
 
 const BASE_BLOCK_CLASS = 'md-block';
 
-describe('blockStyleFn', () => {
+describe('blockStyleFn()', () => {
   it('should return block class for UNKNOWN', () => {
     const normalBlock = new ContentBlock({
       type: 'some-unknown-type',
