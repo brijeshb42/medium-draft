@@ -42,7 +42,7 @@ export const HANDLED = 'handled';
 export const NOT_HANDLED = 'not_handled';
 
 export const KEY_COMMANDS = {
-  addNewBlock: () => 'add-new-blocks',
+  addNewBlock: () => 'add-new-block',
   changeType: (type = '') => `changetype:${type}`,
   showLinkInput: () => 'showlinkinput',
   toggleInline: (type = '') => `toggleinline:${type}`,

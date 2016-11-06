@@ -1,6 +1,3 @@
-dist/index.html
-dist/data.json
-dist/example.js
 node_modules/
 .babelrc
 .gitignore
@@ -11,3 +8,9 @@ webpack.*.js
 src/
 docs/
 wiki/
+coverage/
+
+.travis.yml
+dist/index.html
+dist/data.json
+dist/example.js

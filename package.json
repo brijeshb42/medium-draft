@@ -12,14 +12,15 @@
     "npm": "npm run build && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
     "test:lint": "eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
-    "test:unit": "NODE_PATH=src mocha --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
+    "test:unit": "NODE_PATH=src babel-node ./node_modules/.bin/isparta cover _mocha -- --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
     "test": "npm run test:lint && npm run test:unit"
   },
   "keywords": [
     "rich editor",
     "text editor",
     "medium",
-    "draft-js"
+    "draft-js",
+    "wysiwyg"
   ],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
@@ -53,6 +54,8 @@
     "eslint-plugin-react": "^6.1.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "hint.css": "^2.3.2",
+    "isparta": "^4.0.0",
+    "istanbul": "^0.4.5",
     "jsdom": "^8.2.0",
     "json-loader": "^0.5.4",
     "mocha": "^2.4.5",
