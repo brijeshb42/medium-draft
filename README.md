@@ -62,7 +62,7 @@ These commands are not a part of the core editor but have been implemented in th
 
 Include the css that comes with the library in your HTML -
 ```html
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/medium-draft.css">
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/medium-draft.css"/>
 ```
 
 If you are using `webpack` for bundling, you can import the CSS like this in your JS code
