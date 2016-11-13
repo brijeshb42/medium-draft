@@ -221,21 +221,6 @@ class AtomicEmbedComponent extends React.Component {
       </div>
     );
   }
-
-  /*render() {
-    const { url } = this.props.data;
-    const innerHTML = `<div><a class="embedly-card" href="${url}" data-card-controls="0" data-card-theme="dark">Embedded ― ${url}</a></div>`;
-    return (
-      <div className="md-block-atomic-embed">
-        {this.state.showIframe ? <div dangerouslySetInnerHTML={{ __html: innerHTML }} /> : (
-          <div>
-            <p>Embedded URL - <a href={url} target="_blank">{url}</a></p>
-            <button type="button" onClick={this.enablePreview}>Show Preview</button>
-          </div>
-        )}
-      </div>
-    );
-  }*/
 }
 
 const AtomicSeparatorComponent = (props) => (
@@ -392,11 +377,7 @@ class App extends React.Component {
   }
 
   logData(e) {
-    window.es = this.state.editorState;
     const es = convertToRaw(this.state.editorState.getCurrentContent());
-    // this.setState({
-      // editorState: createEditorState(es),
-    // });
     console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
@@ -446,7 +427,7 @@ class App extends React.Component {
   handleReturn(e) {
     // const currentBlock = getCurrentBlock(this.state.editorState);
     // var text = currentBlock.getText();
-    return false;
+    return NOT_HANDLED;
   }
 
   render() {
