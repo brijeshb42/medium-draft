@@ -90,14 +90,14 @@ $toolbar-color: #2b2b2b;
   }
 }
 
-.RichEditor-controls {
+.md-RichEditor-controls {
   font-family: 'Helvetica', sans-serif;
   font-size: 14px;
   display: inline-block;
   border-right: 1px solid #555;
   position: relative;
 
-  &.RichEditor-show-link-input {
+  &.md-RichEditor-show-link-input {
     padding: 6px 10px;
   }
 
@@ -105,13 +105,13 @@ $toolbar-color: #2b2b2b;
     border-right: none;
   }
 
-  .RichEditor-linkButton {
+  .md-RichEditor-linkButton {
     color: #fff;
     text-decoration: none;
   }
 }
 
-.RichEditor-styleButton {
+.md-RichEditor-styleButton {
   color: #fff;
   cursor: pointer;
   display: inline-block;
@@ -125,21 +125,21 @@ $toolbar-color: #2b2b2b;
     margin-right: 0;
   }
 
-  &.RichEditor-styleButton-bold {
+  &.md-RichEditor-styleButton-bold {
     font-weight: bold;
   }
-  &.RichEditor-styleButton-italic {
+  &.md-RichEditor-styleButton-italic {
     font-style: italic;
   }
-  &.RichEditor-styleButton-underline {
+  &.md-RichEditor-styleButton-underline {
     text-decoration: underline;
   }
-  &.RichEditor-styleButton-strikethrough {
+  &.md-RichEditor-styleButton-strikethrough {
     text-decoration: line-through;
   }
 }
 
-.RichEditor-activeButton {
+.md-RichEditor-activeButton {
   color: #50FF4D;
 
   &:hover {

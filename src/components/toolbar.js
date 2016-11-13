@@ -201,7 +201,7 @@ export default class Toolbar extends React.Component {
           className={className}
         >
           <div
-            className="RichEditor-controls RichEditor-show-link-input"
+            className="md-RichEditor-controls md-RichEditor-show-link-input"
             style={{ display: 'block' }}
           >
             <span className="md-url-input-close" onMouseDown={this.hideLinkInput}>&times;</span>
@@ -252,9 +252,9 @@ export default class Toolbar extends React.Component {
           />
         ) : null}
         {hasHyperLink && (
-          <div className="RichEditor-controls">
+          <div className="md-RichEditor-controls">
             <a
-              className="RichEditor-styleButton RichEditor-linkButton hint--top"
+              className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
               href="#open-link-input"
               onClick={this.handleLinkInput}
               aria-label={hyperlinkDescription}

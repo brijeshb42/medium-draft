@@ -143,14 +143,14 @@ export default class AddButton extends React.Component {
         <div className="md-side-toolbar" style={this.state.style}>
           <button
             onClick={this.openToolbar}
-            className={`md-sb-button add-button${this.state.isOpen ? ' open-button' : ''}`}
+            className={`md-sb-button md-add-button${this.state.isOpen ? ' md-open-button' : ''}`}
             type="button"
           >
             <i className="fa fa-plus-circle fa-lg" />
           </button>
           {this.state.isOpen ? (
             <ReactCSSTransitionGroup
-              transitionName="example"
+              transitionName="md-example"
               transitionEnterTimeout={200}
               transitionLeaveTimeout={100}
               transitionAppear

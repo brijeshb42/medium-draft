@@ -64,7 +64,7 @@ const handleBeforeInput = (editorState, str, onChange) => {
     const len = text.length;
     if (selectionState.getAnchorOffset() === 0) {
       onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
-      return true;
+      return HANDLED;
     } else if (len > 0) {
       const lastChar = text[len - 1];
       if (lastChar !== ' ') {
@@ -72,7 +72,7 @@ const handleBeforeInput = (editorState, str, onChange) => {
       } else {
         onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
       }
-      return true;
+      return HANDLED;
     }
   }
   return beforeInput(editorState, str, onChange, newTypeMap);

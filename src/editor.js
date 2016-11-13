@@ -165,8 +165,11 @@ class MediumDraftEditor extends React.Component {
   */
   handleKeyCommand(command) {
     // console.log(command);
-    if (this.props.handleKeyCommand && this.props.handleKeyCommand(command)) {
-      return HANDLED;
+    if (this.props.handleKeyCommand) {
+      const behaviour = this.props.handleKeyCommand(command);
+      if (behaviour === HANDLED || behaviour === true) {
+        return HANDLED;
+      }
     }
     if (command === KEY_COMMANDS.showLinkInput()) {
       if (!this.props.disableToolbar && this.toolbar) {
@@ -233,7 +236,8 @@ class MediumDraftEditor extends React.Component {
   */
   handleReturn(e) {
     if (this.props.handleReturn) {
-      if (this.props.handleReturn()) {
+      const behavior = this.props.handleReturn();
+      if (behavior === HANDLED || behavior === true) {
         return HANDLED;
       }
     }
