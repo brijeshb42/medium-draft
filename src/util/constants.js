@@ -1,9 +1,11 @@
 /*
-Some of the constants which are used throughout this project instead of directly using the string.
+Some of the constants which are used throughout this project instead of
+directly using string.
 */
 
 export const Block = {
   UNSTYLED: 'unstyled',
+  PARAGRAPH: 'unstyled',
   OL: 'ordered-list-item',
   UL: 'unordered-list-item',
   H1: 'header-one',
@@ -37,6 +39,16 @@ export const Entity = {
 };
 
 export const HYPERLINK = 'hyperlink';
+export const HANDLED = 'handled';
+export const NOT_HANDLED = 'not_handled';
+
+export const KEY_COMMANDS = {
+  addNewBlock: () => 'add-new-block',
+  changeType: (type = '') => `changetype:${type}`,
+  showLinkInput: () => 'showlinkinput',
+  toggleInline: (type = '') => `toggleinline:${type}`,
+  deleteBlock: () => 'delete-block',
+};
 
 export default {
   Block,

@@ -22,4 +22,5 @@ const createEditorState = (content = null, decorators = defaultDecorators) => {
   return EditorState.createWithContent(convertFromRaw(content), decorators);
 };
 
+
 export default createEditorState;

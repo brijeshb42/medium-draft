@@ -1,37 +1,44 @@
 import { getDefaultKeyBinding } from 'draft-js';
 
+import { KEY_COMMANDS } from './constants';
+
+const { changeType, showLinkInput } = KEY_COMMANDS;
+
 /*
 Emits various key commands to be used by `handleKeyCommand` in `Editor` based
 on various key combos.
 */
 export default (e) => {
-  if (e.altKey === true) {
+  if (e.altKey === true && !e.ctrlKey) {
     if (e.shiftKey === true) {
       switch (e.which) {
         // Alt + Shift + A
-        case 65: return 'add-new-block';
+        // case 65: return addNewBlock();
         default: return getDefaultKeyBinding(e);
       }
     }
     switch (e.which) {
       // 1
-      case 49: return 'changetype:ordered-list-item';
+      case 49: return changeType('ordered-list-item');
       // @
-      case 50: return 'showlinkinput';
+      case 50: return showLinkInput();
       // #
-      case 51: return 'changetype:header-three';
+      case 51: return changeType('header-three');
       // *
-      case 56: return 'changetype:unordered-list-item';
+      case 56: return changeType('unordered-list-item');
       // <
-      case 188: return 'changetype:caption';
+      case 188: return changeType('caption');
       // // -
       // case 189: return 'changetype:caption';
       // >
-      case 190: return 'changetype:unstyled';
+      case 190: return changeType('unstyled');
       // "
-      case 222: return 'changetype:blockquote';
+      case 222: return changeType('blockquote');
       default: return getDefaultKeyBinding(e);
     }
   }
+  // if (e.keyCode === 46 && !e.ctrlKey) {
+  //   return KEY_COMMANDS.deleteBlock();
+  // }
   return getDefaultKeyBinding(e);
 };

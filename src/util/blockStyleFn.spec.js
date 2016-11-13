@@ -5,7 +5,7 @@ import { Block } from './constants';
 
 const BASE_BLOCK_CLASS = 'md-block';
 
-describe('blockStyleFn', () => {
+describe('blockStyleFn()', () => {
   it('should return block class for UNKNOWN', () => {
     const normalBlock = new ContentBlock({
       type: 'some-unknown-type',
@@ -33,7 +33,7 @@ describe('blockStyleFn', () => {
     });
     const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
     expect(blockStyleFn(normalBlock)).to.equal(
-      `${cls} RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`);
+      `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`);
   });
 
   it('should return block class for BLOCKQUOTE', () => {
@@ -41,7 +41,7 @@ describe('blockStyleFn', () => {
       type: Block.BLOCKQUOTE,
     });
     expect(blockStyleFn(normalBlock)).to.equal(
-      `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote RichEditor-blockquote`);
+      `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote md-RichEditor-blockquote`);
   });
 
   it('should return block class for ATOMIC', () => {

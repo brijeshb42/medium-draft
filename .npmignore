@@ -1,7 +1,5 @@
-dist/index.html
-dist/data.json
-dist/example.js
 node_modules/
+.npmignore
 .babelrc
 .gitignore
 .eslintcache
@@ -11,3 +9,10 @@ webpack.*.js
 src/
 docs/
 wiki/
+coverage/
+
+.travis.yml
+dist/index.html
+dist/data.json
+dist/example.js
+test-js

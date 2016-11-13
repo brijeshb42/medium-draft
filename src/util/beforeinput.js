@@ -1,5 +1,5 @@
-import { resetBlockWithType, getCurrentBlock } from '../model/index';
-import { Block } from './constants';
+import { resetBlockWithType, getCurrentBlock } from '../model';
+import { Block, HANDLED, NOT_HANDLED } from './constants';
 
 
 /*
@@ -34,36 +34,36 @@ const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeM
   const selection = editorState.getSelection();
   const block = getCurrentBlock(editorState);
   const blockType = block.getType();
-  if (blockType.indexOf('atomic') === 0) {
-    return false;
+  if (blockType.indexOf(Block.ATOMIC) === 0) {
+    return NOT_HANDLED;
   }
   const blockLength = block.getLength();
   if (selection.getAnchorOffset() > 1 || blockLength > 1) {
-    return false;
+    return NOT_HANDLED;
   }
   const blockTo = mapping[block.getText()[0] + inputString];
   if (!blockTo) {
-    return false;
+    return NOT_HANDLED;
   }
   const finalType = blockTo.split(':');
   if (finalType.length < 1 || finalType.length > 3) {
-    return false;
+    return NOT_HANDLED;
   }
   let fType = finalType[0];
   if (finalType.length === 1) {
     if (blockType === finalType[0]) {
-      return false;
+      return NOT_HANDLED;
     }
   } else if (finalType.length === 2) {
     if (blockType === finalType[1]) {
-      return false;
+      return NOT_HANDLED;
     }
     if (blockType === finalType[0]) {
       fType = finalType[1];
     }
   } else if (finalType.length === 3) {
     if (blockType === finalType[2]) {
-      return false;
+      return NOT_HANDLED;
     }
     if (blockType === finalType[0]) {
       fType = finalType[1];
@@ -71,8 +71,10 @@ const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeM
       fType = finalType[2];
     }
   }
-  onChange(resetBlockWithType(editorState, fType));
-  return true;
+  onChange(resetBlockWithType(editorState, fType, {
+    text: '',
+  }));
+  return HANDLED;
 };
 
 

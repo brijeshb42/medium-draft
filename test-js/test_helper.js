@@ -3,7 +3,7 @@ import chai, { expect } from 'chai';
 import React from 'react';
 
 
-const doc = jsdom.jsdom('<!doctype html><html><body></body></html>');
+const doc = jsdom.jsdom('<!doctype html><html><body><div id="app"></div></body></html>');
 const win = doc.defaultView;
 
 global.document = doc;

@@ -3,8 +3,7 @@
 import React, { PropTypes } from 'react';
 import { EditorBlock } from 'draft-js';
 
-import { updateDataOfBlock } from '../../model/index';
-
+import { updateDataOfBlock } from '../../model/';
 
 export default class TodoBlock extends React.Component {
   constructor(props) {

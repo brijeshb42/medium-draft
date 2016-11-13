@@ -13,7 +13,7 @@ import {
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
-import 'hint.css/src/hint.scss';
+import 'hint.css/hint.min.css';
 
 import './index.scss';
 import './components/addbutton.scss';
@@ -36,6 +36,8 @@ import {
   getCurrentBlock,
   ImageSideButton,
   rendererFn,
+  HANDLED,
+  NOT_HANDLED
 } from './index';
 
 
@@ -62,7 +64,7 @@ const handleBeforeInput = (editorState, str, onChange) => {
     const len = text.length;
     if (selectionState.getAnchorOffset() === 0) {
       onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
-      return true;
+      return HANDLED;
     } else if (len > 0) {
       const lastChar = text[len - 1];
       if (lastChar !== ' ') {
@@ -70,7 +72,7 @@ const handleBeforeInput = (editorState, str, onChange) => {
       } else {
         onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
       }
-      return true;
+      return HANDLED;
     }
   }
   return beforeInput(editorState, str, onChange, newTypeMap);
@@ -219,21 +221,6 @@ class AtomicEmbedComponent extends React.Component {
       </div>
     );
   }
-
-  /*render() {
-    const { url } = this.props.data;
-    const innerHTML = `<div><a class="embedly-card" href="${url}" data-card-controls="0" data-card-theme="dark">Embedded ― ${url}</a></div>`;
-    return (
-      <div className="md-block-atomic-embed">
-        {this.state.showIframe ? <div dangerouslySetInnerHTML={{ __html: innerHTML }} /> : (
-          <div>
-            <p>Embedded URL - <a href={url} target="_blank">{url}</a></p>
-            <button type="button" onClick={this.enablePreview}>Show Preview</button>
-          </div>
-        )}
-      </div>
-    );
-  }*/
 }
 
 const AtomicSeparatorComponent = (props) => (
@@ -264,7 +251,7 @@ class App extends React.Component {
     this.state = {
       editorState: createEditorState(),
       editorEnabled: true,
-      placeholder: 'Loading...',
+      placeholder: 'Write here...',
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -301,7 +288,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(this.fetchData, 1000);
+    // setTimeout(this.fetchData, 1000);
+    this.refs.editor.focus();
   }
 
   rendererFn(setEditorState, getEditorState) {
@@ -331,9 +319,10 @@ class App extends React.Component {
     if (hasCommandModifier(e)) {
       if (e.which === 83) {  /* Key S */
         return 'editor-save';
-      } else if (e.which === 74 /* Key J */) {
-        return 'do-nothing';
       }
+      // else if (e.which === 74 /* Key J */) {
+      //  return 'do-nothing';
+      //}
     }
     if (e.altKey === true) {
       if (e.shiftKey === true) {
@@ -367,6 +356,9 @@ class App extends React.Component {
 
   fetchData() {
     window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
+    this.setState({
+      placeholder: 'Loading...',
+    });
     const req = new XMLHttpRequest();
     req.open('GET', 'data.json', true);
     req.onreadystatechange = () => {
@@ -374,7 +366,7 @@ class App extends React.Component {
         const data = JSON.parse(req.responseText);
         this.setState({
           editorState: createEditorState(data),
-          placeholder: 'Write your story...'
+          placeholder: 'Write here...'
         }, () => {
           this.refs.editor.focus();
         });
@@ -385,11 +377,7 @@ class App extends React.Component {
   }
 
   logData(e) {
-    window.es = this.state.editorState;
     const es = convertToRaw(this.state.editorState.getCurrentContent());
-    // this.setState({
-      // editorState: createEditorState(es),
-    // });
     console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
@@ -419,6 +407,7 @@ class App extends React.Component {
   }
 
   handleDroppedFiles(selection, files) {
+    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
     const file = files[0];
     if (file.type.indexOf('image/') === 0) {
       // eslint-disable-next-line no-undef
@@ -430,20 +419,25 @@ class App extends React.Component {
           src,
         }
       ));
+      return HANDLED;
     }
-    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+    return NOT_HANDLED
   }
 
   handleReturn(e) {
     // const currentBlock = getCurrentBlock(this.state.editorState);
     // var text = currentBlock.getText();
-    return false;
+    return NOT_HANDLED;
   }
 
   render() {
     const { editorState, editorEnabled } = this.state;
     return (
       <div>
+        <div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+        </div>
         <Editor
           ref="editor"
           editorState={editorState}
@@ -458,10 +452,6 @@ class App extends React.Component {
           sideButtons={this.sideButtons}
           rendererFn={this.rendererFn}
         />
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-        </div>
       </div>
     );
   }

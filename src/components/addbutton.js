@@ -5,7 +5,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { getSelectedBlockNode } from '../util';
 
-import ImageButton from './sides/image';
 
 /*
 Implementation of the medium-link side `+` button to insert various rich blocks
@@ -140,36 +139,18 @@ export default class AddButton extends React.Component {
 
   render() {
     if (this.state.visible) {
-      const btns = [];
-      btns.push(
-        <ImageButton
-          key="img"
-          getEditorState={this.props.getEditorState}
-          setEditorState={this.props.setEditorState}
-          close={this.openToolbar}
-        />
-      );
-      // btns.push(
-      //   <BreakButton
-      //     key="break"
-      //     getEditorState={this.props.getEditorState}
-      //     setEditorState={this.props.setEditorState}
-      //     close={this.openToolbar}
-      //   />
-      // );
-      // btns.push(<button key="embed" className="md-sb-button md-sb-img-button">E</button>);
       return (
         <div className="md-side-toolbar" style={this.state.style}>
           <button
             onClick={this.openToolbar}
-            className={`md-sb-button add-button${this.state.isOpen ? ' open-button' : ''}`}
+            className={`md-sb-button md-add-button${this.state.isOpen ? ' md-open-button' : ''}`}
             type="button"
           >
             <i className="fa fa-plus-circle fa-lg" />
           </button>
           {this.state.isOpen ? (
             <ReactCSSTransitionGroup
-              transitionName="example"
+              transitionName="md-example"
               transitionEnterTimeout={200}
               transitionLeaveTimeout={100}
               transitionAppear

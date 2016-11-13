@@ -1,0 +1,9 @@
+language: node_js
+before_install:
+  - npm install react react-dom
+script:
+  - npm test
+node_js:
+  - "node"
+  - "6"
+  - "4"

@@ -45,21 +45,21 @@ $add-btn-width: 30px;
     }
 }
 
-.add-button {
+.md-add-button {
 
-    &.open-button {
+    &.md-open-button {
         transform: rotate(45deg);
     }
 }
 
-.example-appear {
+.md-example-appear {
   // opacity: 0.01;
   // transform: translateX(-25px) scale(0.1);
   transform: translate3d(-38px, 0px, 0px);
   opacity: 0;
 }
 
-.example-appear.example-appear-active {
+.md-example-appear.md-example-appear-active {
   // opacity: 1;
   // transform: translate(0px, 0px) scale(1, 1) rotate(135deg);
   // transform: translateX(0px), scale(1);
@@ -68,23 +68,23 @@ $add-btn-width: 30px;
   transition: all .5s ease-in;
 }
 
-.example-enter {
+.md-example-enter {
   // opacity: 0.01;
   transform: translate3d(-38px, 0px, 0px);
   opacity: 0;
 }
 
-.example-enter.example-enter-active {
+.md-example-enter.md-example-enter-active {
   opacity: 1;
   transform: translate3d(0px, 0px, 0px);
   transition: all 500ms ease-in;
 }
 
-.example-leave {
+.md-example-leave {
   opacity: 1;
 }
 
-.example-leave.example-leave-active {
+.md-example-leave.md-example-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
