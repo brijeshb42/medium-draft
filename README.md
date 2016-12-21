@@ -202,7 +202,7 @@ class CustomImageSideButton extends ImageSideButton {
               this.props.setEditorState(addNewBlock(
                 this.props.getEditorState(),
                 Block.IMAGE, {
-                  src,
+                  src: data.url,
                 }
               ));
             }  
