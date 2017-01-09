@@ -288,8 +288,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // setTimeout(this.fetchData, 1000);
-    this.refs.editor.focus();
+    setTimeout(this.fetchData, 1000);
   }
 
   rendererFn(setEditorState, getEditorState) {
@@ -368,7 +367,7 @@ class App extends React.Component {
           editorState: createEditorState(data),
           placeholder: 'Write here...'
         }, () => {
-          this.refs.editor.focus();
+          this._editor.focus();
         });
         window.ga('send', 'event', 'draftjs', 'data-success');
       }
@@ -391,7 +390,7 @@ class App extends React.Component {
     try {
       const blockData = JSON.parse(data);
       console.log(blockData);
-      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this.refs.editor.focus);
+      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
     } catch(e) {
       console.log(e);
     }
@@ -439,7 +438,7 @@ class App extends React.Component {
           <button onClick={this.toggleEdit}>Toggle Edit</button>
         </div>
         <Editor
-          ref="editor"
+          ref={(e) => {this._editor = e;}}
           editorState={editorState}
           onChange={this.onChange}
           editorEnabled={editorEnabled}
