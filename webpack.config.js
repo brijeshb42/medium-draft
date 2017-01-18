@@ -4,7 +4,6 @@ var path = require('path');
 var fs = require('fs');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var DashboardPlugin = require('webpack-dashboard/plugin');
 
 var ENV_DEV = 'development';
 var ENV_PROD = 'production';
@@ -60,8 +59,7 @@ var hashJsonPlugin = function() {
 function getPlugins(env) {
   var plugins = [definePlugin];
   if (!isProd) {
-    plugins.push(new DashboardPlugin());
-    plugins.push(new webpack.NoErrorsPlugin());
+    plugins.push(new webpack.NoEmitOnErrorsPlugin());
     plugins.push(vendorPlugin);
     plugins.push(commonsPlugin);
   } else {
@@ -93,8 +91,8 @@ function getEntry(env) {
       'immutable',
       'draft-js',
     ]
-    entries.push('webpack-dev-server/client?http://localhost:8080/');
-    entries.push('webpack/hot/only-dev-server');
+    // entries.push('webpack-dev-server/client?http://localhost:8080/');
+    // entries.push('webpack/hot/only-dev-server');
     entries.push('./index');
   } else {
     entries = ['./index'];
@@ -111,26 +109,33 @@ function getLoaders(env) {
   loaders.push({
     test: /\.jsx?$/,
     include: APP_DIR,
-    loader: env !== ENV_PROD ? 'react-hot!babel' : 'babel',
+    loader: env !== ENV_PROD ? 'react-hot-loader!babel-loader' : 'babel-loader',
     exclude: /node_modules/
   });
 
   loaders.push({
-    test: /\.(jpe?g|png|gif|svg)$/i,
-    loader: 'file'
+    test: /\.jsx?$/,
+    loaders: 'eslint-loader',
+    enforce: "pre",
+    include: APP_DIR,
   });
 
-  loaders.push({ test: /\.json$/, loader: 'json' });
+  loaders.push({
+    test: /\.(jpe?g|png|gif|svg)$/i,
+    loader: 'file-loader'
+  });
+
+  loaders.push({ test: /\.json$/, loader: 'json-loader' });
 
   if (env === ENV_PROD ) {
     loaders.push({
       test: /(\.css|\.scss)$/,
-      loader: ExtractTextPlugin.extract("css?sourceMap!sass?sourceMap")
+      loader: ExtractTextPlugin.extract("css-loader?sourceMap!sass-loader?sourceMap")
     });
   } else {
     loaders.push({
       test: /(\.css|\.scss)$/,
-      loaders: ['style', 'css?sourceMap', 'sass?sourceMap']
+      loaders: ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap']
     });
   }
   return loaders;
@@ -139,7 +144,6 @@ function getLoaders(env) {
 
 var options = {
   context: APP_DIR,
-  debug: !isProd,
   devtool: isProd  ? '' : 'cheap-module-eval-source-map',
   entry: getEntry(env),
   target: 'web',
@@ -149,7 +153,6 @@ var options = {
     filename: '[name].js',
     // filename: env === ENV_DEV ? '[name].js' : '[name].[hash].js',
     chunkFilename: '[id].[hash].bundle.js',
-    sourceMapFile: '[file].map',
     hotUpdateChunkFilename: 'hot/[id].[hash].hot-update.js',
     hotUpdateMainFilename: 'hot/[hash].hot-update.json',
     library: ['MediumDraft'],
@@ -158,18 +161,13 @@ var options = {
   plugins: getPlugins(env),
   module: {
     loaders: getLoaders(env),
-    preLoaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['eslint'],
-        include: APP_DIR,
-      }
-    ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
-    root: APP_DIR,
-    modulesDirectories: ['node_modules'],
+    modules: [
+      APP_DIR,
+      'node_modules'
+    ],
+    extensions: ['.js', '.jsx'],
   }
 };
 
