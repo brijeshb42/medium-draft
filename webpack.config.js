@@ -66,13 +66,11 @@ function getPlugins(env) {
     plugins.push(new ExtractTextPlugin('[name].css'));
     // plugins.push(new ExtractTextPlugin(isDev ? '[name].css' : '[name].[hash].css'));
     plugins.push(hashJsonPlugin);
-    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
-      output: {comments: false},
-      compress: {
-        warnings: false,
-        dead_code: true,
-      },
+      sourceMap: false,
+      output: { comments: false },
+      debug: false,
+      compress: { warnings: false, dead_code: true }
     }));
     plugins.push(bannerPlugin);
   }
@@ -91,16 +89,13 @@ function getEntry(env) {
       'immutable',
       'draft-js',
     ]
-    // entries.push('webpack-dev-server/client?http://localhost:8080/');
-    // entries.push('webpack/hot/only-dev-server');
     entries.push('./index');
   } else {
     entries = ['./index'];
   }
-  // entries.push('babel-polyfill');
-  
   entry['medium-draft'] = entries;
   entry.example = './example';
+  entry['basic'] = './basic.scss';
   return entry;
 }
 
@@ -113,12 +108,12 @@ function getLoaders(env) {
     exclude: /node_modules/
   });
 
-  loaders.push({
-    test: /\.jsx?$/,
-    loaders: 'eslint-loader',
-    enforce: "pre",
-    include: APP_DIR,
-  });
+  // loaders.push({
+  //   test: /\.jsx?$/,
+  //   loaders: 'eslint-loader',
+  //   enforce: "pre",
+  //   include: APP_DIR,
+  // });
 
   loaders.push({
     test: /\.(jpe?g|png|gif|svg)$/i,
@@ -168,7 +163,11 @@ var options = {
       'node_modules'
     ],
     extensions: ['.js', '.jsx'],
-  }
+  },
+  devServer: {
+    historyApiFallback: false,
+    noInfo: false,
+  },
 };
 
 if (isProd) {

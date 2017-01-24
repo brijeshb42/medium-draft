@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Rendered Content | medium-draft</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: CustomSerif,Georgia,Cambria,'Times New Roman',serif;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    #content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="content">Waiting for content</div>
+  <script src="/static/common.js"></script>
+  <script src="/static/vendor-react.js"></script>
+  <script src="/static/basic.js"></script>
+  <script>
+    function getScript() {
+      var script = document.createElement('script');
+      script.async = 1;
+      script.src = '//cdn.embedly.com/widgets/platform.js';
+      script.onload = () => {
+        window.embedly();
+      };
+      document.body.appendChild(script);
+    }
+
+    window.addEventListener('message', function(e) {
+      console.log(e);
+      if (e.data && e.data.type) {
+        return;
+      }
+      if (typeof e.data === 'string') {
+        try {
+          JSON.parse(e.data);
+          return;
+        } catch (ex) {
+          if (e.data.indexOf('webpackHot') === 0) {
+            return;
+          }
+          document.getElementById('content').innerHTML = e.data;
+          if (window.embedly) {
+            window.embedly();
+          } else {
+            getScript();
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

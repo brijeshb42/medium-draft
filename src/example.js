@@ -40,6 +40,13 @@ import {
   NOT_HANDLED
 } from './index';
 
+import {
+  setRenderOptions,
+  blockToHTML,
+  entityToHTML,
+  styleToHTML,
+} from './exporter';
+
 
 const newTypeMap = StringToTypeMap;
 newTypeMap['2.'] = Block.OL;
@@ -54,6 +61,38 @@ const DQUOTE_START = '“';
 const DQUOTE_END = '”';
 const SQUOTE_START = '‘';
 const SQUOTE_END = '’';
+
+const newBlockToHTML = (block) => {
+  const blockType = block.type;
+  if (block.type === Block.ATOMIC) {
+    if (block.text === 'E') {
+      return {
+        start: '<figure class="md-block-atomic md-block-atomic-embed">',
+        end: '</figure>',
+      };
+    } else if (block.text === '-') {
+      return <hr class="md-block-atomic-break" />;
+    }
+  }
+  return blockToHTML(block);
+};
+
+const newEntityToHTML = (entity, originalText) => {
+  if (entity.type === 'embed') {
+    return (
+      <div>
+        <a
+          className="embedly-card"
+          href={entity.data.url}
+          data-card-controls="0"
+          data-card-theme="dark"
+        >Embedded ― {entity.data.url}
+        </a>
+      </div>
+    );
+  }
+  return entityToHTML(entity, originalText);
+};
 
 const handleBeforeInput = (editorState, str, onChange) => {
   if (str === '"' || str === '\'') {
@@ -275,6 +314,12 @@ class App extends React.Component {
       component: SeparatorSideButton,
     }];
 
+    this.exporter = setRenderOptions({
+      styleToHTML,
+      blockToHTML: newBlockToHTML,
+      entityToHTML: newEntityToHTML,
+    });
+
     this.getEditorState = () => this.state.editorState;
 
     this.logData = this.logData.bind(this);
@@ -376,10 +421,15 @@ class App extends React.Component {
   }
 
   logData(e) {
-    const es = convertToRaw(this.state.editorState.getCurrentContent());
+    const currentContent = this.state.editorState.getCurrentContent();
+    const es = convertToRaw(currentContent);
     console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
+    let eHTML = this.exporter(currentContent);
+    var newWin = open('/rendered.html','windowName','height=600,width=600');
+    setTimeout(() => newWin.postMessage(eHTML, window.location.origin), 2000);
+    window.newWin = newWin;
   }
 
   loadSavedData() {
