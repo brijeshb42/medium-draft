@@ -5,7 +5,7 @@
     <title>medium-draft - a rich text editor built using draft-js - Bitwiser.in</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft@0.4.0/dist/medium-draft.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft@0.4.1/dist/medium-draft.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
     <!--[if lt IE 9]>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
@@ -95,7 +95,10 @@
     <script type="text/javascript" src="https://unpkg.com/react-dom@15.2.1/dist/react-dom.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/immutable@3.8.1/dist/immutable.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/draft-js@0.9.1/dist/Draft.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/medium-draft@0.4.0/dist/medium-draft.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/medium-draft@0.4.1/dist/medium-draft.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/react-dom@15.2.1/dist/react-dom-server.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/draft-convert@1.3.3/dist/draft-convert.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/medium-draft@0.4.1/dist/medium-draft-exporter.js"></script>
 <script type="text/babel">
 const {
   EditorState,
@@ -121,6 +124,45 @@ const {
   HANDLED,
   NOT_HANDLED
 } = MediumDraft;
+
+const {
+  setRenderOptions,
+  blockToHTML,
+  entityToHTML,
+  styleToHTML
+} = MediumDraftExporter;
+
+const newBlockToHTML = (block) => {
+  const blockType = block.type;
+  if (block.type === Block.ATOMIC) {
+    if (block.text === 'E') {
+      return {
+        start: '<figure class="md-block-atomic md-block-atomic-embed">',
+        end: '</figure>',
+      };
+    } else if (block.text === '-') {
+      return <div className="md-block-atomic md-block-atomic-break"><hr/></div>;
+    }
+  }
+  return blockToHTML(block);
+};
+
+const newEntityToHTML = (entity, originalText) => {
+  if (entity.type === 'embed') {
+    return (
+      <div>
+        <a
+          className="embedly-card"
+          href={entity.data.url}
+          data-card-controls="0"
+          data-card-theme="dark"
+        >Embedded ― {entity.data.url}
+        </a>
+      </div>
+    );
+  }
+  return entityToHTML(entity, originalText);
+};
 
 
 const newTypeMap = StringToTypeMap;
@@ -372,9 +414,16 @@ class App extends React.Component {
       component: SeparatorSideButton,
     }];
 
+    this.exporter = setRenderOptions({
+      styleToHTML,
+      blockToHTML: newBlockToHTML,
+      entityToHTML: newEntityToHTML,
+    });
+
     this.getEditorState = () => this.state.editorState;
 
     this.logData = this.logData.bind(this);
+    this.renderHTML = this.renderHTML.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
@@ -480,6 +529,19 @@ class App extends React.Component {
     window.ga('send', 'event', 'draftjs', 'log-data');
   }
 
+  renderHTML(e) {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const eHTML = this.exporter(currentContent);
+    var newWin = window.open(
+      `${window.location.pathname}rendered.html`,
+      'windowName',`height=${window.screen.height},width=${window.screen.wdith}`);
+    newWin.onload = () => {
+      newWin.postMessage(eHTML, window.location.origin);
+      window.ga('send', 'event', 'draftjs', 'render-window-loaded');
+    };
+    window.ga('send', 'event', 'draftjs', 'render-window-opened');
+  }
+
   loadSavedData() {
     const data = window.localStorage.getItem('editor');
     if (data === null) {
@@ -531,6 +593,11 @@ class App extends React.Component {
     const { editorState, editorEnabled } = this.state;
     return (
       <div>
+        <div className="editor-action">
+          <button onClick={this.logData}>Log State</button>
+          <button onClick={this.renderHTML}>Render HTML</button>
+          <button onClick={this.toggleEdit}>Toggle Edit</button>
+        </div>
         <Editor
           ref={(e) => {this._editor = e;}}
           editorState={editorState}
@@ -545,10 +612,6 @@ class App extends React.Component {
           sideButtons={this.sideButtons}
           rendererFn={this.rendererFn}
         />
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-        </div>
       </div>
     );
   }

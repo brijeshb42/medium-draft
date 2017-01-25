@@ -323,6 +323,7 @@ class App extends React.Component {
     this.getEditorState = () => this.state.editorState;
 
     this.logData = this.logData.bind(this);
+    this.renderHTML = this.renderHTML.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.loadSavedData = this.loadSavedData.bind(this);
@@ -426,10 +427,15 @@ class App extends React.Component {
     console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
-    let eHTML = this.exporter(currentContent);
-    var newWin = open('/rendered.html','windowName','height=600,width=600');
-    setTimeout(() => newWin.postMessage(eHTML, window.location.origin), 2000);
-    window.newWin = newWin;
+  }
+
+  renderHTML(e) {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const eHTML = this.exporter(currentContent);
+    var newWin = window.open(
+      `${window.location.pathname}rendered.html`,
+      'windowName',`height=${window.screen.height},width=${window.screen.wdith}`);
+    newWin.onload = () => newWin.postMessage(eHTML, window.location.origin);
   }
 
   loadSavedData() {
@@ -485,6 +491,7 @@ class App extends React.Component {
       <div>
         <div className="editor-action">
           <button onClick={this.logData}>Log State</button>
+          <button onClick={this.renderHTML}>Render HTML</button>
           <button onClick={this.toggleEdit}>Toggle Edit</button>
         </div>
         <Editor

@@ -17,17 +17,16 @@
       margin: 0 auto;
     }
   </style>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft@0.4.1/dist/basic.css">
 </head>
 <body>
   <div id="content" class="content">
     <p>
-      Open this page by clicking the <strong>Render HTML</strong> button.
+      Open this page by clicking the <strong>Render HTML</strong> button. It won't work directly.
     </p>
   </div>
-  <script src="/static/common.js"></script>
-  <script src="/static/vendor-react.js"></script>
-  <script src="/static/basic.js"></script>
   <script>
+    /* eslint-disable */
     function getScript() {
       var script = document.createElement('script');
       script.async = 1;
@@ -39,8 +38,6 @@
     }
 
     window.addEventListener('message', function(e) {
-      console.log(e);
-      console.log();
       if (typeof e.data === 'object') {
         return;
       }
