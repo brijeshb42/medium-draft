@@ -71,7 +71,7 @@ const newBlockToHTML = (block) => {
         end: '</figure>',
       };
     } else if (block.text === '-') {
-      return <hr class="md-block-atomic-break" />;
+      return <div className="md-block-atomic md-block-atomic-break"><hr/></div>;
     }
   }
   return blockToHTML(block);

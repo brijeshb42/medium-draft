@@ -94,6 +94,9 @@ export const blockToHTML = (block) => {
         nest: <ul className={`md-block-${blockType.toLowerCase()}`} />,
       };
     case Block.UNSTYLED:
+      if (block.text.length < 1) {
+        return <p className={`md-block-${blockType.toLowerCase()}`}><br /></p>;
+      }
       return <p className={`md-block-${blockType.toLowerCase()}`} />;
     default: return null;
   }

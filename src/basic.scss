@@ -70,6 +70,13 @@
     }
 }
 
+.md-block-atomic-break {
+    hr {
+        max-width: 100px;
+        border: 2px solid #ccc;
+    }
+}
+
 .md-inline-code {
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
     margin: 4px 0px;
@@ -96,6 +103,8 @@
 
 .md-inline-highlight {
     background: yellow;
+    display: inline;
+    padding: 2px 4px;
 }
 
 p {

@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "build": "npm run clean && npm run test && NODE_ENV=production webpack --progress --colors && mv dist/example.css dist/medium-draft.css",
     "babel": "./node_modules/.bin/babel ./src -d lib --ignore '*.spec.js,example.js'",
     "copyCss": "cp dist/medium-draft.css ./lib/index.css && cp dist/basic.css lib/",
-    "npm": "npm run build && npm run babel && npm run copyCss",
+    "buildExporter": "NODE_ENV=production APP_EXPORT_TYPE=exporter webpack --progress --colors",
+    "npm": "npm run build && npm run buildExporter && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
     "test:lint": "eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
     "test:unit": "NODE_PATH=src babel-node ./node_modules/.bin/isparta cover _mocha -- --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
@@ -25,14 +26,14 @@
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
-    "draft-convert": "^1.3.3",
     "draft-js": "^0.9.1",
     "immutable": "^3.7.6",
     "react-addons-css-transition-group": "^15.0.0"
   },
   "peerDependencies": {
     "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react-dom": "^15.0.0",
+    "draft-convert": "^1.3.3"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

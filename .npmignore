@@ -12,7 +12,8 @@ wiki/
 coverage/
 
 .travis.yml
-dist/index.html
+dist/*.html
 dist/data.json
 dist/example.js
 test-js
+dist/basic.js

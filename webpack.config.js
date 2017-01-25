@@ -214,4 +214,30 @@ if (isProd) {
   ];
 }
 
+var appExportType = process.env.APP_EXPORT_TYPE || '';
+
+if (appExportType === 'exporter') {
+  console.log('Building HTML Exporter');
+  options.entry = {
+    'medium-draft-exporter': './exporter',
+  };
+  options.output.library = 'MediumDraftExporter';
+  options.externals.push({
+    'react-dom/server': {
+      root: 'ReactDOMServer',
+      commonjs2: 'react-dom/server',
+      commonjs: 'react-dom/server',
+      amd: 'react-dom/server'
+    }
+  });
+  options.externals.push({
+    'draft-convert': {
+      root: 'DraftConvert',
+      commonjs2: 'draft-convert',
+      commonjs: 'draft-convert',
+      amd: 'draft-convert'
+    }
+  });
+}
+
 module.exports = options;
