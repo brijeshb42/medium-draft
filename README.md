@@ -323,7 +323,7 @@ The `medium-draft-exporter` also comes with a preset CSS if you want to apply so
 ### Developer
 
 - Clone this repo `git clone https://github.com/brijeshb42/medium-draft.git`.
-- Install node packages `npm install`.
+- Install node packages `npm install react react-dom draft-convert && npm install`.
 - Start local demo `npm run dev`. This will start a local server on port `8080`.
 - Build using `npm run build`.
 
