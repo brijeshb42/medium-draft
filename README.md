@@ -268,7 +268,9 @@ The exporter is not a part of the core library. If you want to use `medium-draft
 
 #### Browserify/webpack
 
-- `npm install draft-convert`;
+- `npm install draft-convert`.
+
+`draft-convert` is part of `peerDependencies` of `medium-draft`.
 
 ##### Code
 
@@ -314,7 +316,7 @@ The `medium-draft-exporter` also comes with a preset CSS if you want to apply so
 
 ### Issues
 
-- [ ] Write an exporter to export draft data to HTML specifically for `medium-draft`.
+- [x] Write an exporter to export draft data to HTML specifically for `medium-draft`.
 - [ ] Figure out a way to show placeholder text for empty image captions.
 - [x] Currently, the toolbar that appears when text is selected needs to be fixed regarding its position in the viewport.
 
