@@ -59,6 +59,7 @@ export default class ImageButton extends React.Component {
         <i className="fa fa-image" />
         <input
           type="file"
+          accept="image/*"
           ref={(c) => { this.input = c; }}
           onChange={this.onChange}
           style={{ display: 'none' }}
