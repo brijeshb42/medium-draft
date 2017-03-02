@@ -1,10 +1,10 @@
 // import './atomic.scss';
 
 import React, { PropTypes } from 'react';
-import { Entity } from 'draft-js';
 
 const AtomicBlock = (props) => {
-  const entity = Entity.get(props.block.getEntityAt(0));
+  const content = props.getEditorState().getCurrentContent();
+  const entity = content.getEntity(props.block.getEntityAt(0));
   const data = entity.getData();
   const type = entity.getType();
   if (type === 'image') {
@@ -22,6 +22,7 @@ const AtomicBlock = (props) => {
 
 AtomicBlock.propTypes = {
   block: PropTypes.object,
+  getEditorState: PropTypes.func,
 };
 
 export default AtomicBlock;

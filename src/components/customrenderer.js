@@ -20,6 +20,9 @@ export default (setEditorState, getEditorState) => (contentBlock) => {
     case Block.ATOMIC: return {
       component: AtomicBlock,
       editable: false,
+      props: {
+        getEditorState,
+      },
     };
     case Block.TODO: return {
       component: TodoBlock,
