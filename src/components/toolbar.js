@@ -255,7 +255,6 @@ export default class Toolbar extends React.Component {
           <div className="md-RichEditor-controls">
             <a
               className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-              href="#open-link-input"
               onClick={this.handleLinkInput}
               aria-label={hyperlinkDescription}
             >
@@ -342,4 +341,3 @@ export const INLINE_BUTTONS = [
   //   style: 'CODE',
   //   description: 'Inline Code',
   // },
-
