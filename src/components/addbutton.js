@@ -49,6 +49,7 @@ export default class AddButton extends React.Component {
       if (block.getLength() === 0) {
         setTimeout(this.findNode, 0);
       }
+      this.blockKey = bkey;
       return;
     }
     if (this.blockKey === bkey) {
