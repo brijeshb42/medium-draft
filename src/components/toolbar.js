@@ -128,7 +128,7 @@ export default class Toolbar extends React.Component {
   }
 
   handleLinkInput(e, direct = false) {
-    if (!direct) {
+    if (direct !== true) {
       e.preventDefault();
       e.stopPropagation();
     }
