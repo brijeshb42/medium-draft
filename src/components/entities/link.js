@@ -18,6 +18,7 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
 };
 
 const Link = (props) => {
+  props.children.bar();
   const { url } = Entity.get(props.entityKey).getData();
   return (
     <a
