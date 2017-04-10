@@ -1,9 +1,10 @@
 {
   "name": "medium-draft",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "scripts": {
+    "start": "npm run dev",
     "clean": "rm -f dist/*.js && rm -f dist/*.css && rm -rf lib",
     "dev": "mkdir -p dist && cp index.html dist/index.html && cp rendered.html dist/rendered.html && cp docs/data.json dist/data.json && NODE_ENV=development webpack-dev-server --host 0.0.0.0 --devtool eval --content-base dist/ --progress --colors --hot",
     "build": "npm run clean && npm run test && NODE_ENV=production webpack --progress --colors && mv dist/example.css dist/medium-draft.css",

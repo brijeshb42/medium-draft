@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
-import { Entity } from 'draft-js';
 
-import { Entity as E } from '../../util/constants';
+import { Entity } from '../../util/constants';
 
 
 export const findLinkEntities = (contentBlock, callback, contentState) => {
@@ -10,7 +9,7 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === E.LINK
+        contentState.getEntity(entityKey).getType() === Entity.LINK
       );
     },
     callback
@@ -18,7 +17,8 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
 };
 
 const Link = (props) => {
-  const { url } = Entity.get(props.entityKey).getData();
+  const { contentState, entityKey } = props;
+  const { url } = contentState.getEntity(entityKey).getData();
   return (
     <a
       className="md-link hint--top hint--rounded"
@@ -33,6 +33,7 @@ const Link = (props) => {
 Link.propTypes = {
   children: PropTypes.node,
   entityKey: PropTypes.string,
+  contentState: PropTypes.object.isRequired,
 };
 
 export default Link;
