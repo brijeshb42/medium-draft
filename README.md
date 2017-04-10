@@ -288,7 +288,7 @@ The exporter is not a part of the core library. If you want to use `medium-draft
 ```html
 <script src="https://unpkg.com/react-dom@15.2.1/dist/react-dom-server.min.js"></script>
 <script src="https://unpkg.com/draft-convert@1.3.3/dist/draft-convert.min.js"></script>
-<script src="https://unpkg.com/medium-draft@0.4.1/dist/medium-draft-exporter.js"></script>
+<script src="https://unpkg.com/medium-draft/dist/medium-draft-exporter.js"></script>
 ```
 
 The exporter is available as `MediumDraftExporter` global;
@@ -311,7 +311,7 @@ The `medium-draft-exporter` also comes with a preset CSS if you want to apply so
 
 - In browser, in your rendered html's page, you can include this stylesheet link
   ```html
-  <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft@0.4.1/dist/basic.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/basic.css">
   ```
 
 ### Issues
