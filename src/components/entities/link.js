@@ -4,13 +4,13 @@ import { Entity } from 'draft-js';
 import { Entity as E } from '../../util/constants';
 
 
-export const findLinkEntities = (contentBlock, callback) => {
+export const findLinkEntities = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        Entity.get(entityKey).getType() === E.LINK
+        contentState.getEntity(entityKey).getType() === E.LINK
       );
     },
     callback

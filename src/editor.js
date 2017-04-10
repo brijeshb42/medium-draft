@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import {
   Editor,
+  EditorState,
   RichUtils,
-  Entity,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 
@@ -132,8 +132,9 @@ class MediumDraftEditor extends React.Component {
   Adds a hyperlink on the selected text with some basic checks.
   */
   setLink(url) {
-    const { editorState } = this.props;
+    let { editorState } = this.props;
     const selection = editorState.getSelection();
+    const content = editorState.getCurrentContent();
     let entityKey = null;
     let newUrl = url;
     if (url !== '') {
@@ -144,7 +145,9 @@ class MediumDraftEditor extends React.Component {
           newUrl = `http://${newUrl}`;
         }
       }
-      entityKey = Entity.create(E.LINK, 'MUTABLE', { url: newUrl });
+      const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
+      editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+      entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }

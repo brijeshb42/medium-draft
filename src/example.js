@@ -9,7 +9,6 @@ import {
   KeyBindingUtil,
   Modifier,
   AtomicBlockUtils,
-  Entity,
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
@@ -125,10 +124,14 @@ class SeparatorSideButton extends React.Component {
   }
 
   onClick() {
-    const entityKey = Entity.create('separator', 'IMMUTABLE', {});
+    let editorState = this.props.getEditorState();
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('separator', 'IMMUTABLE', {});
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
     this.props.setEditorState(
       AtomicBlockUtils.insertAtomicBlock(
-        this.props.getEditorState(),
+        editorState,
         entityKey,
         '-'
       )
@@ -175,10 +178,14 @@ class EmbedSideButton extends React.Component {
   }
 
   addEmbedURL(url) {
-    const entityKey = Entity.create('embed', 'IMMUTABLE', {url});
+    let editorState = this.props.getEditorState();
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('embed', 'IMMUTABLE', {url});
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
     this.props.setEditorState(
       AtomicBlockUtils.insertAtomicBlock(
-        this.props.getEditorState(),
+        editorState,
         entityKey,
         'E'
       )
@@ -268,7 +275,8 @@ const AtomicSeparatorComponent = (props) => (
 
 const AtomicBlock = (props) => {
   const { blockProps, block } = props;
-  const entity = Entity.get(block.getEntityAt(0));
+  const content = blockProps.getEditorState().getCurrentContent();
+  const entity = content.getEntity(block.getEntityAt(0));
   const data = entity.getData();
   const type = entity.getType();
   if (blockProps.components[type]) {
@@ -352,6 +360,7 @@ class App extends React.Component {
             editable: false,
             props: {
               components: atomicRenderers,
+              getEditorState,
             },
           };
         default: return rFnOld(contentBlock);

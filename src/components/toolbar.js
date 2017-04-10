@@ -2,14 +2,13 @@
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Entity } from 'draft-js';
 
 import BlockToolbar from './blocktoolbar';
 import InlineToolbar from './inlinetoolbar';
 
 import { getSelection, getSelectionRect } from '../util/index';
 import { getCurrentBlock } from '../model/index';
-import { Entity as CEntity, HYPERLINK } from '../util/constants';
+import { Entity, HYPERLINK } from '../util/constants';
 
 export default class Toolbar extends React.Component {
 
@@ -144,7 +143,7 @@ export default class Toolbar extends React.Component {
     currentBlock.findEntityRanges((character) => {
       const entityKey = character.getEntity();
       selectedEntity = entityKey;
-      return entityKey !== null && Entity.get(entityKey).getType() === CEntity.LINK;
+      return entityKey !== null && editorState.getCurrentContent().getEntity(entityKey).getType() === Entity.LINK;
     }, (start, end) => {
       let selStart = selection.getAnchorOffset();
       let selEnd = selection.getFocusOffset();
@@ -154,7 +153,7 @@ export default class Toolbar extends React.Component {
       }
       if (start === selStart && end === selEnd) {
         linkFound = true;
-        const { url } = Entity.get(selectedEntity).getData();
+        const { url } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
         this.setState({
           showURLInput: true,
           urlInputValue: url,
