@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 // import './todo.scss';
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { EditorBlock } from 'draft-js';
 
 import { updateDataOfBlock } from '../../model/';

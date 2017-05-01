@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 // import './toolbar.scss';
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import BlockToolbar from './blocktoolbar';
@@ -330,15 +331,15 @@ export const INLINE_BUTTONS = [
     description: 'Add a link',
   },
 ];
-  // {
-  //   label: 'S',
-  //   style: 'STRIKETHROUGH',
-  //   icon: 'strikethrough',
-  //   description: 'Strikethrough',
-  // },
-  // {
-  //   label: 'Code',
-  //   style: 'CODE',
-  //   description: 'Inline Code',
-  // },
+// {
+//   label: 'S',
+//   style: 'STRIKETHROUGH',
+//   icon: 'strikethrough',
+//   description: 'Strikethrough',
+// },
+// {
+//   label: 'Code',
+//   style: 'CODE',
+//   description: 'Inline Code',
+// },
 

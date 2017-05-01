@@ -29,6 +29,7 @@
   "dependencies": {
     "draft-js": "^0.10.0",
     "immutable": "^3.7.6",
+    "prop-types": "^15.5.8",
     "react-addons-css-transition-group": "^15.0.0"
   },
   "peerDependencies": {
