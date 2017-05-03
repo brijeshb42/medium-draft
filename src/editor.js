@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import {
   Editor,
   EditorState,
@@ -43,16 +44,16 @@ class MediumDraftEditor extends React.Component {
     stringToTypeMap: PropTypes.object,
     blockRenderMap: PropTypes.object,
     blockButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: React.PropTypes.string.isRequired,
-      style: React.PropTypes.string.isRequired,
-      icon: React.PropTypes.string,
-      description: React.PropTypes.string,
+      label: PropTypes.string.isRequired,
+      style: PropTypes.string.isRequired,
+      icon: PropTypes.string,
+      description: PropTypes.string,
     })),
     inlineButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: React.PropTypes.string.isRequired,
-      style: React.PropTypes.string.isRequired,
-      icon: React.PropTypes.string,
-      description: React.PropTypes.string,
+      label: PropTypes.string.isRequired,
+      style: PropTypes.string.isRequired,
+      icon: PropTypes.string,
+      description: PropTypes.string,
     })),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),

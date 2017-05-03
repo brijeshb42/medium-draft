@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 // import './atomic.scss';
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 const AtomicBlock = (props) => {
   const content = props.getEditorState().getCurrentContent();

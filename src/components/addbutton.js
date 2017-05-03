@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 // import './addbutton.scss';
 
-import React, { PropTypes } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import React from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import { getSelectedBlockNode } from '../util';
 
@@ -150,7 +151,7 @@ export default class AddButton extends React.Component {
             <i className="fa fa-plus-circle fa-lg" />
           </button>
           {this.state.isOpen ? (
-            <ReactCSSTransitionGroup
+            <CSSTransitionGroup
               transitionName="md-example"
               transitionEnterTimeout={200}
               transitionLeaveTimeout={100}
@@ -168,7 +169,7 @@ export default class AddButton extends React.Component {
                   />
                 );
               })}
-            </ReactCSSTransitionGroup>
+            </CSSTransitionGroup>
           ) : null}
         </div>
       );

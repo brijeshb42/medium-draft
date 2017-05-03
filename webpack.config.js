@@ -188,11 +188,11 @@ if (isProd) {
       }
     },
     {
-      'react-addons-css-transition-group': {
-        root: ['React','addons','CSSTransitionGroup'],
-        commonjs2: 'react-addons-css-transition-group',
-        commonjs: 'react-addons-css-transition-group',
-        amd: 'react-addons-css-transition-group',
+      'react-transition-group/CSSTransitionGroup': {
+        root: ['React', 'addons', 'CSSTransitionGroup'],
+        commonjs2: 'react-transition-group/CSSTransitionGroup',
+        commonjs: 'react-transition-group/CSSTransitionGroup',
+        amd: 'react-transition-group/CSSTransitionGroup',
       }
     },
     {
