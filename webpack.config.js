@@ -125,7 +125,7 @@ function getLoaders(env) {
   if (env === ENV_PROD ) {
     loaders.push({
       test: /(\.css|\.scss)$/,
-      loader: ExtractTextPlugin.extract("css-loader?sourceMap!sass-loader?sourceMap")
+      loader: ExtractTextPlugin.extract("css-loader?sourceMap&minimize!sass-loader?sourceMap")
     });
   } else {
     loaders.push({
