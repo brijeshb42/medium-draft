@@ -23,11 +23,15 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
     *   <kbd>1</kbd> - Toggle Ordered list item
     *   <kbd>*</kbd> - Toggle Unordered list item
-    *   <kbd>@</kbd> - Add link to selected text.
     *   <kbd>#</kbd> - Toggle Header-three.
     *   <kbd><</kbd> - Toggle Caption block.
     *   <kbd>></kbd> - Toggle unstyled or paragraph block.
     *   <kbd>H</kbd> - Highlight selection.
+
+##### Other Shortcuts
+
+* <kbd>CMD/CTRL</kbd> + <kbd>K</kbd> -> Add Link
+* <kbd>CMD/CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>K</kbd> -> Remove link if cursor is inside a word with link.
 
 ##### Editor level commands
 
