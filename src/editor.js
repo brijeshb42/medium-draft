@@ -4,11 +4,13 @@ import {
   Editor,
   EditorState,
   RichUtils,
+  SelectionState,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 
 import AddButton from './components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
+import LinkEditComponent from './components/LinkEditComponent';
 
 import rendererFn from './components/customrenderer';
 import customStyleMap from './util/customstylemap';
@@ -22,7 +24,12 @@ import {
   KEY_COMMANDS } from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
-import { getCurrentBlock, resetBlockWithType, addNewBlockAt } from './model';
+import {
+  getCurrentBlock,
+  resetBlockWithType,
+  addNewBlockAt,
+  isCursorBetweenLink,
+} from './model';
 
 import ImageButton from './components/sides/image';
 
@@ -44,13 +51,21 @@ class MediumDraftEditor extends React.Component {
     stringToTypeMap: PropTypes.object,
     blockRenderMap: PropTypes.object,
     blockButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.string.isRequired,
+      label: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.element,
+        PropTypes.object,
+      ]),
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
     })),
     inlineButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.string.isRequired,
+      label: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.element,
+        PropTypes.object,
+      ]),
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
@@ -66,6 +81,7 @@ class MediumDraftEditor extends React.Component {
     handleKeyCommand: PropTypes.func,
     handleReturn: PropTypes.func,
     disableToolbar: PropTypes.bool,
+    showLinkEditToolbar: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -96,6 +112,7 @@ class MediumDraftEditor extends React.Component {
       },
     ],
     disableToolbar: false,
+    showLinkEditToolbar: true,
   };
 
   constructor(props) {
@@ -169,6 +186,7 @@ class MediumDraftEditor extends React.Component {
   */
   handleKeyCommand(command) {
     // console.log(command);
+    const { editorState } = this.props;
     if (this.props.handleKeyCommand) {
       const behaviour = this.props.handleKeyCommand(command);
       if (behaviour === HANDLED || behaviour === true) {
@@ -177,17 +195,29 @@ class MediumDraftEditor extends React.Component {
     }
     if (command === KEY_COMMANDS.showLinkInput()) {
       if (!this.props.disableToolbar && this.toolbar) {
+        // For some reason, scroll is jumping sometimes for the below code.
+        // Debug and fix it later.
+        const isCursorLink = isCursorBetweenLink(editorState);
+        if (isCursorLink) {
+          this.editLinkAfterSelection(isCursorLink.blockKey, isCursorLink.entityKey);
+          return HANDLED;
+        }
         this.toolbar.handleLinkInput(null, true);
         return HANDLED;
       }
       return NOT_HANDLED;
+    } else if (command === KEY_COMMANDS.unlink()) {
+      const isCursorLink = isCursorBetweenLink(editorState);
+      if (isCursorLink) {
+        this.removeLink(isCursorLink.blockKey, isCursorLink.entityKey);
+        return HANDLED;
+      }
     }
     /* else if (command === KEY_COMMANDS.addNewBlock()) {
       const { editorState } = this.props;
       this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
       return HANDLED;
     } */
-    const { editorState } = this.props;
     const block = getCurrentBlock(editorState);
     const currentBlockType = block.getType();
     // if (command === KEY_COMMANDS.deleteBlock()) {
@@ -326,14 +356,65 @@ class MediumDraftEditor extends React.Component {
     );
   }
 
+  removeLink = (blockKey, entityKey) => {
+    const { editorState } = this.props;
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(blockKey);
+    const oldSelection = editorState.getSelection();
+    block.findEntityRanges((character) => {
+      const eKey = character.getEntity();
+      return eKey === entityKey;
+    }, (start, end) => {
+      const selection = new SelectionState({
+        anchorKey: blockKey,
+        focusKey: blockKey,
+        anchorOffset: start,
+        focusOffset: end,
+      });
+      const newEditorState = EditorState.forceSelection(RichUtils.toggleLink(editorState, selection, null), oldSelection);
+      this.onChange(newEditorState, this.focus);
+    });
+  };
+
+  editLinkAfterSelection = (blockKey, entityKey = null) => {
+    if (entityKey === null) {
+      return;
+    }
+    const { editorState } = this.props;
+    const content = editorState.getCurrentContent();
+    const block = content.getBlockForKey(blockKey);
+    block.findEntityRanges((character) => {
+      const eKey = character.getEntity();
+      return eKey === entityKey;
+    }, (start, end) => {
+      const selection = new SelectionState({
+        anchorKey: blockKey,
+        focusKey: blockKey,
+        anchorOffset: start,
+        focusOffset: end,
+      });
+      const newEditorState = EditorState.forceSelection(editorState, selection);
+      this.onChange(newEditorState);
+      setTimeout(() => {
+        if (this.toolbar) {
+          this.toolbar.handleLinkInput(null, true);
+        }
+      }, 100);
+    });
+  };
+
 
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar } = this.props;
+    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
+    let isCursorLink = false;
+    if (editorEnabled && showLinkEditToolbar) {
+      isCursorLink = isCursorBetweenLink(editorState);
+    }
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -378,6 +459,13 @@ class MediumDraftEditor extends React.Component {
               inlineButtons={this.props.inlineButtons}
             />
           )}
+          {isCursorLink && (
+            <LinkEditComponent
+              {...isCursorLink}
+              editorState={editorState}
+              removeLink={this.removeLink}
+              editLink={this.editLinkAfterSelection}
+            />)}
         </div>
       </div>
     );

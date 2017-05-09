@@ -12,7 +12,7 @@ $add-btn-width: 30px;
 .md-sb-button {
     background: none;
     // background-color: #EAEAEA;
-    border: none;
+    border: 1px solid #5b5b5b;
     // border: 1px solid #A0A0A0;
     color: #6D6D6D;
     cursor: pointer;
@@ -42,6 +42,11 @@ $add-btn-width: 30px;
     &.md-sb-img-button {
       background: none;
       background-color: white;
+    }
+
+    svg path {
+        stroke-width: 0;
+        fill: #545454;
     }
 }
 

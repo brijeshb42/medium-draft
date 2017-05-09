@@ -10,15 +10,10 @@ const InlineToolbar = (props) => {
   }
   const currentStyle = props.editorState.getCurrentInlineStyle();
   return (
-    <div className="md-RichEditor-controls">
+    <div className="md-RichEditor-controls md-RichEditor-controls-inline">
       {props.buttons.map(type => {
         const iconLabel = {};
         iconLabel.label = type.label;
-        // if (type.icon) {
-        //   iconLabel.icon = type.icon;
-        // } else {
-        //   iconLabel.label = type.label;
-        // }
         return (
           <StyleButton
             {...iconLabel}
