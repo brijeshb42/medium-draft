@@ -168,7 +168,7 @@ export default class Toolbar extends React.Component {
           setTimeout(() => {
             this.urlinput.focus();
             this.urlinput.select();
-          }, 1);
+          }, 0);
         });
       }
     });
@@ -178,7 +178,7 @@ export default class Toolbar extends React.Component {
       }, () => {
         setTimeout(() => {
           this.urlinput.focus();
-        }, 1);
+        }, 0);
       });
     }
   }

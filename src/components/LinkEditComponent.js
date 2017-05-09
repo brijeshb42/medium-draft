@@ -32,7 +32,6 @@ export default class LinkEditComponent extends React.Component {
     this.state = {
       position: {},
     };
-    this.showLinkEditComponent = true;
     this.renderedOnce = false;
   }
 
@@ -57,7 +56,7 @@ export default class LinkEditComponent extends React.Component {
   }
 
   calculatePosition = () => {
-    if (!this.showLinkEditComponent || !this.toolbar) {
+    if (!this.toolbar) {
       return;
     }
     const relativeParent = getRelativeParent(this.toolbar.parentElement);
@@ -88,8 +87,8 @@ export default class LinkEditComponent extends React.Component {
 
   render() {
     let url = this.props.url;
-    if (url.length > 40) {
-      url = `${url.slice(0, 40)}...`;
+    if (url.length > 30) {
+      url = `${url.slice(0, 30)}...`;
     }
     return (
       <div

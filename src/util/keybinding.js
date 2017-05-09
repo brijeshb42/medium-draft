@@ -2,7 +2,7 @@ import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 
 import { KEY_COMMANDS } from './constants';
 
-const { changeType, showLinkInput } = KEY_COMMANDS;
+const { changeType, showLinkInput, unlink } = KEY_COMMANDS;
 
 /*
 Emits various key commands to be used by `handleKeyCommand` in `Editor` based
@@ -10,6 +10,9 @@ on various key combos.
 */
 export default (e) => {
   if (KeyBindingUtil.hasCommandModifier(e) && e.which === 75) {
+    if (e.shiftKey) {
+      return unlink();
+    }
     return showLinkInput();
   }
   if (e.altKey === true && !e.ctrlKey) {

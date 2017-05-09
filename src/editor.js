@@ -195,6 +195,8 @@ class MediumDraftEditor extends React.Component {
     }
     if (command === KEY_COMMANDS.showLinkInput()) {
       if (!this.props.disableToolbar && this.toolbar) {
+        // For some reason, scroll is jumping sometimes for the below code.
+        // Debug and fix it later.
         const isCursorLink = isCursorBetweenLink(editorState);
         if (isCursorLink) {
           this.editLinkAfterSelection(isCursorLink.blockKey, isCursorLink.entityKey);
@@ -204,6 +206,12 @@ class MediumDraftEditor extends React.Component {
         return HANDLED;
       }
       return NOT_HANDLED;
+    } else if (command === KEY_COMMANDS.unlink()) {
+      const isCursorLink = isCursorBetweenLink(editorState);
+      if (isCursorLink) {
+        this.removeLink(isCursorLink.blockKey, isCursorLink.entityKey);
+        return HANDLED;
+      }
     }
     /* else if (command === KEY_COMMANDS.addNewBlock()) {
       const { editorState } = this.props;
@@ -386,18 +394,12 @@ class MediumDraftEditor extends React.Component {
         focusOffset: end,
       });
       const newEditorState = EditorState.forceSelection(editorState, selection);
-      // const { url } = content.getEntity(entityKey).getData();
-      // this.setState({
-      //   editorState: newEditorState,
-      //   urlValue: url,
-      //   showLinkInput: true,
-      // });
       this.onChange(newEditorState);
       setTimeout(() => {
         if (this.toolbar) {
           this.toolbar.handleLinkInput(null, true);
         }
-      }, 10);
+      }, 100);
     });
   };
 
