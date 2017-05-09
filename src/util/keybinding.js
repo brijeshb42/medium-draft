@@ -1,4 +1,4 @@
-import { getDefaultKeyBinding } from 'draft-js';
+import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 
 import { KEY_COMMANDS } from './constants';
 
@@ -9,6 +9,9 @@ Emits various key commands to be used by `handleKeyCommand` in `Editor` based
 on various key combos.
 */
 export default (e) => {
+  if (KeyBindingUtil.hasCommandModifier(e) && e.which === 75) {
+    return showLinkInput();
+  }
   if (e.altKey === true && !e.ctrlKey) {
     if (e.shiftKey === true) {
       switch (e.which) {

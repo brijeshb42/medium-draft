@@ -13,7 +13,7 @@ const BlockToolbar = (props) => {
   // const selection = editorState.getSelection();
   const blockType = RichUtils.getCurrentBlockType(editorState);
   return (
-    <div className="md-RichEditor-controls">
+    <div className="md-RichEditor-controls md-RichEditor-controls-block">
       {props.buttons.map((type) => {
         const iconLabel = {};
         iconLabel.label = type.label;
