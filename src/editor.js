@@ -5,8 +5,11 @@ import {
   EditorState,
   RichUtils,
   SelectionState,
+  ContentBlock,
+  genKey,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
+import { OrderedMap } from 'immutable';
 
 import AddButton from './components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
@@ -403,6 +406,49 @@ class MediumDraftEditor extends React.Component {
     });
   };
 
+  onUpArrow = (e) => {
+    const { editorState } = this.props;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const key = selection.getAnchorKey();
+    const currentBlock = content.getBlockForKey(key);
+    const firstBlock = content.getFirstBlock();
+    if (firstBlock.getKey() === key) {
+      if (firstBlock.getType().indexOf('atomic') === 0 ) {
+        e.preventDefault();
+        const newBlock = new ContentBlock({
+          type: Block.UNSTYLED,
+          key: genKey(),
+        });
+        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
+        const newContent = content.merge({
+          blockMap: newBlockMap,
+          selectionAfter: selection.merge({
+            anchorKey: newBlock.getKey(),
+            focusKey: newBlock.getKey(),
+            anchorOffset: 0,
+            focusOffset: 0,
+            isBackward: false,
+          }),
+        });
+        this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
+      }
+    } else if (currentBlock.getType().indexOf('atomic') === 0) {
+      const blockBefore = content.getBlockBefore(key);
+      if (!blockBefore) {
+        return;
+      }
+      e.preventDefault();
+      const newSelection = selection.merge({
+        anchorKey: blockBefore.getKey(),
+        focusKey: blockBefore.getKey(),
+        anchorOffset: blockBefore.getLength(),
+        focusOffset: blockBefore.getLength(),
+        isBackward: false,
+      });
+      this.onChange(EditorState.forceSelection(editorState, newSelection));
+    }
+  };
 
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
@@ -426,6 +472,7 @@ class MediumDraftEditor extends React.Component {
             blockStyleFn={this.props.blockStyleFn}
             onChange={this.onChange}
             onTab={this.onTab}
+            onUpArrow={this.onUpArrow}
             blockRenderMap={this.props.blockRenderMap}
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}

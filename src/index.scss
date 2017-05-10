@@ -1,7 +1,7 @@
 .md-RichEditor-root {
   background: #fff;
   box-sizing: border-box;
-  font-family: 'Georgia', serif;
+  //font-family: 'Georgia', serif;
   padding: 15px 30px;
   position: relative;
   line-height: 1.4em;
@@ -37,7 +37,7 @@
 .md-RichEditor-editor .md-RichEditor-blockquote {
   border-left: 5px solid #4CA8DE;
   color: #555;
-  font-family: 'Hoefler Text', 'Georgia', serif;
+  //font-family: 'Hoefler Text', 'Georgia', serif;
   font-size: 1.2em;
   margin: 0;
   padding: 10px 0 10px 20px;
@@ -59,7 +59,7 @@
 
 .md-RichEditor-editor .public-DraftStyleDefault-pre {
   background-color: rgba(0, 0, 0, 0.05);
-  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+  //font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
   font-size: 16px;
   padding: 20px;
 }
