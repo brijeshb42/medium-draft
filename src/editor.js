@@ -119,8 +119,8 @@ class MediumDraftEditor extends React.Component {
     super(props);
 
     this.focus = () => this._editorNode.focus();
-    this.onChange = (editorState) => {
-      this.props.onChange(editorState);
+    this.onChange = (editorState, cb) => {
+      this.props.onChange(editorState, cb);
     };
 
     this.getEditorState = () => this.props.editorState;
