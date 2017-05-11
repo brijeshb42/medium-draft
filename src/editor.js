@@ -149,6 +149,50 @@ class MediumDraftEditor extends React.Component {
     }
   }
 
+  onUpArrow = (e) => {
+    const { editorState } = this.props;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const key = selection.getAnchorKey();
+    const currentBlock = content.getBlockForKey(key);
+    const firstBlock = content.getFirstBlock();
+    if (firstBlock.getKey() === key) {
+      if (firstBlock.getType().indexOf('atomic') === 0) {
+        e.preventDefault();
+        const newBlock = new ContentBlock({
+          type: Block.UNSTYLED,
+          key: genKey(),
+        });
+        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
+        const newContent = content.merge({
+          blockMap: newBlockMap,
+          selectionAfter: selection.merge({
+            anchorKey: newBlock.getKey(),
+            focusKey: newBlock.getKey(),
+            anchorOffset: 0,
+            focusOffset: 0,
+            isBackward: false,
+          }),
+        });
+        this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
+      }
+    } else if (currentBlock.getType().indexOf('atomic') === 0) {
+      const blockBefore = content.getBlockBefore(key);
+      if (!blockBefore) {
+        return;
+      }
+      e.preventDefault();
+      const newSelection = selection.merge({
+        anchorKey: blockBefore.getKey(),
+        focusKey: blockBefore.getKey(),
+        anchorOffset: blockBefore.getLength(),
+        focusOffset: blockBefore.getLength(),
+        isBackward: false,
+      });
+      this.onChange(EditorState.forceSelection(editorState, newSelection));
+    }
+  };
+
   /*
   Adds a hyperlink on the selected text with some basic checks.
   */
@@ -404,50 +448,6 @@ class MediumDraftEditor extends React.Component {
         }
       }, 100);
     });
-  };
-
-  onUpArrow = (e) => {
-    const { editorState } = this.props;
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const key = selection.getAnchorKey();
-    const currentBlock = content.getBlockForKey(key);
-    const firstBlock = content.getFirstBlock();
-    if (firstBlock.getKey() === key) {
-      if (firstBlock.getType().indexOf('atomic') === 0 ) {
-        e.preventDefault();
-        const newBlock = new ContentBlock({
-          type: Block.UNSTYLED,
-          key: genKey(),
-        });
-        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
-        const newContent = content.merge({
-          blockMap: newBlockMap,
-          selectionAfter: selection.merge({
-            anchorKey: newBlock.getKey(),
-            focusKey: newBlock.getKey(),
-            anchorOffset: 0,
-            focusOffset: 0,
-            isBackward: false,
-          }),
-        });
-        this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
-      }
-    } else if (currentBlock.getType().indexOf('atomic') === 0) {
-      const blockBefore = content.getBlockBefore(key);
-      if (!blockBefore) {
-        return;
-      }
-      e.preventDefault();
-      const newSelection = selection.merge({
-        anchorKey: blockBefore.getKey(),
-        focusKey: blockBefore.getKey(),
-        anchorOffset: blockBefore.getLength(),
-        focusOffset: blockBefore.getLength(),
-        isBackward: false,
-      });
-      this.onChange(EditorState.forceSelection(editorState, newSelection));
-    }
   };
 
   /*

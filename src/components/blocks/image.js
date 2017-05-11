@@ -12,11 +12,7 @@ class ImageBlock extends React.Component {
     blockProps: PropTypes.object,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
-  focusBlock = (e) => {
+  focusBlock = () => {
     const { block, blockProps } = this.props;
     const { getEditorState, setEditorState } = blockProps;
     const key = block.getKey();
@@ -35,8 +31,7 @@ class ImageBlock extends React.Component {
   };
 
   render() {
-    const { block, blockProps } = this.props;
-    const { getEditorState } = blockProps;
+    const { block } = this.props;
     const data = block.getData();
     const src = data.get('src');
     if (src !== null) {
