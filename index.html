@@ -4,16 +4,18 @@
     <meta charset="utf-8">
     <title>Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style type="text/css">
     body {
       font-size: 18px;
-      font-family: 'Lato', sans-serif;
     }
 
     a, a:visited {
       color: #08c;
+    }
+
+    .md-RichEditor-root {
+        font-family: 'Georgia', serif;
     }
 
     .md-RichEditor-editor {
@@ -33,6 +35,12 @@
         background: #5a5a5a;
         min-height: 3px;
         max-width: 50px;
+    }
+    .md-RichEditor-editor .md-RichEditor-blockquote {
+        font-family: 'Hoefler Text', 'Georgia', serif;
+    }
+    .md-RichEditor-editor .public-DraftStyleDefault-pre {
+        font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
     }
     .md-block-atomic-wrapper.md-block-atomic-wrapper-separator {
         border-color: transparent;
