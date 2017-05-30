@@ -80,7 +80,7 @@ export const blockToHTML = (block) => {
       };
     }
     case Block.BREAK:
-      return <hr className={`md-block-${blockType.toLowerCase()}`} />;
+      return <div className={`md-block-${blockType.toLowerCase().replace(':', '-')}`} />;
     case Block.BLOCKQUOTE:
       return <blockquote className={`md-block-${blockType.toLowerCase()}`} />;
     case Block.OL:
