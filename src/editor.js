@@ -391,10 +391,6 @@ class MediumDraftEditor extends React.Component {
   for some key combinations handled by default inside draft-js).
   */
   _toggleInlineStyle(inlineStyle) {
-    const type = RichUtils.getCurrentBlockType(this.props.editorState);
-    if (type.indexOf(Block.H1.split('-')[0]) === 0) {
-      return;
-    }
     this.onChange(
       RichUtils.toggleInlineStyle(
         this.props.editorState,
