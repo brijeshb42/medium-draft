@@ -13,7 +13,7 @@
     "buildExporter": "NODE_ENV=production APP_EXPORT_TYPE=exporter webpack --progress --colors",
     "npm": "npm run build && npm run buildExporter && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
-    "test:lint": "eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
+    "test:lint": "./node_modules/.bin/eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
     "test:unit": "NODE_PATH=src babel-node ./node_modules/.bin/isparta cover _mocha -- --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",
     "test": "npm run test:lint && npm run test:unit"
   },
