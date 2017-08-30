@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'lodash';
 import {
   Editor,
   EditorState,
@@ -85,6 +86,7 @@ class MediumDraftEditor extends React.Component {
     handleReturn: PropTypes.func,
     disableToolbar: PropTypes.bool,
     showLinkEditToolbar: PropTypes.bool,
+    toolbarConfig: PropTypes.object,
   };
 
   static defaultProps = {
@@ -116,6 +118,7 @@ class MediumDraftEditor extends React.Component {
     ],
     disableToolbar: false,
     showLinkEditToolbar: true,
+    toolbarConfig: {},
   };
 
   constructor(props) {
@@ -136,6 +139,8 @@ class MediumDraftEditor extends React.Component {
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+    this.blockButtons = this.configureToolbarBlockOptions(this.props.toolbarConfig);
+    this.inlineButtons = this.configureToolbarInlineOptions(this.props.toolbarConfig);
   }
 
   /*
@@ -216,6 +221,40 @@ class MediumDraftEditor extends React.Component {
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
   }
+
+  /**
+   * Override which text modifications are available according BLOCK_BUTTONS style property.
+   * Defaults all of them if no toolbarConfig.block passed:
+   *   block: ['ordered-list-item', 'unordered-list-item', 'blockquote', 'header-three', 'todo'],
+   * Example parameter: toolbarConfig = {
+   *   block: ['ordered-list-item', 'unordered-list-item'],
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink'],
+   * };
+   */
+  configureToolbarBlockOptions(toolbarConfig) {
+    return toolbarConfig && toolbarConfig.block
+      ? toolbarConfig.block.map(type =>
+      _.find(BLOCK_BUTTONS, button => button.style === type))
+      : BLOCK_BUTTONS;
+  }
+
+  /**
+   * Override which text modifications are available according INLINE_BUTTONS style property.
+   * CASE SENSITIVE. Would be good clean up to lowercase inline styles consistently.
+   * Defaults all of them if no toolbarConfig.inline passed:
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink', 'HIGHLIGHT'],
+   * Example parameter: toolbarConfig = {
+   *   block: ['ordered-list-item', 'unordered-list-item'],
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink'],
+   * };
+   */
+  configureToolbarInlineOptions(toolbarConfig) {
+    return toolbarConfig && toolbarConfig.inline
+      ? toolbarConfig.inline.map(type =>
+      _.find(INLINE_BUTTONS, button => button.style === type))
+      : INLINE_BUTTONS;
+  }
+
 
   /*
   Handles custom commands based on various key combinations. First checks
@@ -457,6 +496,7 @@ class MediumDraftEditor extends React.Component {
     if (editorEnabled && showLinkEditToolbar) {
       isCursorLink = isCursorBetweenLink(editorState);
     }
+
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -498,8 +538,8 @@ class MediumDraftEditor extends React.Component {
               editorEnabled={editorEnabled}
               setLink={this.setLink}
               focus={this.focus}
-              blockButtons={this.props.blockButtons}
-              inlineButtons={this.props.inlineButtons}
+              blockButtons={this.blockButtons}
+              inlineButtons={this.inlineButtons}
             />
           )}
           {isCursorLink && (
