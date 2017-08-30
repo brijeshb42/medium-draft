@@ -517,6 +517,7 @@ class App extends React.Component {
           handleReturn={this.handleReturn}
           sideButtons={this.sideButtons}
           rendererFn={this.rendererFn}
+          toolbarConfig={{inline: ['BOLD'], block: ['unordered-list-item']}}
         />
       </div>
     );
