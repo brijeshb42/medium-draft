@@ -3,6 +3,7 @@
 - Added `medium-draft-importer` to convert html exported using `medium-draft-exporter` to draft's json format (@Yukaii)
 - Fixed arrow navigation around image blocks
 - Allow inline styles to be applied to heading blocks
+- Remove hardcoded fonts from css files
 
 ### 0.5.2
 
