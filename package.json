@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "babel": "./node_modules/.bin/babel ./src -d lib --ignore '*.spec.js,example.js'",
     "copyCss": "cp dist/medium-draft.css ./lib/index.css && cp dist/basic.css lib/",
     "buildExporter": "NODE_ENV=production APP_EXPORT_TYPE=exporter webpack --progress --colors",
-    "npm": "npm run build && npm run buildExporter && npm run babel && npm run copyCss",
+    "buildImporter": "NODE_ENV=production APP_EXPORT_TYPE=importer webpack --progress --colors",
+    "npm": "npm run build && npm run buildExporter && npm run buildImporter && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
     "test:lint": "./node_modules/.bin/eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
     "test:unit": "NODE_PATH=src babel-node ./node_modules/.bin/isparta cover _mocha -- --growl --compilers js:babel-core/register,css:test-js/css-null-compiler.js --require ./test-js/test_helper.js $(find src -path '*.spec.js')",

@@ -216,12 +216,13 @@ if (isProd) {
 
 var appExportType = process.env.APP_EXPORT_TYPE || '';
 
-if (appExportType === 'exporter') {
-  console.log('Building HTML Exporter');
+if (appExportType === 'exporter' || appExportType === 'importer') {
+  console.log('Building HTML ' + appExportType);
   options.entry = {
-    'medium-draft-exporter': './exporter',
+    ['medium-draft-' + appExportType]: './' + appExportType,
   };
-  options.output.library = 'MediumDraftExporter';
+  var globalName = 'MediumDraft' + appExportType[0].toUpperCase() + appExportType[1] + 'porter';
+  options.output.library = globalName
   options.externals.push({
     'react-dom/server': {
       root: 'ReactDOMServer',
