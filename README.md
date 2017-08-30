@@ -183,7 +183,7 @@ import {
 import 'isomorphic-fetch';
 
 class CustomImageSideButton extends ImageSideButton {
-  
+
   /*
   We will only check for first file and also whether
   it is an image or not.
@@ -209,7 +209,7 @@ class CustomImageSideButton extends ImageSideButton {
                   src: data.url,
                 }
               ));
-            }  
+            }
           });
         }
       });
@@ -317,6 +317,55 @@ The `medium-draft-exporter` also comes with a preset CSS if you want to apply so
   ```html
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/basic.css">
   ```
+
+### Load HTML exported using `medium-draft-exporter` to `editorState`
+
+The feature to export HTML is available from version `0.5.3` onwards.
+
+`medium-draft` uses [draft-convert](https://github.com/hubspot/draft-convert) (which in turn uses react-dom-server) to render `draft-js`'s `editorState` to HTML.
+
+The importer is not a part of the core library. If you want to use `medium-draft-importer`, follow these steps -
+
+#### Browserify/webpack
+
+- `npm install draft-convert`.
+
+`draft-convert` is part of `peerDependencies` of `medium-draft`.
+
+##### Code
+
+```js
+  import { convertToRaw } from 'draft-js';
+  import { createEditorState } from 'medium-draft';
+  import mediumDraftImporter from 'medium-draft/lib/importer';
+
+  const html = /* your previously exported html */;
+  const editorState = createEditorState(convertToRaw(mediumDraftImporter(html)));
+  // Use this editorState
+```
+
+#### Browser
+
+- Add the following scripts before your js code.
+
+```html
+<script src="https://unpkg.com/react-dom@15.2.1/dist/react-dom-server.min.js"></script>
+<script src="https://unpkg.com/draft-convert@1.3.3/dist/draft-convert.min.js"></script>
+<script src="https://unpkg.com/medium-draft/dist/medium-draft-importer.js"></script>
+```
+
+The importer is available as `MediumDraftImporter` global;
+
+- JS
+
+```js
+  const { convertToRaw } = Draft;
+  const { createEditorState } = MediumDraft;
+  const mediumDraftImporter = MediumDraftImporter.default;
+  const html = /* your previously exported html */;
+  const editorState = createEditorState(convertToRaw(mediumDraftImporter(html)));
+  // Use this editorState
+```
 
 ### Issues
 

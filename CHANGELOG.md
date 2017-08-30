@@ -1,3 +1,7 @@
+### 0.5.3
+
+- Added `medium-draft-importer` to convert html exported using `medium-draft-exporter` to draft's json format (@Yukaii)
+
 ### 0.5.2
 
 - Now, the toolbar buttons also accept a react component instead of just a string as label.
