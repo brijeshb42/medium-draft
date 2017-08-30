@@ -4,6 +4,7 @@ before_install:
 script:
   - npm test
 node_js:
-  - "node"
+  - "7"
+  - "6"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
