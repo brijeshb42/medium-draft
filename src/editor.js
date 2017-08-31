@@ -85,6 +85,7 @@ class MediumDraftEditor extends React.Component {
     handleReturn: PropTypes.func,
     disableToolbar: PropTypes.bool,
     showLinkEditToolbar: PropTypes.bool,
+    toolbarConfig: PropTypes.object,
   };
 
   static defaultProps = {
@@ -116,6 +117,7 @@ class MediumDraftEditor extends React.Component {
     ],
     disableToolbar: false,
     showLinkEditToolbar: true,
+    toolbarConfig: {},
   };
 
   constructor(props) {
@@ -215,6 +217,39 @@ class MediumDraftEditor extends React.Component {
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
     this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+  }
+
+  /**
+   * Override which text modifications are available according BLOCK_BUTTONS style property.
+   * Defaults all of them if no toolbarConfig.block passed:
+   *   block: ['ordered-list-item', 'unordered-list-item', 'blockquote', 'header-three', 'todo'],
+   * Example parameter: toolbarConfig = {
+   *   block: ['ordered-list-item', 'unordered-list-item'],
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink'],
+   * };
+   */
+  configureToolbarBlockOptions(toolbarConfig) {
+    return toolbarConfig && toolbarConfig.block
+      ? toolbarConfig.block.map(type => BLOCK_BUTTONS.find(button => button.style === type))
+        .filter(button => button !== undefined)
+      : BLOCK_BUTTONS;
+  }
+
+  /**
+   * Override which text modifications are available according INLINE_BUTTONS style property.
+   * CASE SENSITIVE. Would be good clean up to lowercase inline styles consistently.
+   * Defaults all of them if no toolbarConfig.inline passed:
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink', 'HIGHLIGHT'],
+   * Example parameter: toolbarConfig = {
+   *   block: ['ordered-list-item', 'unordered-list-item'],
+   *   inline: ['BOLD', 'ITALIC', 'UNDERLINE', 'hyperlink'],
+   * };
+   */
+  configureToolbarInlineOptions(toolbarConfig) {
+    return toolbarConfig && toolbarConfig.inline
+      ? toolbarConfig.inline.map(type => INLINE_BUTTONS.find(button => button.style === type))
+        .filter(button => button !== undefined)
+      : INLINE_BUTTONS;
   }
 
   /*
@@ -450,13 +485,15 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar } = this.props;
+    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
     if (editorEnabled && showLinkEditToolbar) {
       isCursorLink = isCursorBetweenLink(editorState);
     }
+    this.blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
+    this.inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -498,8 +535,8 @@ class MediumDraftEditor extends React.Component {
               editorEnabled={editorEnabled}
               setLink={this.setLink}
               focus={this.focus}
-              blockButtons={this.props.blockButtons}
-              inlineButtons={this.props.inlineButtons}
+              blockButtons={this.blockButtons}
+              inlineButtons={this.inlineButtons}
             />
           )}
           {isCursorLink && (
