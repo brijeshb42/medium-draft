@@ -7,7 +7,7 @@ import {
   SelectionState,
   ContentBlock,
   genKey,
-  Modifier
+  Modifier,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 import { OrderedMap } from 'immutable';

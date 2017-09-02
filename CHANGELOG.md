@@ -1,3 +1,15 @@
+### 0.5.4
+
+- A new prop `toolbarConfig` has been introduced. So instead of passing whole configuration into `blockButtons` and `inlineButtons`, you can just pass, `toolbarConfig` with value
+```json
+{block: ["header-three", "blockquote", ...], inline: ["BOLD", "ITALIC", "UNDERLINE", "hyperlink"]}
+```
+Note that the string values of the array must already be present in `BLOCK_BUTTON` and `INLINE_BUTTONS` in `medium-draft` (@roy-gbiv)
+
+- Extra props can be passed to the `component` of each item in `sideButtons` inside the `prop` key. Earlier, only `title` and `component` were accepted. Now a 3rd key `prop` can also be passed whose keys can be accessed inside the `component` through `this.props` (@ jaspersorrio)
+- Fixed paste handling when cursor is inside image block caption. Earlier, the `src` of image became `undefined`. Now, plaintext will be pasted if the cursor is inside Image block. Otherwise, Draft's pasting will take over.
+- Now a string of text can also be passed to `createEditorState` as the first argument to create initial `editorState` pre-filled with the text.
+
 ### 0.5.3
 
 - Added `medium-draft-importer` to convert html exported using `medium-draft-exporter` to draft's json format (@Yukaii)
