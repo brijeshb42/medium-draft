@@ -232,7 +232,7 @@ class MediumDraftEditor extends React.Component {
     return toolbarConfig && toolbarConfig.block
       ? toolbarConfig.block.map(type => BLOCK_BUTTONS.find(button => button.style === type))
         .filter(button => button !== undefined)
-      : BLOCK_BUTTONS;
+      : this.props.blockButtons;
   }
 
   /**
@@ -249,7 +249,7 @@ class MediumDraftEditor extends React.Component {
     return toolbarConfig && toolbarConfig.inline
       ? toolbarConfig.inline.map(type => INLINE_BUTTONS.find(button => button.style === type))
         .filter(button => button !== undefined)
-      : INLINE_BUTTONS;
+      : this.props.inlineButtons;
   }
 
   /*
@@ -492,8 +492,8 @@ class MediumDraftEditor extends React.Component {
     if (editorEnabled && showLinkEditToolbar) {
       isCursorLink = isCursorBetweenLink(editorState);
     }
-    this.blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
-    this.inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
+    const blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
+    const inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -535,8 +535,8 @@ class MediumDraftEditor extends React.Component {
               editorEnabled={editorEnabled}
               setLink={this.setLink}
               focus={this.focus}
-              blockButtons={this.blockButtons}
-              inlineButtons={this.inlineButtons}
+              blockButtons={blockButtons}
+              inlineButtons={inlineButtons}
             />
           )}
           {isCursorLink && (
