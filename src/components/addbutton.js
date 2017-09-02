@@ -157,15 +157,16 @@ export default class AddButton extends React.Component {
               transitionName="md-example"
               transitionEnterTimeout={200}
               transitionLeaveTimeout={100}
-              transitionAppear
               transitionAppearTimeout={100}
+              transitionAppear
             >
               {this.props.sideButtons.map((button) => {
                 const Button = button.component;
+                const extraProps = button.props ? button.props : {};
                 return (
                   <Button
-                    {...button}
                     key={button.title}
+                    {...extraProps}
                     getEditorState={this.props.getEditorState}
                     setEditorState={this.props.setEditorState}
                     close={this.openToolbar}
