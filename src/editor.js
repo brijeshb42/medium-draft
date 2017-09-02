@@ -7,6 +7,7 @@ import {
   SelectionState,
   ContentBlock,
   genKey,
+  Modifier
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 import { OrderedMap } from 'immutable';
@@ -83,6 +84,7 @@ class MediumDraftEditor extends React.Component {
     onChange: PropTypes.func.isRequired,
     handleKeyCommand: PropTypes.func,
     handleReturn: PropTypes.func,
+    handlePastedText: PropTypes.func,
     disableToolbar: PropTypes.bool,
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
@@ -140,9 +142,9 @@ class MediumDraftEditor extends React.Component {
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
   }
 
-  /*
-  Implemented to provide nesting of upto 2 levels in ULs or OLs.
-  */
+  /**
+   * Implemented to provide nesting of upto 2 levels in ULs or OLs.
+   */
   onTab(e) {
     const { editorState } = this.props;
     const newEditorState = RichUtils.onTab(e, editorState, 2);
@@ -481,6 +483,34 @@ class MediumDraftEditor extends React.Component {
     });
   };
 
+  /**
+   * Handle pasting when cursor is in an image block. Paste the text as the
+   * caption. Otherwise, let Draft do its thing.
+   */
+  handlePastedText = (text, html, es) => {
+    const currentBlock = getCurrentBlock(this.props.editorState);
+    if (currentBlock.getType() === Block.IMAGE) {
+      const { editorState } = this.props;
+      window.es = editorState;
+      const content = editorState.getCurrentContent();
+      this.onChange(
+        EditorState.push(
+          editorState,
+          Modifier.insertText(
+            content,
+            editorState.getSelection(),
+            text
+          )
+        )
+      );
+      return HANDLED;
+    }
+    if (this.props.handlePastedText(text, html, es) === HANDLED) {
+      return HANDLED;
+    }
+    return NOT_HANDLED;
+  };
+
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
@@ -510,6 +540,7 @@ class MediumDraftEditor extends React.Component {
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}
             handleReturn={this.handleReturn}
+            handlePastedText={this.handlePastedText}
             customStyleMap={this.props.customStyleMap}
             readOnly={!editorEnabled}
             keyBindingFn={this.props.keyBindingFn}

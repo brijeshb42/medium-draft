@@ -1,7 +1,7 @@
 import { Map, List } from 'immutable';
 
 import { EditorState, ContentBlock, genKey } from 'draft-js';
-import { Block } from '../util/constants';
+import { Block, Entity } from '../util/constants';
 
 
 /*
@@ -150,6 +150,9 @@ export const addNewBlockAt = (
   return EditorState.push(editorState, newContent, 'split-block');
 };
 
+/**
+ * Check whether the cursor is between entity of type LINK
+ */
 export const isCursorBetweenLink = (editorState) => {
   let ret = null;
   const selection = editorState.getSelection();
@@ -160,14 +163,14 @@ export const isCursorBetweenLink = (editorState) => {
   }
   let entityKey = null;
   let blockKey = null;
-  if (currentBlock.getType() !== 'atomic' && selection.isCollapsed()) {
+  if (currentBlock.getType() !== Block.ATOMIC && selection.isCollapsed()) {
     if (currentBlock.getLength() > 0) {
       if (selection.getAnchorOffset() > 0) {
         entityKey = currentBlock.getEntityAt(selection.getAnchorOffset() - 1);
         blockKey = currentBlock.getKey();
         if (entityKey !== null) {
           const entity = content.getEntity(entityKey);
-          if (entity.getType() === 'LINK') {
+          if (entity.getType() === Entity.LINK) {
             ret = {
               entityKey,
               blockKey,
