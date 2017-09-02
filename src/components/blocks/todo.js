@@ -26,7 +26,9 @@ export default class TodoBlock extends React.Component {
     const checked = data.get('checked') === true;
     return (
       <div className={checked ? 'block-todo-completed' : ''}>
-        <input type="checkbox" checked={checked} onChange={this.updateData} />
+        <span contentEditable={false}>
+          <input type="checkbox" checked={checked} onChange={this.updateData} />
+        </span>
         <EditorBlock {...this.props} />
       </div>
     );
