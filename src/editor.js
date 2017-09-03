@@ -161,7 +161,7 @@ class MediumDraftEditor extends React.Component {
     const currentBlock = content.getBlockForKey(key);
     const firstBlock = content.getFirstBlock();
     if (firstBlock.getKey() === key) {
-      if (firstBlock.getType().indexOf('atomic') === 0) {
+      if (firstBlock.getType().indexOf(Block.ATOMIC) === 0) {
         e.preventDefault();
         const newBlock = new ContentBlock({
           type: Block.UNSTYLED,
@@ -180,7 +180,7 @@ class MediumDraftEditor extends React.Component {
         });
         this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
       }
-    } else if (currentBlock.getType().indexOf('atomic') === 0) {
+    } else if (currentBlock.getType().indexOf(Block.ATOMIC) === 0) {
       const blockBefore = content.getBlockBefore(key);
       if (!blockBefore) {
         return;

@@ -140,45 +140,45 @@ export default class AddButton extends React.Component {
   }
 
   render() {
-    if (this.state.visible) {
-      return (
-        <div className="md-side-toolbar" style={this.state.style}>
-          <button
-            onClick={this.openToolbar}
-            className={`md-sb-button md-add-button${this.state.isOpen ? ' md-open-button' : ''}`}
-            type="button"
-          >
-            <svg viewBox="0 0 8 8" height="14" width="14">
-              <path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" />
-            </svg>
-          </button>
-          {this.state.isOpen ? (
-            <CSSTransitionGroup
-              transitionName="md-example"
-              transitionEnterTimeout={200}
-              transitionLeaveTimeout={100}
-              transitionAppearTimeout={100}
-              transitionAppear
-            >
-              {this.props.sideButtons.map((button) => {
-                const Button = button.component;
-                const extraProps = button.props ? button.props : {};
-                return (
-                  <Button
-                    key={button.title}
-                    {...extraProps}
-                    getEditorState={this.props.getEditorState}
-                    setEditorState={this.props.setEditorState}
-                    close={this.openToolbar}
-                  />
-                );
-              })}
-            </CSSTransitionGroup>
-          ) : null}
-        </div>
-      );
+    if (!this.state.visible) {
+      return null;
     }
-    return null;
+    return (
+      <div className="md-side-toolbar" style={this.state.style}>
+        <button
+          onClick={this.openToolbar}
+          className={`md-sb-button md-add-button${this.state.isOpen ? ' md-open-button' : ''}`}
+          type="button"
+        >
+          <svg viewBox="0 0 8 8" height="14" width="14">
+            <path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" />
+          </svg>
+        </button>
+        {this.state.isOpen ? (
+          <CSSTransitionGroup
+            transitionName="md-example"
+            transitionEnterTimeout={200}
+            transitionLeaveTimeout={100}
+            transitionAppearTimeout={100}
+            transitionAppear
+          >
+            {this.props.sideButtons.map((button) => {
+              const Button = button.component;
+              const extraProps = button.props ? button.props : {};
+              return (
+                <Button
+                  key={button.title}
+                  {...extraProps}
+                  getEditorState={this.props.getEditorState}
+                  setEditorState={this.props.setEditorState}
+                  close={this.openToolbar}
+                />
+              );
+            })}
+          </CSSTransitionGroup>
+        ) : null}
+      </div>
+    );
   }
 }
 
