@@ -505,7 +505,7 @@ class MediumDraftEditor extends React.Component {
       );
       return HANDLED;
     }
-    if (this.props.handlePastedText(text, html, es) === HANDLED) {
+    if (this.props.handlePastedText && this.props.handlePastedText(text, html, es) === HANDLED) {
       return HANDLED;
     }
     return NOT_HANDLED;

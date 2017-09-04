@@ -1,4 +1,4 @@
-### 0.5.4
+### 0.5.5
 
 - A new prop `toolbarConfig` has been introduced. So instead of passing whole configuration into `blockButtons` and `inlineButtons`, you can just pass, `toolbarConfig` with value
 ```json
