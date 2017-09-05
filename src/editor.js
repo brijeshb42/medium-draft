@@ -491,7 +491,6 @@ class MediumDraftEditor extends React.Component {
     const currentBlock = getCurrentBlock(this.props.editorState);
     if (currentBlock.getType() === Block.IMAGE) {
       const { editorState } = this.props;
-      window.es = editorState;
       const content = editorState.getCurrentContent();
       this.onChange(
         EditorState.push(
