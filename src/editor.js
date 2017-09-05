@@ -5,12 +5,8 @@ import {
   EditorState,
   RichUtils,
   SelectionState,
-  ContentBlock,
-  genKey,
-  Modifier,
 } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
-import { OrderedMap } from 'immutable';
 
 import AddButton from './components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
@@ -36,14 +32,16 @@ import {
 } from './model';
 
 import onTab from './handlers/onTab';
+import onUpArrow from './handlers/onUpArrow';
+import handlePastedText from './handlers/handlePastedText';
 
 import ImageButton from './components/sides/image';
 
-/*
-A wrapper over `draft-js`'s default **Editor** component which provides
-some built-in customisations like custom blocks (todo, caption, etc) and
-some key handling for ease of use so that users' mouse usage is minimum.
-*/
+/**
+ * A wrapper over `draft-js`'s default **Editor** component which provides
+ * some built-in customisations like custom blocks (todo, caption, etc) and
+ * some key handling for ease of use so that users' mouse usage is minimum.
+ */
 class MediumDraftEditor extends React.Component {
 
   static propTypes = {
@@ -144,9 +142,6 @@ class MediumDraftEditor extends React.Component {
     this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
   }
 
-  /**
-   * Implemented to provide nesting of upto 2 levels in ULs or OLs.
-   */
   onTab= (e) => {
     onTab(e, {
       getEditorState: this.getEditorState,
@@ -155,52 +150,15 @@ class MediumDraftEditor extends React.Component {
   };
 
   onUpArrow = (e) => {
-    const { editorState } = this.props;
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const key = selection.getAnchorKey();
-    const currentBlock = content.getBlockForKey(key);
-    const firstBlock = content.getFirstBlock();
-    if (firstBlock.getKey() === key) {
-      if (firstBlock.getType().indexOf(Block.ATOMIC) === 0) {
-        e.preventDefault();
-        const newBlock = new ContentBlock({
-          type: Block.UNSTYLED,
-          key: genKey(),
-        });
-        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
-        const newContent = content.merge({
-          blockMap: newBlockMap,
-          selectionAfter: selection.merge({
-            anchorKey: newBlock.getKey(),
-            focusKey: newBlock.getKey(),
-            anchorOffset: 0,
-            focusOffset: 0,
-            isBackward: false,
-          }),
-        });
-        this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
-      }
-    } else if (currentBlock.getType().indexOf(Block.ATOMIC) === 0) {
-      const blockBefore = content.getBlockBefore(key);
-      if (!blockBefore) {
-        return;
-      }
-      e.preventDefault();
-      const newSelection = selection.merge({
-        anchorKey: blockBefore.getKey(),
-        focusKey: blockBefore.getKey(),
-        anchorOffset: blockBefore.getLength(),
-        focusOffset: blockBefore.getLength(),
-        isBackward: false,
-      });
-      this.onChange(EditorState.forceSelection(editorState, newSelection));
-    }
+    onUpArrow(e, {
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
+    });
   };
 
-  /*
-  Adds a hyperlink on the selected text with some basic checks.
-  */
+  /**
+   * Adds a hyperlink on the selected text with some basic checks.
+   */
   setLink(url) {
     let { editorState } = this.props;
     const selection = editorState.getSelection();
@@ -270,7 +228,6 @@ class MediumDraftEditor extends React.Component {
     togglled.
   */
   handleKeyCommand(command) {
-    // console.log(command);
     const { editorState } = this.props;
     if (this.props.handleKeyCommand) {
       const behaviour = this.props.handleKeyCommand(command);
@@ -488,28 +445,12 @@ class MediumDraftEditor extends React.Component {
    * Handle pasting when cursor is in an image block. Paste the text as the
    * caption. Otherwise, let Draft do its thing.
    */
-  handlePastedText = (text, html, es) => {
-    const currentBlock = getCurrentBlock(this.props.editorState);
-    if (currentBlock.getType() === Block.IMAGE) {
-      const { editorState } = this.props;
-      const content = editorState.getCurrentContent();
-      this.onChange(
-        EditorState.push(
-          editorState,
-          Modifier.insertText(
-            content,
-            editorState.getSelection(),
-            text
-          )
-        )
-      );
-      return HANDLED;
-    }
-    if (this.props.handlePastedText && this.props.handlePastedText(text, html, es) === HANDLED) {
-      return HANDLED;
-    }
-    return NOT_HANDLED;
-  };
+  handlePastedText = (text, html, es) => (
+    handlePastedText(text, html, es, {
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
+    })
+  );
 
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.

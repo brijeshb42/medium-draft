@@ -2,7 +2,8 @@ import { RichUtils } from 'draft-js';
 
 const MAX_NESTING_LEVEL = 2;
 
-const handleTabForListItems = (e, { getEditorState }) => {
+
+export const handleTabForListItems = (e, { getEditorState }) => {
   const editorState = getEditorState();
   const newEditorState = RichUtils.onTab(e, editorState, MAX_NESTING_LEVEL);
   if (newEditorState === editorState) {
@@ -11,12 +12,15 @@ const handleTabForListItems = (e, { getEditorState }) => {
   return newEditorState;
 };
 
-const onTabHandlers = [handleTabForListItems];
 
-const onTab = (e, options, handlers = onTabHandlers) => {
+export const handlerList = [handleTabForListItems];
+
+
+const onTab = (e, options, handlers = handlerList) => {
   const { getEditorState, setEditorState } = options;
   const newEditorState = handlers.reduce((editorState, handler) => (
     handler(e, {
+      ...options,
       getEditorState: () => editorState,
     })
   ), getEditorState());
