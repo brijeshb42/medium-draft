@@ -35,6 +35,8 @@ import {
   isCursorBetweenLink,
 } from './model';
 
+import onTab from './handlers/onTab';
+
 import ImageButton from './components/sides/image';
 
 /*
@@ -145,13 +147,12 @@ class MediumDraftEditor extends React.Component {
   /**
    * Implemented to provide nesting of upto 2 levels in ULs or OLs.
    */
-  onTab(e) {
-    const { editorState } = this.props;
-    const newEditorState = RichUtils.onTab(e, editorState, 2);
-    if (newEditorState !== editorState) {
-      this.onChange(newEditorState);
-    }
-  }
+  onTab= (e) => {
+    onTab(e, {
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
+    });
+  };
 
   onUpArrow = (e) => {
     const { editorState } = this.props;
