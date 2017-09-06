@@ -121,9 +121,9 @@ export default class Toolbar extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       this.props.setLink(this.state.urlInputValue);
-      this.hideLinkInput();
+      this.hideLinkInput(e);
     } else if (e.which === 27) {
-      this.hideLinkInput();
+      this.hideLinkInput(e);
     }
   }
 
@@ -134,7 +134,7 @@ export default class Toolbar extends React.Component {
   }
 
   handleLinkInput(e, direct = false) {
-    if (direct !== true) {
+    if (direct !== true || e !== null) {
       e.preventDefault();
       e.stopPropagation();
     }
@@ -191,8 +191,7 @@ export default class Toolbar extends React.Component {
     this.setState({
       showURLInput: false,
       urlInputValue: '',
-    }, this.props.focus
-    );
+    }, this.props.focus);
   }
 
   render() {
@@ -370,4 +369,3 @@ export const INLINE_BUTTONS = [
     description: 'Add a link',
   },
 ];
-

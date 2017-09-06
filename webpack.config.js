@@ -34,7 +34,9 @@ var definePlugin = new webpack.DefinePlugin({
   __PROD__: JSON.stringify(env === ENV_PROD),
   __TEST__: JSON.stringify(env === ENV_TEST),
   __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false')),
-  'process.env.NODE_ENV': '"' +env+ '"'
+  'process.env': {
+    NODE_ENV: JSON.stringify(env)
+  }
 });
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
   name: 'common',
@@ -72,6 +74,7 @@ function getPlugins(env) {
       debug: false,
       compress: { warnings: false, dead_code: true }
     }));
+    plugins.push(new webpack.optimize.AggressiveMergingPlugin());
     plugins.push(bannerPlugin);
   }
   return plugins;

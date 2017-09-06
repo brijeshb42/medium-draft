@@ -1,3 +1,11 @@
+/**
+ * By default, it handles return key for inserting soft breaks (BRs in HTML) and
+ * also instead of inserting a new empty block after current empty block, it first check
+ * whether the current block is of a type other than `unstyled`. If yes, current block is
+ * simply converted to an unstyled empty block. If RETURN is pressed on an unstyled block
+ * default behavior is executed.
+ */
+
 import { RichUtils } from 'draft-js';
 import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 
