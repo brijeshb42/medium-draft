@@ -6,7 +6,6 @@ import {
   RichUtils,
   SelectionState,
 } from 'draft-js';
-import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 
 import AddButton from './components/addbutton';
 import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
@@ -26,14 +25,13 @@ import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
 import {
   getCurrentBlock,
-  resetBlockWithType,
-  addNewBlockAt,
   isCursorBetweenLink,
 } from './model';
 
 import onTab from './handlers/onTab';
 import onUpArrow from './handlers/onUpArrow';
 import handlePastedText from './handlers/handlePastedText';
+import handleReturn from './handlers/handleReturn';
 
 import ImageButton from './components/sides/image';
 
@@ -181,6 +179,21 @@ class MediumDraftEditor extends React.Component {
   }
 
   /**
+   * By default, it handles return key for inserting soft breaks (BRs in HTML) and
+   * also instead of inserting a new empty block after current empty block, it first check
+   * whether the current block is of a type other than `unstyled`. If yes, current block is
+   * simply converted to an unstyled empty block. If RETURN is pressed on an unstyled block
+   * default behavior is executed.
+   */
+  handleReturn(e) {
+    return handleReturn(e, {
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
+      continuousBlocks: this.props.continuousBlocks,
+    });
+  }
+
+  /**
    * Override which text modifications are available according BLOCK_BUTTONS style property.
    * Defaults all of them if no toolbarConfig.block passed:
    *   block: ['ordered-list-item', 'unordered-list-item', 'blockquote', 'header-three', 'todo'],
@@ -302,67 +315,6 @@ class MediumDraftEditor extends React.Component {
     return this.props.beforeInput(
       this.props.editorState, str, this.onChange, this.props.stringToTypeMap);
   }
-
-  /*
-  By default, it handles return key for inserting soft breaks (BRs in HTML) and
-  also instead of inserting a new empty block after current empty block, it first check
-  whether the current block is of a type other than `unstyled`. If yes, current block is
-  simply converted to an unstyled empty block. If RETURN is pressed on an unstyled block
-  default behavior is executed.
-  */
-  handleReturn(e) {
-    if (this.props.handleReturn) {
-      const behavior = this.props.handleReturn();
-      if (behavior === HANDLED || behavior === true) {
-        return HANDLED;
-      }
-    }
-    const { editorState } = this.props;
-    if (isSoftNewlineEvent(e)) {
-      this.onChange(RichUtils.insertSoftNewline(editorState));
-      return HANDLED;
-    }
-    if (!e.altKey && !e.metaKey && !e.ctrlKey) {
-      const currentBlock = getCurrentBlock(editorState);
-      const blockType = currentBlock.getType();
-
-      if (blockType.indexOf(Block.ATOMIC) === 0) {
-        this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
-        return HANDLED;
-      }
-
-      if (currentBlock.getLength() === 0) {
-        switch (blockType) {
-          case Block.UL:
-          case Block.OL:
-          case Block.BLOCKQUOTE:
-          case Block.BLOCKQUOTE_CAPTION:
-          case Block.CAPTION:
-          case Block.TODO:
-          case Block.H2:
-          case Block.H3:
-          case Block.H1:
-            this.onChange(resetBlockWithType(editorState, Block.UNSTYLED));
-            return HANDLED;
-          default:
-            return NOT_HANDLED;
-        }
-      }
-
-      const selection = editorState.getSelection();
-
-      if (selection.isCollapsed() && currentBlock.getLength() === selection.getStartOffset()) {
-        if (this.props.continuousBlocks.indexOf(blockType) < 0) {
-          this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
-          return HANDLED;
-        }
-        return NOT_HANDLED;
-      }
-      return NOT_HANDLED;
-    }
-    return NOT_HANDLED;
-  }
-
 
   /*
   The function documented in `draft-js` to be used to toggle block types (mainly

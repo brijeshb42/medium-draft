@@ -28,7 +28,10 @@ export const handleUpArrowFromFirstAtomicBlock = (e, { getEditorState }) => {
     type: Block.UNSTYLED,
     key: genKey(),
   });
-  const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
+  const newBlockMap = OrderedMap([
+    [newBlock.getKey(), newBlock],
+  ]).concat(content.getBlockMap());
+
   const newContent = content.merge({
     blockMap: newBlockMap,
     selectionAfter: selection.merge({
@@ -39,7 +42,11 @@ export const handleUpArrowFromFirstAtomicBlock = (e, { getEditorState }) => {
       isBackward: false,
     }),
   });
-  return EditorState.push(editorState, newContent, 'insert-characters');
+  return EditorState.push(
+    editorState,
+    newContent,
+    'insert-characters'
+  );
 };
 
 
