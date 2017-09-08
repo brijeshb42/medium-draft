@@ -102,7 +102,7 @@ export const handlerList = [
   handleReturnInNonContinuousBlock,
 ];
 
-const handleReturn = (e, options, handlers = handlerList) => {
+const handleReturn = (e, es, options, handlers = handlerList) => {
   const originalEs = options.getEditorState();
   let editorState = originalEs;
 

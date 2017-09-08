@@ -23,7 +23,7 @@ export const handlerUsingBeforeInput = (str, {
 
 export const handlerList = [handlerUsingBeforeInput];
 
-const handleBeforeInput = (str, options, handlers = handlerList) => {
+const handleBeforeInput = (str, es, options, handlers = handlerList) => {
   const originalEs = options.getEditorState();
   let editorState = originalEs;
 

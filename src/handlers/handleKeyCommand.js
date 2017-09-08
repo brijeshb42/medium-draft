@@ -139,7 +139,7 @@ export const handlerList = [
   handleInlineCommand,
 ];
 
-const handleKeyCommand = (command, options, handlers = handlerList) => {
+const handleKeyCommand = (command, es, options, handlers = handlerList) => {
   const originalEs = options.getEditorState();
   let editorState = originalEs;
 
