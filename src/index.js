@@ -6,7 +6,7 @@ import Link, { findLinkEntities } from './components/entities/link';
 import keyBindingFn from './util/keybinding';
 import rendererFn from './components/customrenderer';
 import customStyleMap from './util/customstylemap';
-import getSelectedBlockNode from './util';
+import { getSelectedBlockNode } from './util';
 import createEditorState from './model/content';
 
 import QuoteCaptionBlock from './components/blocks/blockquotecaption';
