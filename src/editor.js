@@ -112,7 +112,7 @@ class MediumDraftEditor extends React.Component {
       Block.CODE,
       Block.TODO,
     ],
-    addButton: <AddButton />,
+    addButton: null,
     sideButtons: [
       {
         title: 'Image',
@@ -512,15 +512,27 @@ class MediumDraftEditor extends React.Component {
     return NOT_HANDLED;
   };
 
-  renderAddButton = (editorState) => (
-    React.cloneElement(this.props.addButton, {
-      editorState,
-      getEditorState: this.getEditorState,
-      setEditorState: this.onChange,
-      focus: this.focus,
-      sideButtons: this.props.sideButtons,
-    })
-  );
+  renderAddButton = (editorState) => {
+    if (this.props.addButton) {
+      return React.cloneElement(this.props.addButton, {
+        editorState,
+        getEditorState: this.getEditorState,
+        setEditorState: this.onChange,
+        focus: this.focus,
+        sideButtons: this.props.sideButtons,
+      });
+    }
+
+    return (
+      <AddButton
+        editorState={editorState}
+        getEditorState={this.getEditorState}
+        setEditorState={this.onChange}
+        focus={this.focus}
+        sideButtons={this.props.sideButtons}
+      />
+    );
+  };
 
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
