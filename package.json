@@ -30,7 +30,7 @@
   "dependencies": {
     "draft-js": "^0.10.3",
     "immutable": "^3.8.1",
-    "prop-types": "^15.5.8",
+    "prop-types": "^15.6.0",
     "react-transition-group": "^1.1.2"
   },
   "peerDependencies": {
