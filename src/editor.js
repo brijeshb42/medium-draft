@@ -76,7 +76,7 @@ class MediumDraftEditor extends React.Component {
     })),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
-    addButton: PropTypes.func,
+    addButton: PropTypes.node,
     sideButtons: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       component: PropTypes.func,
@@ -514,15 +514,13 @@ class MediumDraftEditor extends React.Component {
 
   renderAddButton = (editorState) => {
     if (this.props.addButton) {
-      return (
-        <this.props.addButton
-          editorState={editorState}
-          getEditorState={this.getEditorState}
-          setEditorState={this.onChange}
-          focus={this.focus}
-          sideButtons={this.props.sideButtons}
-        />
-      );
+      return React.cloneElement(this.props.addButton, {
+        editorState,
+        getEditorState: this.getEditorState,
+        setEditorState: this.onChange,
+        focus: this.focus,
+        sideButtons: this.props.sideButtons,
+      });
     }
 
     return (
