@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // import './addbutton.scss';
 
 import React from 'react';
-import { Transition, CSSTransition } from 'react-transition-group';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import { getSelectedBlockNode } from '../util';
 
@@ -155,27 +155,27 @@ export default class AddButton extends React.Component {
           </svg>
         </button>
         {this.state.isOpen ? (
-          <Transition>
-            <CSSTransition
-              classNames="md-example"
-              timeout={{ enter: 200, exit: 100 }}
-              appear
-            >
-              {this.props.sideButtons.map((button) => {
-                const Button = button.component;
-                const extraProps = button.props ? button.props : {};
-                return (
-                  <Button
-                    key={button.title}
-                    {...extraProps}
-                    getEditorState={this.props.getEditorState}
-                    setEditorState={this.props.setEditorState}
-                    close={this.openToolbar}
-                  />
-                );
-              })}
-            </CSSTransition>
-          </Transition>
+          <CSSTransitionGroup
+            transitionName="md-example"
+            transitionEnterTimeout={200}
+            transitionLeaveTimeout={100}
+            transitionAppearTimeout={100}
+            transitionAppear
+          >
+            {this.props.sideButtons.map((button) => {
+              const Button = button.component;
+              const extraProps = button.props ? button.props : {};
+              return (
+                <Button
+                  key={button.title}
+                  {...extraProps}
+                  getEditorState={this.props.getEditorState}
+                  setEditorState={this.props.setEditorState}
+                  close={this.openToolbar}
+                />
+              );
+            })}
+          </CSSTransitionGroup>
         ) : null}
       </div>
     );
