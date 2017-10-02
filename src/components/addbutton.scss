@@ -2,7 +2,7 @@ $add-btn-width: 30px;
 
 
 .md-side-toolbar {
-    position: absolute;    
+    position: absolute;
     z-index: 1;
     left: -35px;
     top: 0;
@@ -85,11 +85,11 @@ $add-btn-width: 30px;
   transition: all 500ms ease-in;
 }
 
-.md-example-leave {
+.md-example-exit {
   opacity: 1;
 }
 
-.md-example-leave.md-example-leave-active {
+.md-example-exit.md-example-exit-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
