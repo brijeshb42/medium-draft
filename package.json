@@ -29,7 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "draft-js": "^0.10.3",
-    "immutable": "^3.8.1",
+    "immutable": "^3.8.2",
     "prop-types": "^15.6.0",
     "react-transition-group": "^2.2.1"
   },

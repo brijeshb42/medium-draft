@@ -155,16 +155,16 @@ export default class AddButton extends React.Component {
           </svg>
         </button>
         {this.state.isOpen ? (
-          <Transition>
-            <CSSTransition
-              classNames="md-example"
-              timeout={{ enter: 200, exit: 100 }}
-              appear
-            >
-              {this.props.sideButtons.map((button) => {
-                const Button = button.component;
-                const extraProps = button.props ? button.props : {};
-                return (
+          <Transition component="span">
+            {this.props.sideButtons.map((button) => {
+              const Button = button.component;
+              const extraProps = button.props ? button.props : {};
+              return (
+                <CSSTransition
+                  classNames="md-example"
+                  timeout={{ enter: 200, exit: 100 }}
+                  appear
+                >
                   <Button
                     key={button.title}
                     {...extraProps}
@@ -172,9 +172,9 @@ export default class AddButton extends React.Component {
                     setEditorState={this.props.setEditorState}
                     close={this.openToolbar}
                   />
-                );
-              })}
-            </CSSTransition>
+                </CSSTransition>
+              );
+            })}
           </Transition>
         ) : null}
       </div>
