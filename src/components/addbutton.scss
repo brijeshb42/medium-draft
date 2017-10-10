@@ -1,9 +1,14 @@
 $editor-side-toolbar-left: -3rem !default;
+$editor-side-toolbar-display: inline !default;
+
 $editor-side-button-bg-color: #fff !default;
 $editor-side-button-border-color: #5b5b5b !default;
 $editor-side-button-color: #6d6d6d !default;
 $editor-side-button-size: 2rem !default;
-$editor-side-display: inline !default;
+$editor-side-button-focus-border-color: #08c !default;
+$editor-side-button-focus-color: #08c !default;
+$editor-side-button-hover-color: green !default;
+
 
 .md-side-toolbar {
   display: flex;
@@ -19,24 +24,25 @@ $editor-side-display: inline !default;
   border: 1px solid $editor-side-button-border-color;
   border-radius: $editor-side-button-size;
   color: $editor-side-button-color;
-  display: $editor-side-display;
+  display: $editor-side-toolbar-display;
   height: $editor-side-button-size;
   margin-right: .25rem;
   width: $editor-side-button-size;
+  transition: all 0.2s ease;
 
   &:focus {
     outline: none;
-    border-color: #08c;
-    color: #08c;
+    border-color: $editor-side-button-focus-border-color;
+    color: $editor-side-button-focus-color;
   }
 
   &:hover {
-    color: green;
+    color: $editor-side-button-hover-color;
   }
 
   &.md-sb-img-button {
-  background: none;
-  background-color: white;
+    background: none;
+    background-color: white;
   }
 
   svg path {

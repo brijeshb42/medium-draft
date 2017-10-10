@@ -1,42 +1,64 @@
-@keyframes pop-upwards{
-  0% {
-    transform:matrix(.97,0,0,1,0,12);
-    opacity:0;
-  }
-  20% {
-    transform:matrix(.99,0,0,1,0,2);
-    opacity:.7;
-  }
-  40% {
-    transform:matrix(1,0,0,1,0,-1);
-    opacity:1;
-  }
-  70% {
-    transform:matrix(1,0,0,1,0,0);
-    opacity:1;
+$editor-toolbar-include-animation: true !default;
+$editor-toolbar-include-triangle: true !default;
+
+$editor-toolbar-bg-color: #323845 !default;
+$editor-toolbar-color: #fff !default;
+$editor-toolbar-border-radius: 5px !default;
+$editor-toolbar-box-shadow: 0 1px 3px 0 #747171 !default;
+
+$editor-toolbar-link-padding: 5px 11px 5px 5px !default;
+$editor-toolbar-link-font-size: .9em !default;
+$editor-toolbar-link-font-weight: 100 !default;
+$editor-toolbar-link-edit-padding: 4px 5px !default;
+$editor-toolbar-link-edit-font-size: 0.8em !default;
+$editor-toolbar-link-edit-width: 320px !default;
+$editor-toolbar-link-border-radius: 2px !default;
+$editor-toolbar-link-close-right: 8px !default;
+$editor-toolbar-link-close-top: 2.5px !default;
+$editor-toolbar-link-close-font-size: 20px !default;
+
+$editor-toolbar-btn-padding: 6px 10px !default;
+
+@if $editor-toolbar-include-animation {
+  @keyframes pop-upwards{
+    0% {
+      transform:matrix(.97,0,0,1,0,12);
+      opacity:0;
     }
-  100% {
-    transform:matrix(1,0,0,1,0,0);
-    opacity:1;
+    20% {
+      transform:matrix(.99,0,0,1,0,2);
+      opacity:.7;
+    }
+    40% {
+      transform:matrix(1,0,0,1,0,-1);
+      opacity:1;
+    }
+    70% {
+      transform:matrix(1,0,0,1,0,0);
+      opacity:1;
+      }
+    100% {
+      transform:matrix(1,0,0,1,0,0);
+      opacity:1;
+    }
   }
 }
 
-@keyframes pop-downwards{0%{transform:matrix(.97,0,0,1,0,-12);opacity:0}20%{transform:matrix(.99,0,0,1,0,-2);opacity:.7}40%{transform:matrix(1,0,0,1,0,1);opacity:1}70%{transform:matrix(1,0,0,1,0,0);opacity:1}100%{transform:matrix(1,0,0,1,0,0);opacity:1}}
-
-
-$toolbar-color: #323845;
+@if $editor-toolbar-include-animation {
+  @keyframes pop-downwards{0%{transform:matrix(.97,0,0,1,0,-12);opacity:0}20%{transform:matrix(.99,0,0,1,0,-2);opacity:.7}40%{transform:matrix(1,0,0,1,0,1);opacity:1}70%{transform:matrix(1,0,0,1,0,0);opacity:1}100%{transform:matrix(1,0,0,1,0,0);opacity:1}}
+}
 
 
 .md-editor-toolbar {
-  background: $toolbar-color;
-  color: #fff;
+  background-color: $editor-toolbar-bg-color;
+  color: $editor-toolbar-color;
   cursor: auto;
-  border-radius: 5px;
+  border-radius: $editor-toolbar-border-radius;
   z-index: 2;
   position: absolute;
   transition: all 0.1s ease;
   visibility: hidden;
-  box-shadow: 0 1px 3px 0 #747171;
+  box-shadow: $editor-toolbar-box-shadow;
   // background-image: linear-gradient(to bottom,rgba(49,49,47,.99),#262625);
 
   // transition: top 75ms ease-out,left 75ms ease-out;
@@ -49,32 +71,35 @@ $toolbar-color: #323845;
 
   &.md-editor-toolbar--linkinput {
     // display:block;
-    animation: pop-downwards 200ms forwards linear;
+    @if $editor-toolbar-include-animation {
+      animation: pop-downwards 200ms forwards linear;
+    }
   }
 
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    margin-left: -5px;
-    border-top: 5px solid $toolbar-color;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
+  @if $editor-toolbar-include-triangle {
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      margin-left: -5px;
+      border-top: 5px solid $editor-toolbar-bg-color;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+    }
   }
 
   .md-url-input {
     box-sizing: border-box;
-    border-radius: 2px;
+    border-radius: $editor-toolbar-link-border-radius;
     display: block;
     width: 100%;
-    padding: 5px;
-    padding-right: 11px;
+    padding: $editor-toolbar-link-padding;
     border: none;
-    background: $toolbar-color;
-    color: #fff;
-    font-size: 0.9em;
-    font-weight: 100;
+    background: $editor-toolbar-bg-color;
+    color: $editor-toolbar-color;
+    font-size: $editor-toolbar-link-font-size;
+    font-weight: $editor-toolbar-link-font-weight;
 
     &:focus {
       outline: none;
@@ -85,17 +110,17 @@ $toolbar-color: #323845;
 
   .md-url-input-close {
     position: absolute;
-    right: 8px;
-    top: 2.5px;
-    font-size: 20px;
+    right: $editor-toolbar-link-close-right;
+    top: $editor-toolbar-link-close-top;
+    font-size: $editor-toolbar-link-close-font-size;
     cursor: pointer;
   }
 }
 
 .md-editor-toolbar-edit-link {
-  padding: 4px 5px;
-  font-size: 0.8em;
-  width: 320px;
+  padding: $editor-toolbar-link-edit-padding;
+  font-size: $editor-toolbar-link-edit-font-size;
+  width: $editor-toolbar-link-edit-width;
 
   a {
     color: #fff;
@@ -125,14 +150,13 @@ $toolbar-color: #323845;
 }
 
 .md-RichEditor-controls {
-  font-family: 'Helvetica', sans-serif;
-  font-size: 14px;
+  font-size: inherit;
   display: inline-block;
   border-right: 1px solid #555;
   position: relative;
 
   &.md-RichEditor-show-link-input {
-    padding: 6px 10px;
+    padding: $editor-toolbar-btn-padding;
   }
 
   &:last-child {
@@ -150,7 +174,7 @@ $toolbar-color: #323845;
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  padding: 6px 10px;
+  padding: $editor-toolbar-btn-padding;
 
   &:hover {
     color: yellow;
@@ -185,8 +209,8 @@ $toolbar-color: #323845;
 
 .md-RichEditor-controls-block {
   .md-RichEditor-styleButton:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-top-left-radius: $editor-toolbar-border-radius;
+    border-bottom-left-radius: $editor-toolbar-border-radius;
   }
 }
 
