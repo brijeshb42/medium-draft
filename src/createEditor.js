@@ -11,26 +11,12 @@ import LinkEditComponent from './components/LinkEditComponent';
 import { isCursorBetweenLink } from './model';
 import { Block, Entity as E } from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
-import keyBindingFn from './util/keybinding';
+import keyBindingFnProp from './util/keybinding';
 import customStyleMap from './util/customstylemap';
 import RenderMap from './util/rendermap';
-import blockStyleFn from './util/blockStyleFn';
+import blockStyleFnProp from './util/blockStyleFn';
 
-import onTab from './handlers/onTab';
-import onUpArrow from './handlers/onUpArrow';
-import handlePastedText from './handlers/handlePastedText';
-import handleReturn from './handlers/handleReturn';
-import handleKeyCommand from './handlers/handleKeyCommand';
-import handleBeforeInput from './handlers/handleBeforeInput';
-
-const defaultHandlers = {
-  onTab,
-  onUpArrow,
-  handlePastedText,
-  handleReturn,
-  handleKeyCommand,
-  handleBeforeInput,
-};
+import defaultHandlers from './handlers/';
 
 
 const merge = (obj2, obj3) => {
@@ -102,10 +88,10 @@ const createEditor = (defHandlers = {}) => {
 
     static defaultProps = {
       beforeInput,
-      keyBindingFn,
       customStyleMap,
-      blockStyleFn,
       rendererFn,
+      keyBindingFn: keyBindingFnProp,
+      blockStyleFn: blockStyleFnProp,
       editorEnabled: true,
       spellCheck: true,
       stringToTypeMap: StringToTypeMap,
@@ -144,7 +130,6 @@ const createEditor = (defHandlers = {}) => {
 
       this.toggleBlockType = this._toggleBlockType.bind(this);
       this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
-      this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
 
       this.handlers = {};
 
@@ -207,6 +192,9 @@ const createEditor = (defHandlers = {}) => {
       disableToolbar: this.props.disableToolbar,
       beforeInput: this.props.beforeInput,
       stringToTypeMap: this.props.stringToTypeMap,
+      rendererFn: this.props.rendererFn,
+      blockStyleFn: this.props.blockStyleFn,
+      keyBindingFn: this.props.keyBindingFn,
     });
 
     /**
@@ -348,13 +336,10 @@ const createEditor = (defHandlers = {}) => {
               {...this.props}
               {...this.handlers}
               editorState={editorState}
-              blockRendererFn={this.blockRendererFn}
-              blockStyleFn={this.props.blockStyleFn}
               onChange={this.onChange}
               blockRenderMap={this.props.blockRenderMap}
               customStyleMap={this.props.customStyleMap}
               readOnly={!editorEnabled}
-              keyBindingFn={this.props.keyBindingFn}
               placeholder={this.props.placeholder}
               spellCheck={editorEnabled && this.props.spellCheck}
             />

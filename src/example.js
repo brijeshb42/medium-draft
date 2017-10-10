@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-/* eslint-disable */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -13,7 +12,9 @@ import {
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
+/* eslint-disable */
 import 'hint.css/hint.min.css';
+/* eslint-enable */
 
 import './index.scss';
 import './components/addbutton.scss';
