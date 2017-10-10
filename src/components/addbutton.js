@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // import './addbutton.scss';
 
 import React from 'react';
-import { Transition, CSSTransition } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { getSelectedBlockNode } from '../util';
 
@@ -155,7 +155,7 @@ export default class AddButton extends React.Component {
           </svg>
         </button>
         {this.state.isOpen ? (
-          <Transition component="span">
+          <TransitionGroup component="span">
             {this.props.sideButtons.map((button) => {
               const Button = button.component;
               const extraProps = button.props ? button.props : {};
@@ -175,7 +175,7 @@ export default class AddButton extends React.Component {
                 </CSSTransition>
               );
             })}
-          </Transition>
+          </TransitionGroup>
         ) : null}
       </div>
     );
