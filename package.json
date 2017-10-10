@@ -25,6 +25,10 @@
     "draft-js",
     "wysiwyg"
   ],
+  "files": [
+    "src",
+    "lib",
+  ],
   "author": "Brijesh Bittu <brijeshb42@gmail.com> (http://bitwiser.in/)",
   "license": "MIT",
   "dependencies": {
