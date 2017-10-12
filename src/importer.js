@@ -1,5 +1,4 @@
 import { convertFromHTML } from 'draft-convert';
-import { Entity } from 'draft-js';
 import { Inline, Block, Entity as EntityType } from './util/constants';
 
 export const htmlToStyle = (nodeName, node, currentStyle) => {
@@ -26,9 +25,9 @@ export const htmlToStyle = (nodeName, node, currentStyle) => {
   return currentStyle;
 };
 
-export const htmlToEntity = (nodeName, node) => {
+export const htmlToEntity = (nodeName, node, createEntity) => {
   if (nodeName === 'a') {
-    return Entity.create(EntityType.LINK, 'MUTABLE', { url: node.href });
+    return createEntity(EntityType.LINK, 'MUTABLE', { url: node.href });
   }
   return undefined;
 };
