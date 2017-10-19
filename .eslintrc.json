@@ -15,6 +15,7 @@
     "describe": true,
     "it": true,
     "expect": true,
-    "window": true
+    "window": true,
+    "__PROD__": true
   }
 }

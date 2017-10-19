@@ -12,9 +12,8 @@ import {
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
-/* eslint-disable */
+// eslint-disable-next-line
 import 'hint.css/hint.min.css';
-/* eslint-enable */
 
 import './index.scss';
 import './components/addbutton.scss';
@@ -38,7 +37,7 @@ import {
   ImageSideButton,
   rendererFn,
   HANDLED,
-  NOT_HANDLED
+  NOT_HANDLED,
 } from './index';
 
 import {
@@ -64,7 +63,6 @@ const SQUOTE_START = '‘';
 const SQUOTE_END = '’';
 
 const newBlockToHTML = (block) => {
-  const blockType = block.type;
   if (block.type === Block.ATOMIC) {
     if (block.text === 'E') {
       return {
@@ -72,7 +70,7 @@ const newBlockToHTML = (block) => {
         end: '</figure>',
       };
     } else if (block.text === '-') {
-      return <div className="md-block-atomic md-block-atomic-break"><hr/></div>;
+      return <div className="md-block-atomic md-block-atomic-break"><hr /></div>;
     }
   }
   return blockToHTML(block);
@@ -120,6 +118,12 @@ const handleBeforeInput = (editorState, str, onChange) => {
 
 
 class SeparatorSideButton extends React.Component {
+  static propTypes = {
+    getEditorState: PropTypes.func,
+    setEditorState: PropTypes.func,
+    close: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -156,6 +160,7 @@ class SeparatorSideButton extends React.Component {
 }
 
 
+// eslint-disable-next-line
 class EmbedSideButton extends React.Component {
 
   static propTypes = {
@@ -182,7 +187,7 @@ class EmbedSideButton extends React.Component {
   addEmbedURL(url) {
     let editorState = this.props.getEditorState();
     const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('embed', 'IMMUTABLE', {url});
+    const contentWithEntity = content.createEntity('embed', 'IMMUTABLE', { url });
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
     editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
     this.props.setEditorState(
@@ -209,7 +214,7 @@ class EmbedSideButton extends React.Component {
 
 }
 
-
+// eslint-disable-next-line
 class AtomicEmbedComponent extends React.Component {
 
   static propTypes = {
@@ -237,13 +242,19 @@ class AtomicEmbedComponent extends React.Component {
   }
 
   getScript() {
-    const script = document.createElement('script');
+    const script = window.document.createElement('script');
     script.async = 1;
     script.src = '//cdn.embedly.com/widgets/platform.js';
     script.onload = () => {
       window.embedly();
     };
-    document.body.appendChild(script);
+    window.document.body.appendChild(script);
+  }
+
+  enablePreview() {
+    this.setState({
+      showIframe: true,
+    });
   }
 
   renderEmbedly() {
@@ -252,12 +263,6 @@ class AtomicEmbedComponent extends React.Component {
     } else {
       this.getScript();
     }
-  }
-
-  enablePreview() {
-    this.setState({
-      showIframe: true,
-    });
   }
 
   render() {
@@ -271,7 +276,7 @@ class AtomicEmbedComponent extends React.Component {
   }
 }
 
-const AtomicSeparatorComponent = (props) => (
+const AtomicSeparatorComponent = () => (
   <hr />
 );
 
@@ -292,7 +297,12 @@ const AtomicBlock = (props) => {
   return <p>Block of type <b>{type}</b> is not supported.</p>;
 };
 
+AtomicBlock.propTypes = {
+  blockProps: PropTypes.object,
+  block: PropTypes.object,
+};
 
+// eslint-disable-next-line
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -347,44 +357,17 @@ class App extends React.Component {
     setTimeout(this.fetchData, 1000);
   }
 
-  rendererFn(setEditorState, getEditorState) {
-    const atomicRenderers = {
-      embed: AtomicEmbedComponent,
-      separator: AtomicSeparatorComponent,
-    };
-    const rFnOld = rendererFn(setEditorState, getEditorState);
-    const rFnNew = (contentBlock) => {
-      const type = contentBlock.getType();
-      switch(type) {
-        case Block.ATOMIC:
-          return {
-            component: AtomicBlock,
-            editable: false,
-            props: {
-              components: atomicRenderers,
-              getEditorState,
-            },
-          };
-        default: return rFnOld(contentBlock);
-      }
-    };
-    return rFnNew;
-  }
-
   keyBinding(e) {
     if (hasCommandModifier(e)) {
       if (e.which === 83) {  /* Key S */
         return 'editor-save';
       }
-      // else if (e.which === 74 /* Key J */) {
-      //  return 'do-nothing';
-      //}
     }
     if (e.altKey === true) {
       if (e.shiftKey === true) {
-        switch (e.which) {
+        if (e.which === 76) {
           /* Alt + Shift + L */
-          case 76: return 'load-saved-data';
+          return 'load-saved-data';
           /* Key E */
           // case 69: return 'toggle-edit-mode';
         }
@@ -398,7 +381,11 @@ class App extends React.Component {
 
   handleKeyCommand(command) {
     if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.localStorage.editor = JSON.stringify(
+        convertToRaw(
+          this.state.editorState.getCurrentContent()
+        )
+      );
       window.ga('send', 'event', 'draftjs', command);
       return true;
     } else if (command === 'load-saved-data') {
@@ -415,14 +402,14 @@ class App extends React.Component {
     this.setState({
       placeholder: 'Loading...',
     });
-    const req = new XMLHttpRequest();
+    const req = new window.XMLHttpRequest();
     req.open('GET', 'data.json', true);
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
         this.setState({
           editorState: createEditorState(data),
-          placeholder: 'Write here...'
+          placeholder: 'Write here...',
         }, () => {
           this._editor.focus();
         });
@@ -432,21 +419,12 @@ class App extends React.Component {
     req.send();
   }
 
-  logData(e) {
+  logData() {
     const currentContent = this.state.editorState.getCurrentContent();
     const es = convertToRaw(currentContent);
     console.log(es);
     console.log(this.state.editorState.getSelection().toJS());
     window.ga('send', 'event', 'draftjs', 'log-data');
-  }
-
-  renderHTML(e) {
-    const currentContent = this.state.editorState.getCurrentContent();
-    const eHTML = this.exporter(currentContent);
-    var newWin = window.open(
-      `${window.location.pathname}rendered.html`,
-      'windowName',`height=${window.screen.height},width=${window.screen.wdith}`);
-    newWin.onload = () => newWin.postMessage(eHTML, window.location.origin);
   }
 
   loadSavedData() {
@@ -457,23 +435,23 @@ class App extends React.Component {
     try {
       const blockData = JSON.parse(data);
       console.log(blockData);
-      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
-    } catch(e) {
+      this.onChange(EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
+    } catch (e) {
       console.log(e);
     }
     window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
   }
 
-  toggleEdit(e) {
+  toggleEdit() {
     this.setState({
-      editorEnabled: !this.state.editorEnabled
+      editorEnabled: !this.state.editorEnabled,
     }, () => {
-      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
+      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled.toString());
     });
   }
 
   handleDroppedFiles(selection, files) {
-    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+    window.ga('send', 'event', 'draftjs', 'filesdropped', `${files.length} files`);
     const file = files[0];
     if (file.type.indexOf('image/') === 0) {
       // eslint-disable-next-line no-undef
@@ -487,13 +465,47 @@ class App extends React.Component {
       ));
       return HANDLED;
     }
-    return NOT_HANDLED
+    return NOT_HANDLED;
   }
 
-  handleReturn(e) {
+  handleReturn() {
     // const currentBlock = getCurrentBlock(this.state.editorState);
     // var text = currentBlock.getText();
     return NOT_HANDLED;
+  }
+
+  renderHTML() {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const eHTML = this.exporter(currentContent);
+    const newWin = window.open(
+      `${window.location.pathname}rendered.html`,
+      'windowName',
+      `height=${window.screen.height},width=${window.screen.wdith}`);
+    newWin.onload = () => newWin.postMessage(eHTML, window.location.origin);
+  }
+
+  rendererFn(setEditorState, getEditorState) {
+    const atomicRenderers = {
+      embed: AtomicEmbedComponent,
+      separator: AtomicSeparatorComponent,
+    };
+    const rFnOld = rendererFn(setEditorState, getEditorState);
+    const rFnNew = (contentBlock) => {
+      const type = contentBlock.getType();
+      switch (type) {
+        case Block.ATOMIC:
+          return {
+            component: AtomicBlock,
+            editable: false,
+            props: {
+              components: atomicRenderers,
+              getEditorState,
+            },
+          };
+        default: return rFnOld(contentBlock);
+      }
+    };
+    return rFnNew;
   }
 
   render() {
@@ -506,7 +518,7 @@ class App extends React.Component {
           <button onClick={this.toggleEdit}>Toggle Edit</button>
         </div>
         <Editor
-          ref={(e) => {this._editor = e;}}
+          ref={(e) => { this._editor = e; }}
           editorState={editorState}
           onChange={this.onChange}
           editorEnabled={editorEnabled}
@@ -525,11 +537,10 @@ class App extends React.Component {
 }
 
 if (!__PROD__) {
-  window.ga = function() {
-    console.log(arguments);
-  };
+  // eslint-disable-next-line
+  window.ga = () => console.log(arguments);
 }
 ReactDOM.render(
   <App />,
-  document.getElementById('app')
+  window.document.getElementById('app')
 );
