@@ -1,3 +1,8 @@
+### 0.6.0-beta
+
+- A revamped architecture develop custom editor in a better way using plugin-like system.
+- Updated draft-convert's version (@mckelvey)
+
 ### 0.5.5
 
 - A new prop `toolbarConfig` has been introduced. So instead of passing whole configuration into `blockButtons` and `inlineButtons`, you can just pass, `toolbarConfig` with value
