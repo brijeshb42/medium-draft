@@ -527,7 +527,6 @@ class App extends React.Component {
           placeholder={this.state.placeholder}
           keyBindingFn={this.keyBinding}
           beforeInput={handleBeforeInput}
-          handleReturn={this.handleReturn}
           sideButtons={this.sideButtons}
           rendererFn={this.rendererFn}
         />
