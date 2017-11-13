@@ -111,7 +111,15 @@ export default class AddButton extends React.Component {
   openToolbar() {
     this.setState({
       isOpen: !this.state.isOpen,
-    }, this.props.focus);
+    }, () => { // callback function
+      // save page state
+      const x = window.scrollX,
+        y = window.scrollY;
+      // do focus
+      this.props.focus();
+      // back previous window state
+      window.scrollTo(x, y);
+    });
   }
 
   findNode() {
