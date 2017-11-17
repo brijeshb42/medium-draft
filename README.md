@@ -6,6 +6,10 @@ A medium like rich text editor built upon [draft-js](https://facebook.github.io/
 
 [Documentation](https://github.com/brijeshb42/medium-draft/wiki) in progress.
 
+Install the beta version using
+
+`npm install medium-draft@beta`
+
 ### Features
 
 - Focus on keyboard shortcuts and auto transform of text blocks.

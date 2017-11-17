@@ -84,6 +84,7 @@ const createEditor = (defHandlers = {}) => {
       disableToolbar: PropTypes.bool,
       showLinkEditToolbar: PropTypes.bool,
       toolbarConfig: PropTypes.object,
+      processURL: PropTypes.func
     };
 
     static defaultProps = {
@@ -153,14 +154,16 @@ const createEditor = (defHandlers = {}) => {
       const content = editorState.getCurrentContent();
       let entityKey = null;
       let newUrl = url;
-      if (url !== '') {
-        if (url.indexOf('http') === -1) {
-          if (url.indexOf('@') >= 0) {
-            newUrl = `mailto:${newUrl}`;
-          } else {
-            newUrl = `http://${newUrl}`;
-          }
+      if (this.props.processURL) {
+        newUrl = this.props.processURL(url);
+      } else if (url.indexOf('http') === -1) {
+        if (url.indexOf('@') >= 0) {
+          newUrl = `mailto:${newUrl}`;
+        } else {
+          newUrl = `http://${newUrl}`;
         }
+      }
+      if (newUrl !== '') {
         const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
         editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
         entityKey = contentWithEntity.getLastCreatedEntityKey();
