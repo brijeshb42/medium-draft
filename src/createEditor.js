@@ -84,7 +84,7 @@ const createEditor = (defHandlers = {}) => {
       disableToolbar: PropTypes.bool,
       showLinkEditToolbar: PropTypes.bool,
       toolbarConfig: PropTypes.object,
-      processURL: PropTypes.func
+      processURL: PropTypes.func,
     };
 
     static defaultProps = {
