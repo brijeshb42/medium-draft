@@ -1,6 +1,6 @@
 language: node_js
 before_install:
-  - yarn
+  - yarn && ./node_modules/.bin/lerna bootstrap
 script:
   - yarn run test
 node_js:
