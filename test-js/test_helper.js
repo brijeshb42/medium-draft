@@ -1,13 +1,13 @@
-import jsdom from 'jsdom';
+import { JSDOM } from 'jsdom';
 import chai, { expect } from 'chai';
 import React from 'react';
 
 
-const doc = jsdom.jsdom('<!doctype html><html><body><div id="app"></div></body></html>');
-const win = doc.defaultView;
+const doc = new JSDOM('<!doctype html><html><body><div id="app"></div></body></html>');
+const win = doc.window;
 
-global.document = doc;
 global.window = win;
+global.document = global.window.document;
 global.React = React;
 global.expect = expect;
 
