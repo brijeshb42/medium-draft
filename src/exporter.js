@@ -60,7 +60,7 @@ export const blockToHTML = (block) => {
     }
     case Block.ATOMIC:
       return {
-        start: `<figure className="md-block-${blockType.toLowerCase()}">`,
+        start: `<figure class="md-block-${blockType.toLowerCase()}">`,
         end: '</figure>',
       };
     case Block.TODO: {
