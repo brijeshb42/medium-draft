@@ -357,7 +357,7 @@ class MediumDraftEditor extends React.Component {
   */
   handleReturn(e) {
     if (this.props.handleReturn) {
-      const behavior = this.props.handleReturn();
+      const behavior = this.props.handleReturn(e);
       if (behavior === HANDLED || behavior === true) {
         return HANDLED;
       }
