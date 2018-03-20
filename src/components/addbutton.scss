@@ -1,60 +1,61 @@
-$add-btn-width: 30px;
+$editor-side-toolbar-left: -3rem !default;
+$editor-side-toolbar-display: inline !default;
+
+$editor-side-button-bg-color: #fff !default;
+$editor-side-button-border-color: #5b5b5b !default;
+$editor-side-button-color: #6d6d6d !default;
+$editor-side-button-size: 2rem !default;
+$editor-side-button-focus-border-color: #08c !default;
+$editor-side-button-focus-color: #08c !default;
+$editor-side-button-hover-color: green !default;
 
 
 .md-side-toolbar {
-    position: absolute;    
-    z-index: 1;
-    left: -35px;
-    top: 0;
-    transition: all 0.2s ease;
+  display: flex;
+  left: $editor-side-toolbar-left;
+  top: .75rem;
+  position: absolute;
+  z-index: 1;
+  transition: all 0.2s ease;
 }
 
 .md-sb-button {
+  background: $editor-side-button-bg-color;
+  border: 1px solid $editor-side-button-border-color;
+  border-radius: $editor-side-button-size;
+  color: $editor-side-button-color;
+  display: $editor-side-toolbar-display;
+  height: $editor-side-button-size;
+  margin-right: .25rem;
+  width: $editor-side-button-size;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $editor-side-button-focus-border-color;
+    color: $editor-side-button-focus-color;
+  }
+
+  &:hover {
+    color: $editor-side-button-hover-color;
+  }
+
+  &.md-sb-img-button {
     background: none;
-    // background-color: #EAEAEA;
-    border: 1px solid #5b5b5b;
-    // border: 1px solid #A0A0A0;
-    color: #6D6D6D;
-    cursor: pointer;
-    height: $add-btn-width;
-    width: $add-btn-width;
-    border-radius: $add-btn-width/2;
-    font-weight: bold;
-    font-size: 20px;
-    margin-right: 2px;
-    text-align: center;
-    transition: all 0.2s ease;
+    background-color: white;
+  }
 
-    // &.md-sb-img-button {
-    //     width: inherit;
-    // }
-
-    &:focus {
-        outline: none;
-        border-color: #08c;
-        color: #08c;
-    }
-
-    &:hover {
-        color: green;
-    }
-
-    &.md-sb-img-button {
-      background: none;
-      background-color: white;
-    }
-
-    svg path {
-        stroke-width: 0;
-        fill: #545454;
-    }
+  svg path {
+    stroke-width: 0;
+    fill: #545454;
+  }
 }
 
-.md-add-button {
 
-    &.md-open-button {
-        transform: rotate(45deg);
-    }
+.md-add-button {
+  &.md-open-button {
+    transform: rotate(45deg);
+  }
 }
 
 .md-example-appear {
@@ -85,11 +86,11 @@ $add-btn-width: 30px;
   transition: all 500ms ease-in;
 }
 
-.md-example-leave {
+.md-example-exit {
   opacity: 1;
 }
 
-.md-example-leave.md-example-leave-active {
+.md-example-exit.md-example-exit-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }

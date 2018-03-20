@@ -76,6 +76,7 @@ class MediumDraftEditor extends React.Component {
     })),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
+    addButton: PropTypes.func,
     sideButtons: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       component: PropTypes.func,
@@ -112,6 +113,7 @@ class MediumDraftEditor extends React.Component {
       Block.CODE,
       Block.TODO,
     ],
+    addButton: null,
     sideButtons: [
       {
         title: 'Image',
@@ -513,6 +515,28 @@ class MediumDraftEditor extends React.Component {
     return NOT_HANDLED;
   };
 
+  renderAddButton = (editorState) => {
+    if (this.props.addButton) {
+      return this.props.addButton({
+        editorState,
+        getEditorState: this.getEditorState,
+        setEditorState: this.onChange,
+        focus: this.focus,
+        sideButtons: this.props.sideButtons,
+      });
+    }
+
+    return (
+      <AddButton
+        editorState={editorState}
+        getEditorState={this.getEditorState}
+        setEditorState={this.onChange}
+        focus={this.focus}
+        sideButtons={this.props.sideButtons}
+      />
+    );
+  };
+
   /*
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
@@ -549,15 +573,7 @@ class MediumDraftEditor extends React.Component {
             placeholder={this.props.placeholder}
             spellCheck={editorEnabled && this.props.spellCheck}
           />
-          {this.props.sideButtons.length > 0 && showAddButton && (
-            <AddButton
-              editorState={editorState}
-              getEditorState={this.getEditorState}
-              setEditorState={this.onChange}
-              focus={this.focus}
-              sideButtons={this.props.sideButtons}
-            />
-          )}
+          {this.props.sideButtons.length > 0 && showAddButton && this.renderAddButton(editorState)}
           {!disableToolbar && (
             <Toolbar
               ref={(c) => { this.toolbar = c; }}

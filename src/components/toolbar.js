@@ -264,7 +264,7 @@ export default class Toolbar extends React.Component {
           <div className="md-RichEditor-controls">
             <span
               className="md-RichEditor-styleButton md-RichEditor-linkButton hint--top"
-              onClick={this.handleLinkInput}
+              onMouseDown={this.handleLinkInput}
               aria-label={hyperlinkDescription}
             >
               {hyperlinkLabel}

@@ -1,12 +1,25 @@
-.md-RichEditor-root {
-  background: #fff;
-  box-sizing: border-box;
-  //font-family: 'Georgia', serif;
-  padding: 15px 30px;
-  position: relative;
-  line-height: 1.4em;
-}
+$editor-padding: 1rem 2rem 4rem !default;
+$editor-border-radius: 4px !default;
+$editor-border-color: #e7e7e7 !default;
+$editor-placeholder-color: #9197a3 !default;
 
+.md-RichEditor-root {
+  border: 1px solid $editor-border-color;
+  border-radius: $editor-border-radius;
+  line-height: inherit;
+  padding: $editor-padding;
+
+  .public-DraftEditorPlaceholder-root {
+    color: $editor-placeholder-color;
+    margin: 0 -1rem -1rem;
+    padding: 1rem;
+  }
+
+  .public-DraftEditor-content {
+    margin: 0 -1rem -1rem;
+    padding: 1rem;
+  }
+}
 
 .md-RichEditor-editor {
   cursor: text;
@@ -18,16 +31,10 @@
     font-size: 1.3em;
     margin: 1.2em 0;
   }
-}
 
-.md-RichEditor-editor .public-DraftEditorPlaceholder-root,
-.md-RichEditor-editor .public-DraftEditor-content {
-  margin: 0px -15px -15px;
-  padding: 15px;
-}
-
-.md-RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
+  .public-DraftEditor-content {
+    min-height: 100px;
+  }
 }
 
 .md-RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
