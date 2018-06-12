@@ -15,7 +15,8 @@
     "buildImporter": "NODE_ENV=production APP_EXPORT_TYPE=importer webpack --progress --colors",
     "npm": "npm run build && npm run buildExporter && npm run buildImporter && npm run babel && npm run copyCss",
     "prepublish": "npm run npm",
-    "test": "jest",
+    "test": "jest && npm run test:lint",
+    "test:lint": "./node_modules/.bin/eslint ./src/ --ext .js --ext .jsx --ignore-path .gitignore --cache",
     "test:watch": "npm test -- --watch"
   },
   "keywords": [
