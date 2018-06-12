@@ -3,17 +3,17 @@ import { Map, List } from 'immutable';
 import { EditorState, ContentBlock, genKey } from 'draft-js';
 import { Block, Entity } from '../util/constants';
 
-
 /*
 Returns default block-level metadata for various block type. Empty object otherwise.
 */
 export const getDefaultBlockData = (blockType, initialData = {}) => {
   switch (blockType) {
-    case Block.TODO: return { checked: false };
-    default: return initialData;
+    case Block.TODO:
+      return { checked: false };
+    default:
+      return initialData;
   }
 };
-
 
 /*
 Get currentBlock in the editorState.
@@ -29,7 +29,11 @@ export const getCurrentBlock = (editorState) => {
 Adds a new block (currently replaces an empty block) at the current cursor position
 of the given `newType`.
 */
-export const addNewBlock = (editorState, newType = Block.UNSTYLED, initialData = {}) => {
+export const addNewBlock = (
+  editorState,
+  newType = Block.UNSTYLED,
+  initialData = {},
+) => {
   const selectionState = editorState.getSelection();
   if (!selectionState.isCollapsed()) {
     return editorState;
@@ -58,11 +62,14 @@ export const addNewBlock = (editorState, newType = Block.UNSTYLED, initialData =
   return editorState;
 };
 
-
 /*
 Changes the block type of the current block.
 */
-export const resetBlockWithType = (editorState, newType = Block.UNSTYLED, overrides = {}) => {
+export const resetBlockWithType = (
+  editorState,
+  newType = Block.UNSTYLED,
+  overrides = {},
+) => {
   const contentState = editorState.getCurrentContent();
   const selectionState = editorState.getSelection();
   const key = selectionState.getStartKey();
@@ -81,7 +88,6 @@ export const resetBlockWithType = (editorState, newType = Block.UNSTYLED, overri
   });
   return EditorState.push(editorState, newContentState, 'change-block-type');
 };
-
 
 /*
 Update block-level metadata of the given `block` to the `newData`/
@@ -105,19 +111,24 @@ Used from [react-rte](https://github.com/sstur/react-rte/blob/master/src/lib/ins
 by [sstur](https://github.com/sstur)
 */
 export const addNewBlockAt = (
-    editorState,
-    pivotBlockKey,
-    newBlockType = Block.UNSTYLED,
-    initialData = {}
-  ) => {
+  editorState,
+  pivotBlockKey,
+  newBlockType = Block.UNSTYLED,
+  initialData = {},
+) => {
   const content = editorState.getCurrentContent();
   const blockMap = content.getBlockMap();
   const block = blockMap.get(pivotBlockKey);
   if (!block) {
-    throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
+    throw new Error(
+      `The pivot key - ${pivotBlockKey} is not present in blockMap.`,
+    );
   }
-  const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
-  const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
+  const blocksBefore = blockMap.toSeq().takeUntil(v => v === block);
+  const blocksAfter = blockMap
+    .toSeq()
+    .skipUntil(v => v === block)
+    .rest();
   const newBlockKey = genKey();
 
   const newBlock = new ContentBlock({
@@ -129,10 +140,9 @@ export const addNewBlockAt = (
     data: Map(getDefaultBlockData(newBlockType, initialData)),
   });
 
-  const newBlockMap = blocksBefore.concat(
-    [[pivotBlockKey, block], [newBlockKey, newBlock]],
-    blocksAfter
-  ).toOrderedMap();
+  const newBlockMap = blocksBefore
+    .concat([[pivotBlockKey, block], [newBlockKey, newBlock]], blocksAfter)
+    .toOrderedMap();
 
   const selection = editorState.getSelection();
 

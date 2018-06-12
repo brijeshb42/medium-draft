@@ -16,7 +16,7 @@ export default class TodoBlock extends React.Component {
     const { block, blockProps } = this.props;
     const { setEditorState, getEditorState } = blockProps;
     const data = block.getData();
-    const checked = (data.has('checked') && data.get('checked') === true);
+    const checked = data.has('checked') && data.get('checked') === true;
     const newData = data.set('checked', !checked);
     setEditorState(updateDataOfBlock(getEditorState(), block, newData));
   }
@@ -35,8 +35,7 @@ export default class TodoBlock extends React.Component {
   }
 }
 
-
 TodoBlock.propTypes = {
-  block: PropTypes.object,
-  blockProps: PropTypes.object,
+  block: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  blockProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };

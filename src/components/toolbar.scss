@@ -1,31 +1,50 @@
-@keyframes pop-upwards{
+@keyframes pop-upwards {
   0% {
-    transform:matrix(.97,0,0,1,0,12);
-    opacity:0;
+    transform: matrix(0.97, 0, 0, 1, 0, 12);
+    opacity: 0;
   }
   20% {
-    transform:matrix(.99,0,0,1,0,2);
-    opacity:.7;
+    transform: matrix(0.99, 0, 0, 1, 0, 2);
+    opacity: 0.7;
   }
   40% {
-    transform:matrix(1,0,0,1,0,-1);
-    opacity:1;
+    transform: matrix(1, 0, 0, 1, 0, -1);
+    opacity: 1;
   }
   70% {
-    transform:matrix(1,0,0,1,0,0);
-    opacity:1;
-    }
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    opacity: 1;
+  }
   100% {
-    transform:matrix(1,0,0,1,0,0);
-    opacity:1;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    opacity: 1;
   }
 }
 
-@keyframes pop-downwards{0%{transform:matrix(.97,0,0,1,0,-12);opacity:0}20%{transform:matrix(.99,0,0,1,0,-2);opacity:.7}40%{transform:matrix(1,0,0,1,0,1);opacity:1}70%{transform:matrix(1,0,0,1,0,0);opacity:1}100%{transform:matrix(1,0,0,1,0,0);opacity:1}}
-
+@keyframes pop-downwards {
+  0% {
+    transform: matrix(0.97, 0, 0, 1, 0, -12);
+    opacity: 0;
+  }
+  20% {
+    transform: matrix(0.99, 0, 0, 1, 0, -2);
+    opacity: 0.7;
+  }
+  40% {
+    transform: matrix(1, 0, 0, 1, 0, 1);
+    opacity: 1;
+  }
+  70% {
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    opacity: 1;
+  }
+}
 
 $toolbar-color: #323845;
-
 
 .md-editor-toolbar {
   background: $toolbar-color;
@@ -53,7 +72,7 @@ $toolbar-color: #323845;
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -5px;
     left: 50%;
@@ -175,7 +194,7 @@ $toolbar-color: #323845;
 }
 
 .md-RichEditor-activeButton {
-  color: #50FF4D;
+  color: #50ff4d;
   background: #242933;
 
   &:hover {
@@ -189,4 +208,3 @@ $toolbar-color: #323845;
     border-bottom-left-radius: 5px;
   }
 }
-

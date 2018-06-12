@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -25,7 +26,8 @@ import {
   Entity as E,
   HANDLED,
   NOT_HANDLED,
-  KEY_COMMANDS } from './util/constants';
+  KEY_COMMANDS,
+} from './util/constants';
 import beforeInput, { StringToTypeMap } from './util/beforeinput';
 import blockStyleFn from './util/blockStyleFn';
 import {
@@ -43,7 +45,6 @@ some built-in customisations like custom blocks (todo, caption, etc) and
 some key handling for ease of use so that users' mouse usage is minimum.
 */
 class MediumDraftEditor extends React.Component {
-
   static propTypes = {
     beforeInput: PropTypes.func,
     keyBindingFn: PropTypes.func,
@@ -54,32 +55,38 @@ class MediumDraftEditor extends React.Component {
     spellCheck: PropTypes.bool,
     stringToTypeMap: PropTypes.object,
     blockRenderMap: PropTypes.object,
-    blockButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.element,
-        PropTypes.object,
-      ]),
-      style: PropTypes.string.isRequired,
-      icon: PropTypes.string,
-      description: PropTypes.string,
-    })),
-    inlineButtons: PropTypes.arrayOf(PropTypes.shape({
-      label: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.element,
-        PropTypes.object,
-      ]),
-      style: PropTypes.string.isRequired,
-      icon: PropTypes.string,
-      description: PropTypes.string,
-    })),
+    blockButtons: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.element,
+          PropTypes.object,
+        ]),
+        style: PropTypes.string.isRequired,
+        icon: PropTypes.string,
+        description: PropTypes.string,
+      }),
+    ),
+    inlineButtons: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.element,
+          PropTypes.object,
+        ]),
+        style: PropTypes.string.isRequired,
+        icon: PropTypes.string,
+        description: PropTypes.string,
+      }),
+    ),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
-    sideButtons: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      component: PropTypes.func,
-    })),
+    sideButtons: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        component: PropTypes.func,
+      }),
+    ),
     editorState: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     handleKeyCommand: PropTypes.func,
@@ -118,9 +125,13 @@ class MediumDraftEditor extends React.Component {
         component: ImageButton,
       },
     ],
+    handleKeyCommand: null,
+    handleReturn: null,
+    handlePastedText: null,
     disableToolbar: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
+    processURL: null,
   };
 
   constructor(props) {
@@ -140,7 +151,10 @@ class MediumDraftEditor extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
-    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+    this.blockRendererFn = this.props.rendererFn(
+      this.onChange,
+      this.getEditorState,
+    );
   }
 
   /**
@@ -168,7 +182,9 @@ class MediumDraftEditor extends React.Component {
           type: Block.UNSTYLED,
           key: genKey(),
         });
-        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
+        const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(
+          content.getBlockMap(),
+        );
         const newContent = content.merge({
           blockMap: newBlockMap,
           selectionAfter: selection.merge({
@@ -179,7 +195,9 @@ class MediumDraftEditor extends React.Component {
             isBackward: false,
           }),
         });
-        this.onChange(EditorState.push(editorState, newContent, 'insert-characters'));
+        this.onChange(
+          EditorState.push(editorState, newContent, 'insert-characters'),
+        );
       }
     } else if (currentBlock.getType().indexOf(Block.ATOMIC) === 0) {
       const blockBefore = content.getBlockBefore(key);
@@ -217,11 +235,20 @@ class MediumDraftEditor extends React.Component {
       }
     }
     if (newUrl !== '') {
-      const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
-      editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+      const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', {
+        url: newUrl,
+      });
+      editorState = EditorState.push(
+        editorState,
+        contentWithEntity,
+        'create-entity',
+      );
       entityKey = contentWithEntity.getLastCreatedEntityKey();
     }
-    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+    this.onChange(
+      RichUtils.toggleLink(editorState, selection, entityKey),
+      this.focus,
+    );
   }
 
   /**
@@ -235,7 +262,8 @@ class MediumDraftEditor extends React.Component {
    */
   configureToolbarBlockOptions(toolbarConfig) {
     return toolbarConfig && toolbarConfig.block
-      ? toolbarConfig.block.map(type => BLOCK_BUTTONS.find(button => button.style === type))
+      ? toolbarConfig.block
+        .map(type => BLOCK_BUTTONS.find(button => button.style === type))
         .filter(button => button !== undefined)
       : this.props.blockButtons;
   }
@@ -252,7 +280,8 @@ class MediumDraftEditor extends React.Component {
    */
   configureToolbarInlineOptions(toolbarConfig) {
     return toolbarConfig && toolbarConfig.inline
-      ? toolbarConfig.inline.map(type => INLINE_BUTTONS.find(button => button.style === type))
+      ? toolbarConfig.inline
+        .map(type => INLINE_BUTTONS.find(button => button.style === type))
         .filter(button => button !== undefined)
       : this.props.inlineButtons;
   }
@@ -286,7 +315,10 @@ class MediumDraftEditor extends React.Component {
         // Debug and fix it later.
         const isCursorLink = isCursorBetweenLink(editorState);
         if (isCursorLink) {
-          this.editLinkAfterSelection(isCursorLink.blockKey, isCursorLink.entityKey);
+          this.editLinkAfterSelection(
+            isCursorLink.blockKey,
+            isCursorLink.entityKey,
+          );
           return HANDLED;
         }
         this.toolbar.handleLinkInput(null, true);
@@ -320,9 +352,15 @@ class MediumDraftEditor extends React.Component {
       if (currentBlockType === Block.ATOMIC) {
         return HANDLED;
       }
-      if (currentBlockType === Block.BLOCKQUOTE && newBlockType === Block.CAPTION) {
+      if (
+        currentBlockType === Block.BLOCKQUOTE &&
+        newBlockType === Block.CAPTION
+      ) {
         newBlockType = Block.BLOCKQUOTE_CAPTION;
-      } else if (currentBlockType === Block.BLOCKQUOTE_CAPTION && newBlockType === Block.CAPTION) {
+      } else if (
+        currentBlockType === Block.BLOCKQUOTE_CAPTION &&
+        newBlockType === Block.CAPTION
+      ) {
         newBlockType = Block.BLOCKQUOTE;
       }
       this.onChange(RichUtils.toggleBlockType(editorState, newBlockType));
@@ -345,7 +383,11 @@ class MediumDraftEditor extends React.Component {
   */
   handleBeforeInput(str) {
     return this.props.beforeInput(
-      this.props.editorState, str, this.onChange, this.props.stringToTypeMap);
+      this.props.editorState,
+      str,
+      this.onChange,
+      this.props.stringToTypeMap,
+    );
   }
 
   /*
@@ -396,7 +438,10 @@ class MediumDraftEditor extends React.Component {
 
       const selection = editorState.getSelection();
 
-      if (selection.isCollapsed() && currentBlock.getLength() === selection.getStartOffset()) {
+      if (
+        selection.isCollapsed() &&
+        currentBlock.getLength() === selection.getStartOffset()
+      ) {
         if (this.props.continuousBlocks.indexOf(blockType) < 0) {
           this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
           return HANDLED;
@@ -408,7 +453,6 @@ class MediumDraftEditor extends React.Component {
     return NOT_HANDLED;
   }
 
-
   /*
   The function documented in `draft-js` to be used to toggle block types (mainly
   for some key combinations handled by default inside draft-js).
@@ -418,12 +462,7 @@ class MediumDraftEditor extends React.Component {
     if (type.indexOf(`${Block.ATOMIC}:`) === 0) {
       return;
     }
-    this.onChange(
-      RichUtils.toggleBlockType(
-        this.props.editorState,
-        blockType
-      )
-    );
+    this.onChange(RichUtils.toggleBlockType(this.props.editorState, blockType));
   }
 
   /*
@@ -432,10 +471,7 @@ class MediumDraftEditor extends React.Component {
   */
   _toggleInlineStyle(inlineStyle) {
     this.onChange(
-      RichUtils.toggleInlineStyle(
-        this.props.editorState,
-        inlineStyle
-      )
+      RichUtils.toggleInlineStyle(this.props.editorState, inlineStyle),
     );
   }
 
@@ -444,19 +480,25 @@ class MediumDraftEditor extends React.Component {
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(blockKey);
     const oldSelection = editorState.getSelection();
-    block.findEntityRanges((character) => {
-      const eKey = character.getEntity();
-      return eKey === entityKey;
-    }, (start, end) => {
-      const selection = new SelectionState({
-        anchorKey: blockKey,
-        focusKey: blockKey,
-        anchorOffset: start,
-        focusOffset: end,
-      });
-      const newEditorState = EditorState.forceSelection(RichUtils.toggleLink(editorState, selection, null), oldSelection);
-      this.onChange(newEditorState, this.focus);
-    });
+    block.findEntityRanges(
+      (character) => {
+        const eKey = character.getEntity();
+        return eKey === entityKey;
+      },
+      (start, end) => {
+        const selection = new SelectionState({
+          anchorKey: blockKey,
+          focusKey: blockKey,
+          anchorOffset: start,
+          focusOffset: end,
+        });
+        const newEditorState = EditorState.forceSelection(
+          RichUtils.toggleLink(editorState, selection, null),
+          oldSelection,
+        );
+        this.onChange(newEditorState, this.focus);
+      },
+    );
   };
 
   editLinkAfterSelection = (blockKey, entityKey = null) => {
@@ -466,24 +508,30 @@ class MediumDraftEditor extends React.Component {
     const { editorState } = this.props;
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(blockKey);
-    block.findEntityRanges((character) => {
-      const eKey = character.getEntity();
-      return eKey === entityKey;
-    }, (start, end) => {
-      const selection = new SelectionState({
-        anchorKey: blockKey,
-        focusKey: blockKey,
-        anchorOffset: start,
-        focusOffset: end,
-      });
-      const newEditorState = EditorState.forceSelection(editorState, selection);
-      this.onChange(newEditorState);
-      setTimeout(() => {
-        if (this.toolbar) {
-          this.toolbar.handleLinkInput(null, true);
-        }
-      }, 100);
-    });
+    block.findEntityRanges(
+      (character) => {
+        const eKey = character.getEntity();
+        return eKey === entityKey;
+      },
+      (start, end) => {
+        const selection = new SelectionState({
+          anchorKey: blockKey,
+          focusKey: blockKey,
+          anchorOffset: start,
+          focusOffset: end,
+        });
+        const newEditorState = EditorState.forceSelection(
+          editorState,
+          selection,
+        );
+        this.onChange(newEditorState);
+        setTimeout(() => {
+          if (this.toolbar) {
+            this.toolbar.handleLinkInput(null, true);
+          }
+        }, 100);
+      },
+    );
   };
 
   /**
@@ -498,16 +546,15 @@ class MediumDraftEditor extends React.Component {
       this.onChange(
         EditorState.push(
           editorState,
-          Modifier.insertText(
-            content,
-            editorState.getSelection(),
-            text
-          )
-        )
+          Modifier.insertText(content, editorState.getSelection(), text),
+        ),
       );
       return HANDLED;
     }
-    if (this.props.handlePastedText && this.props.handlePastedText(text, html, es) === HANDLED) {
+    if (
+      this.props.handlePastedText &&
+      this.props.handlePastedText(text, html, es) === HANDLED
+    ) {
       return HANDLED;
     }
     return NOT_HANDLED;
@@ -517,9 +564,17 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
+    const {
+      editorState,
+      editorEnabled,
+      disableToolbar,
+      showLinkEditToolbar,
+      toolbarConfig,
+    } = this.props;
     const showAddButton = editorEnabled;
-    const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
+    const editorClass = `md-RichEditor-editor${
+      !editorEnabled ? ' md-RichEditor-readonly' : ''
+    }`;
     let isCursorLink = false;
     if (editorEnabled && showLinkEditToolbar) {
       isCursorLink = isCursorBetweenLink(editorState);
@@ -530,7 +585,9 @@ class MediumDraftEditor extends React.Component {
       <div className="md-RichEditor-root">
         <div className={editorClass}>
           <Editor
-            ref={(node) => { this._editorNode = node; }}
+            ref={(node) => {
+              this._editorNode = node;
+            }}
             {...this.props}
             editorState={editorState}
             blockRendererFn={this.blockRendererFn}
@@ -549,7 +606,8 @@ class MediumDraftEditor extends React.Component {
             placeholder={this.props.placeholder}
             spellCheck={editorEnabled && this.props.spellCheck}
           />
-          {this.props.sideButtons.length > 0 && showAddButton && (
+          {this.props.sideButtons.length > 0 &&
+            showAddButton && (
             <AddButton
               editorState={editorState}
               getEditorState={this.getEditorState}
@@ -560,7 +618,9 @@ class MediumDraftEditor extends React.Component {
           )}
           {!disableToolbar && (
             <Toolbar
-              ref={(c) => { this.toolbar = c; }}
+              ref={(c) => {
+                this.toolbar = c;
+              }}
               editorNode={this._editorNode}
               editorState={editorState}
               toggleBlockType={this.toggleBlockType}
@@ -578,7 +638,8 @@ class MediumDraftEditor extends React.Component {
               editorState={editorState}
               removeLink={this.removeLink}
               editLink={this.editLinkAfterSelection}
-            />)}
+            />
+          )}
         </div>
       </div>
     );

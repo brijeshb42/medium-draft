@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { HYPERLINK } from '../util/constants.js';
+import { HYPERLINK } from '../util/constants';
 
 export default class StyleButton extends React.Component {
   constructor(props) {
@@ -27,16 +29,19 @@ export default class StyleButton extends React.Component {
         onMouseDown={this.onToggle}
         aria-label={this.props.description}
       >
-        {this.props.icon ? <i className={`fa fa-${this.props.icon}`} /> : this.props.label}
+        {this.props.icon ? (
+          <i className={`fa fa-${this.props.icon}`} />
+        ) : (
+          this.props.label
+        )}
       </span>
     );
   }
 }
 
-
 StyleButton.propTypes = {
   onToggle: PropTypes.func,
-  style: PropTypes.string,
+  style: PropTypes.string.isRequired,
   active: PropTypes.bool,
   icon: PropTypes.string,
   label: PropTypes.oneOfType([
@@ -45,4 +50,12 @@ StyleButton.propTypes = {
     PropTypes.object,
   ]),
   description: PropTypes.string,
+};
+
+StyleButton.defaultProps = {
+  onToggle: null,
+  active: false,
+  icon: null,
+  label: null,
+  description: null,
 };

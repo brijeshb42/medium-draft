@@ -6,10 +6,9 @@ import { EditorBlock, EditorState, SelectionState } from 'draft-js';
 import { getCurrentBlock } from '../../model/';
 
 class ImageBlock extends React.Component {
-
   static propTypes = {
-    block: PropTypes.object,
-    blockProps: PropTypes.object,
+    block: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    blockProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   };
 
   focusBlock = () => {
@@ -37,8 +36,12 @@ class ImageBlock extends React.Component {
     if (src !== null) {
       return (
         <div>
-          <div className="md-block-image-inner-container" onClick={this.focusBlock}>
-            <img role="presentation" src={src} />
+          <div
+            className="md-block-image-inner-container"
+            onClick={this.focusBlock}
+            role="presentation"
+          >
+            <img alt="presentation" role="presentation" src={src} />
           </div>
           <figcaption>
             <EditorBlock {...this.props} />

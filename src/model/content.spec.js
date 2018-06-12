@@ -10,16 +10,18 @@ describe('createEditorState', () => {
 
   it('creates empty editorState when no argument or null is passed', () => {
     const raw = convertToRaw(es.getCurrentContent());
-    expect(raw.blocks).to.be.instanceof(Array);
-    expect(raw.blocks[0].type).to.equal(Block.UNSTYLED);
-    expect(raw.blocks[0].text).to.equal('');
-    expect(raw.blocks[0]).to.include.keys('data', 'key');
+    expect(raw.blocks).toBeInstanceOf(Array);
+    expect(raw.blocks[0].type).toEqual(Block.UNSTYLED);
+    expect(raw.blocks[0].text).toEqual('');
+    expect(Object.keys(raw.blocks[0])).toEqual(
+      expect.arrayContaining(['data', 'key']),
+    );
   });
 
   it('adds link decorator by default in CompositeDecorator', () => {
-    expect(es.getDecorator()).to.be.instanceof(CompositeDecorator);
-    expect(es.getDecorator()._decorators.length).to.equal(1);
-    expect(es.getDecorator()._decorators[0]).to.deep.equal({
+    expect(es.getDecorator()).toBeInstanceOf(CompositeDecorator);
+    expect(es.getDecorator()._decorators.length).toEqual(1);
+    expect(es.getDecorator()._decorators[0]).toEqual({
       strategy: findLinkEntities,
       component: Link,
     });
@@ -29,11 +31,11 @@ describe('createEditorState', () => {
 
   it('fills data from provided json', () => {
     const blocks = esContent.getCurrentContent().getBlockMap();
-    expect(blocks.size).to.be.above(1);
+    expect(blocks.size).toBeGreaterThan(1);
 
-    expect(esContent.getDecorator()).to.be.instanceof(CompositeDecorator);
-    expect(esContent.getDecorator()._decorators.length).to.equal(1);
-    expect(esContent.getDecorator()._decorators[0]).to.deep.equal({
+    expect(esContent.getDecorator()).toBeInstanceOf(CompositeDecorator);
+    expect(esContent.getDecorator()._decorators.length).toEqual(1);
+    expect(esContent.getDecorator()._decorators[0]).toEqual({
       strategy: findLinkEntities,
       component: Link,
     });

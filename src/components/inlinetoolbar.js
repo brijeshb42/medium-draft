@@ -3,7 +3,6 @@ import React from 'react';
 
 import StyleButton from './stylebutton';
 
-
 const InlineToolbar = (props) => {
   if (props.buttons.length < 1) {
     return null;
@@ -11,7 +10,7 @@ const InlineToolbar = (props) => {
   const currentStyle = props.editorState.getCurrentInlineStyle();
   return (
     <div className="md-RichEditor-controls md-RichEditor-controls-inline">
-      {props.buttons.map(type => {
+      {props.buttons.map((type) => {
         const iconLabel = {};
         iconLabel.label = type.label;
         return (
@@ -30,9 +29,14 @@ const InlineToolbar = (props) => {
 };
 
 InlineToolbar.propTypes = {
-  buttons: PropTypes.array,
-  editorState: PropTypes.object.isRequired,
+  buttons: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  editorState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   onToggle: PropTypes.func,
+};
+
+InlineToolbar.defaultProps = {
+  buttons: [],
+  onToggle: null,
 };
 
 export default InlineToolbar;

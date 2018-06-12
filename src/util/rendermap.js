@@ -24,5 +24,4 @@ const RenderMap = Map({
   },
 }).merge(DefaultDraftBlockRenderMap);
 
-
 export default RenderMap;

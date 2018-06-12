@@ -5,11 +5,10 @@ import { addNewBlock } from '../../model';
 import { Block } from '../../util/constants';
 
 export default class ImageButton extends React.Component {
-
   static propTypes = {
-    setEditorState: PropTypes.func,
-    getEditorState: PropTypes.func,
-    close: PropTypes.func,
+    close: PropTypes.func.isRequired,
+    setEditorState: PropTypes.func.isRequired,
+    getEditorState: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -23,7 +22,6 @@ export default class ImageButton extends React.Component {
     this.input.value = null;
     this.input.click();
   }
-
 
   /*
   This is an example of how an image button can be added
@@ -39,12 +37,11 @@ export default class ImageButton extends React.Component {
       // console.log(this.props.getEditorState());
       // eslint-disable-next-line no-undef
       const src = URL.createObjectURL(file);
-      this.props.setEditorState(addNewBlock(
-        this.props.getEditorState(),
-        Block.IMAGE, {
+      this.props.setEditorState(
+        addNewBlock(this.props.getEditorState(), Block.IMAGE, {
           src,
-        }
-      ));
+        }),
+      );
     }
     this.props.close();
   }
@@ -61,7 +58,9 @@ export default class ImageButton extends React.Component {
         <input
           type="file"
           accept="image/*"
-          ref={(c) => { this.input = c; }}
+          ref={(c) => {
+            this.input = c;
+          }}
           onChange={this.onChange}
           style={{ display: 'none' }}
         />

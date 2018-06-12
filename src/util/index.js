@@ -4,7 +4,8 @@ Returns the `boundingClientRect` of the passed selection.
 export const getSelectionRect = (selected) => {
   const _rect = selected.getRangeAt(0).getBoundingClientRect();
   // selected.getRangeAt(0).getBoundingClientRect()
-  let rect = _rect && _rect.top ? _rect : selected.getRangeAt(0).getClientRects()[0];
+  let rect =
+    _rect && _rect.top ? _rect : selected.getRangeAt(0).getClientRects()[0];
   if (!rect) {
     if (selected.anchorNode && selected.anchorNode.getBoundingClientRect) {
       rect = selected.anchorNode.getBoundingClientRect();

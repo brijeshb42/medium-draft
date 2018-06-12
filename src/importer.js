@@ -63,9 +63,11 @@ export const htmlToBlock = (nodeName, node) => {
       type: Block.H6,
       data: {},
     };
-  } else if (nodeName === 'p' && (
-             node.className === `md-block-${Block.CAPTION.toLowerCase()}` ||
-             node.className === `md-block-${Block.BLOCKQUOTE_CAPTION.toLowerCase()}`)) {
+  } else if (
+    nodeName === 'p' &&
+    (node.className === `md-block-${Block.CAPTION.toLowerCase()}` ||
+      node.className === `md-block-${Block.BLOCKQUOTE_CAPTION.toLowerCase()}`)
+  ) {
     return {
       type: Block.BLOCKQUOTE_CAPTION,
       data: {},
@@ -86,7 +88,11 @@ export const htmlToBlock = (nodeName, node) => {
       };
     }
     return undefined;
-  } else if (nodeName === 'div' && node.className && node.className.match(/^md-block-todo/)) {
+  } else if (
+    nodeName === 'div' &&
+    node.className &&
+    node.className.match(/^md-block-todo/)
+  ) {
     const inputNode = node.querySelector('input');
     return {
       type: Block.TODO,
@@ -120,6 +126,8 @@ export const options = {
   htmlToBlock,
 };
 
-export const setImportOptions = (htmlOptions = options) => convertFromHTML(htmlOptions);
+export const setImportOptions = (htmlOptions = options) =>
+  convertFromHTML(htmlOptions);
 
-export default (rawHTML, htmlOptions = options) => convertFromHTML(htmlOptions)(rawHTML);
+export default (rawHTML, htmlOptions = options) =>
+  convertFromHTML(htmlOptions)(rawHTML);

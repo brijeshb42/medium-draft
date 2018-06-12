@@ -3,18 +3,14 @@ import React from 'react';
 
 import { Entity } from '../../util/constants';
 
-
 export const findLinkEntities = (contentBlock, callback, contentState) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === Entity.LINK
-      );
-    },
-    callback
-  );
+  contentBlock.findEntityRanges((character) => {
+    const entityKey = character.getEntity();
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === Entity.LINK
+    );
+  }, callback);
 };
 
 const Link = (props) => {
@@ -27,14 +23,20 @@ const Link = (props) => {
       rel="noopener noreferrer"
       target="_blank"
       aria-label={url}
-    >{props.children}</a>
+    >
+      {props.children}
+    </a>
   );
 };
 
 Link.propTypes = {
   children: PropTypes.node,
-  entityKey: PropTypes.string,
-  contentState: PropTypes.object.isRequired,
+  entityKey: PropTypes.string.isRequired,
+  contentState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+};
+
+Link.defaultProps = {
+  children: [],
 };
 
 export default Link;

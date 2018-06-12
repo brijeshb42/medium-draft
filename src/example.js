@@ -9,7 +9,7 @@ import {
   convertFromRaw,
   KeyBindingUtil,
   Modifier,
-  AtomicBlockUtils,
+  AtomicBlockUtils
 } from 'draft-js';
 
 import 'draft-js/dist/Draft.css';
@@ -44,9 +44,8 @@ import {
   setRenderOptions,
   blockToHTML,
   entityToHTML,
-  styleToHTML,
+  styleToHTML
 } from './exporter';
-
 
 const newTypeMap = StringToTypeMap;
 newTypeMap['2.'] = Block.OL;
@@ -62,16 +61,20 @@ const DQUOTE_END = '”';
 const SQUOTE_START = '‘';
 const SQUOTE_END = '’';
 
-const newBlockToHTML = (block) => {
+const newBlockToHTML = block => {
   const blockType = block.type;
   if (block.type === Block.ATOMIC) {
     if (block.text === 'E') {
       return {
         start: '<figure class="md-block-atomic md-block-atomic-embed">',
-        end: '</figure>',
+        end: '</figure>'
       };
     } else if (block.text === '-') {
-      return <div className="md-block-atomic md-block-atomic-break"><hr/></div>;
+      return (
+        <div className="md-block-atomic md-block-atomic-break">
+          <hr />
+        </div>
+      );
     }
   }
   return blockToHTML(block);
@@ -86,7 +89,8 @@ const newEntityToHTML = (entity, originalText) => {
           href={entity.data.url}
           data-card-controls="0"
           data-card-theme="dark"
-        >Embedded ― {entity.data.url}
+        >
+          Embedded ― {entity.data.url}
         </a>
       </div>
     );
@@ -95,28 +99,57 @@ const newEntityToHTML = (entity, originalText) => {
 };
 
 const handleBeforeInput = (editorState, str, onChange) => {
-  if (str === '"' || str === '\'') {
+  if (str === '"' || str === "'") {
     const currentBlock = getCurrentBlock(editorState);
     const selectionState = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const text = currentBlock.getText();
     const len = text.length;
     if (selectionState.getAnchorOffset() === 0) {
-      onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+      onChange(
+        EditorState.push(
+          editorState,
+          Modifier.insertText(
+            contentState,
+            selectionState,
+            str === '"' ? DQUOTE_START : SQUOTE_START
+          ),
+          'transpose-characters'
+        )
+      );
       return HANDLED;
     } else if (len > 0) {
       const lastChar = text[len - 1];
       if (lastChar !== ' ') {
-        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_END : SQUOTE_END)), 'transpose-characters'));
+        onChange(
+          EditorState.push(
+            editorState,
+            Modifier.insertText(
+              contentState,
+              selectionState,
+              str === '"' ? DQUOTE_END : SQUOTE_END
+            ),
+            'transpose-characters'
+          )
+        );
       } else {
-        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
+        onChange(
+          EditorState.push(
+            editorState,
+            Modifier.insertText(
+              contentState,
+              selectionState,
+              str === '"' ? DQUOTE_START : SQUOTE_START
+            ),
+            'transpose-characters'
+          )
+        );
       }
       return HANDLED;
     }
   }
   return beforeInput(editorState, str, onChange, newTypeMap);
 };
-
 
 class SeparatorSideButton extends React.Component {
   constructor(props) {
@@ -127,15 +160,19 @@ class SeparatorSideButton extends React.Component {
   onClick() {
     let editorState = this.props.getEditorState();
     const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('separator', 'IMMUTABLE', {});
+    const contentWithEntity = content.createEntity(
+      'separator',
+      'IMMUTABLE',
+      {}
+    );
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    editorState = EditorState.push(
+      editorState,
+      contentWithEntity,
+      'create-entity'
+    );
     this.props.setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(
-        editorState,
-        entityKey,
-        '-'
-      )
+      AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '-')
     );
     this.props.close();
   }
@@ -154,13 +191,11 @@ class SeparatorSideButton extends React.Component {
   }
 }
 
-
 class EmbedSideButton extends React.Component {
-
   static propTypes = {
     setEditorState: PropTypes.func,
     getEditorState: PropTypes.func,
-    close: PropTypes.func,
+    close: PropTypes.func
   };
 
   constructor(props) {
@@ -170,7 +205,10 @@ class EmbedSideButton extends React.Component {
   }
 
   onClick() {
-    const url = window.prompt('Enter a URL', 'https://www.youtube.com/watch?v=PMNFaAUs2mo');
+    const url = window.prompt(
+      'Enter a URL',
+      'https://www.youtube.com/watch?v=PMNFaAUs2mo'
+    );
     this.props.close();
     if (!url) {
       return;
@@ -181,15 +219,17 @@ class EmbedSideButton extends React.Component {
   addEmbedURL(url) {
     let editorState = this.props.getEditorState();
     const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('embed', 'IMMUTABLE', {url});
+    const contentWithEntity = content.createEntity('embed', 'IMMUTABLE', {
+      url
+    });
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    editorState = EditorState.push(
+      editorState,
+      contentWithEntity,
+      'create-entity'
+    );
     this.props.setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(
-        editorState,
-        entityKey,
-        'E'
-      )
+      AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, 'E')
     );
   }
 
@@ -205,21 +245,18 @@ class EmbedSideButton extends React.Component {
       </button>
     );
   }
-
 }
 
-
 class AtomicEmbedComponent extends React.Component {
-
   static propTypes = {
-    data: PropTypes.object.isRequired,
-  }
+    data: PropTypes.object.isRequired
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      showIframe: false,
+      showIframe: false
     };
 
     this.enablePreview = this.enablePreview.bind(this);
@@ -230,7 +267,10 @@ class AtomicEmbedComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.showIframe !== this.state.showIframe && this.state.showIframe === true) {
+    if (
+      prevState.showIframe !== this.state.showIframe &&
+      this.state.showIframe === true
+    ) {
       this.renderEmbedly();
     }
   }
@@ -255,7 +295,7 @@ class AtomicEmbedComponent extends React.Component {
 
   enablePreview() {
     this.setState({
-      showIframe: true,
+      showIframe: true
     });
   }
 
@@ -270,11 +310,9 @@ class AtomicEmbedComponent extends React.Component {
   }
 }
 
-const AtomicSeparatorComponent = (props) => (
-  <hr />
-);
+const AtomicSeparatorComponent = props => <hr />;
 
-const AtomicBlock = (props) => {
+const AtomicBlock = props => {
   const { blockProps, block } = props;
   const content = blockProps.getEditorState().getCurrentContent();
   const entity = content.getEntity(block.getEntityAt(0));
@@ -283,14 +321,19 @@ const AtomicBlock = (props) => {
   if (blockProps.components[type]) {
     const AtComponent = blockProps.components[type];
     return (
-      <div className={`md-block-atomic-wrapper md-block-atomic-wrapper-${type}`}>
+      <div
+        className={`md-block-atomic-wrapper md-block-atomic-wrapper-${type}`}
+      >
         <AtComponent data={data} />
       </div>
     );
   }
-  return <p>Block of type <b>{type}</b> is not supported.</p>;
+  return (
+    <p>
+      Block of type <b>{type}</b> is not supported.
+    </p>
+  );
 };
-
 
 class App extends React.Component {
   constructor(props) {
@@ -299,7 +342,7 @@ class App extends React.Component {
     this.state = {
       editorState: createEditorState(),
       editorEnabled: true,
-      placeholder: 'Write here...',
+      placeholder: 'Write here...'
     };
 
     this.onChange = (editorState, callback = null) => {
@@ -312,21 +355,25 @@ class App extends React.Component {
       }
     };
 
-    this.sideButtons = [{
-      title: 'Image',
-      component: ImageSideButton,
-    }, {
-      title: 'Embed',
-      component: EmbedSideButton,
-    }, {
-      title: 'Separator',
-      component: SeparatorSideButton,
-    }];
+    this.sideButtons = [
+      {
+        title: 'Image',
+        component: ImageSideButton
+      },
+      {
+        title: 'Embed',
+        component: EmbedSideButton
+      },
+      {
+        title: 'Separator',
+        component: SeparatorSideButton
+      }
+    ];
 
     this.exporter = setRenderOptions({
       styleToHTML,
       blockToHTML: newBlockToHTML,
-      entityToHTML: newEntityToHTML,
+      entityToHTML: newEntityToHTML
     });
 
     this.getEditorState = () => this.state.editorState;
@@ -349,22 +396,23 @@ class App extends React.Component {
   rendererFn(setEditorState, getEditorState) {
     const atomicRenderers = {
       embed: AtomicEmbedComponent,
-      separator: AtomicSeparatorComponent,
+      separator: AtomicSeparatorComponent
     };
     const rFnOld = rendererFn(setEditorState, getEditorState);
-    const rFnNew = (contentBlock) => {
+    const rFnNew = contentBlock => {
       const type = contentBlock.getType();
-      switch(type) {
+      switch (type) {
         case Block.ATOMIC:
           return {
             component: AtomicBlock,
             editable: false,
             props: {
               components: atomicRenderers,
-              getEditorState,
-            },
+              getEditorState
+            }
           };
-        default: return rFnOld(contentBlock);
+        default:
+          return rFnOld(contentBlock);
       }
     };
     return rFnNew;
@@ -372,7 +420,8 @@ class App extends React.Component {
 
   keyBinding(e) {
     if (hasCommandModifier(e)) {
-      if (e.which === 83) {  /* Key S */
+      if (e.which === 83) {
+        /* Key S */
         return 'editor-save';
       }
       // else if (e.which === 74 /* Key J */) {
@@ -383,7 +432,8 @@ class App extends React.Component {
       if (e.shiftKey === true) {
         switch (e.which) {
           /* Alt + Shift + L */
-          case 76: return 'load-saved-data';
+          case 76:
+            return 'load-saved-data';
           /* Key E */
           // case 69: return 'toggle-edit-mode';
         }
@@ -397,7 +447,9 @@ class App extends React.Component {
 
   handleKeyCommand(command) {
     if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+      window.localStorage['editor'] = JSON.stringify(
+        convertToRaw(this.state.editorState.getCurrentContent())
+      );
       window.ga('send', 'event', 'draftjs', command);
       return true;
     } else if (command === 'load-saved-data') {
@@ -412,19 +464,22 @@ class App extends React.Component {
   fetchData() {
     window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
     this.setState({
-      placeholder: 'Loading...',
+      placeholder: 'Loading...'
     });
     const req = new XMLHttpRequest();
     req.open('GET', 'data.json', true);
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         const data = JSON.parse(req.responseText);
-        this.setState({
-          editorState: createEditorState(data),
-          placeholder: 'Write here...'
-        }, () => {
-          this._editor.focus();
-        });
+        this.setState(
+          {
+            editorState: createEditorState(data),
+            placeholder: 'Write here...'
+          },
+          () => {
+            this._editor.focus();
+          }
+        );
         window.ga('send', 'event', 'draftjs', 'data-success');
       }
     };
@@ -444,7 +499,9 @@ class App extends React.Component {
     const eHTML = this.exporter(currentContent);
     var newWin = window.open(
       `${window.location.pathname}rendered.html`,
-      'windowName',`height=${window.screen.height},width=${window.screen.wdith}`);
+      'windowName',
+      `height=${window.screen.height},width=${window.screen.wdith}`
+    );
     newWin.onload = () => newWin.postMessage(eHTML, window.location.origin);
   }
 
@@ -456,37 +513,58 @@ class App extends React.Component {
     try {
       const blockData = JSON.parse(data);
       console.log(blockData);
-      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
-    } catch(e) {
+      this.onChange(
+        EditorState.push(this.state.editorState, convertFromRaw(blockData)),
+        this._editor.focus
+      );
+    } catch (e) {
       console.log(e);
     }
     window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
   }
 
   toggleEdit(e) {
-    this.setState({
-      editorEnabled: !this.state.editorEnabled
-    }, () => {
-      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
-    });
+    this.setState(
+      {
+        editorEnabled: !this.state.editorEnabled
+      },
+      () => {
+        window.ga(
+          'send',
+          'event',
+          'draftjs',
+          'toggle-edit',
+          this.state.editorEnabled + ''
+        );
+      }
+    );
   }
 
   handleDroppedFiles(selection, files) {
-    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
+    window.ga(
+      'send',
+      'event',
+      'draftjs',
+      'filesdropped',
+      files.length + ' files'
+    );
     const file = files[0];
     if (file.type.indexOf('image/') === 0) {
       // eslint-disable-next-line no-undef
       const src = URL.createObjectURL(file);
-      this.onChange(addNewBlockAt(
-        this.state.editorState,
-        selection.getAnchorKey(),
-        Block.IMAGE, {
-          src,
-        }
-      ));
+      this.onChange(
+        addNewBlockAt(
+          this.state.editorState,
+          selection.getAnchorKey(),
+          Block.IMAGE,
+          {
+            src
+          }
+        )
+      );
       return HANDLED;
     }
-    return NOT_HANDLED
+    return NOT_HANDLED;
   }
 
   handleReturn(e) {
@@ -505,7 +583,9 @@ class App extends React.Component {
           <button onClick={this.toggleEdit}>Toggle Edit</button>
         </div>
         <Editor
-          ref={(e) => {this._editor = e;}}
+          ref={e => {
+            this._editor = e;
+          }}
           editorState={editorState}
           onChange={this.onChange}
           editorEnabled={editorEnabled}
@@ -528,7 +608,4 @@ if (!__PROD__) {
     console.log(arguments);
   };
 }
-ReactDOM.render(
-  <App />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App />, document.getElementById('app'));

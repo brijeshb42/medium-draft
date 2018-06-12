@@ -18,8 +18,10 @@ export default (block) => {
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-caption`;
     case Block.TODO: {
       const data = block.getData();
-      const checkedClass = data.get('checked') === true ?
-        `${BASE_BLOCK_CLASS}-todo-checked` : `${BASE_BLOCK_CLASS}-todo-unchecked`;
+      const checkedClass =
+        data.get('checked') === true
+          ? `${BASE_BLOCK_CLASS}-todo-checked`
+          : `${BASE_BLOCK_CLASS}-todo-unchecked`;
       let finalClass = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph `;
       finalClass += `${BASE_BLOCK_CLASS}-todo ${checkedClass}`;
       return finalClass;
@@ -30,6 +32,7 @@ export default (block) => {
       const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
       return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
     }
-    default: return BASE_BLOCK_CLASS;
+    default:
+      return BASE_BLOCK_CLASS;
   }
 };

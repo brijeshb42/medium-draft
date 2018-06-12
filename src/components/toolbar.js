@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions, react/forbid-prop-types, no-plusplus */
+
 import PropTypes from 'prop-types';
 // import './toolbar.scss';
 
@@ -12,20 +14,23 @@ import { getCurrentBlock } from '../model/index';
 import { Entity, HYPERLINK } from '../util/constants';
 
 export default class Toolbar extends React.Component {
-
   static propTypes = {
     editorEnabled: PropTypes.bool,
-    editorState: PropTypes.object,
+    editorState: PropTypes.object.isRequired,
     toggleBlockType: PropTypes.func,
     toggleInlineStyle: PropTypes.func,
     inlineButtons: PropTypes.arrayOf(PropTypes.object),
     blockButtons: PropTypes.arrayOf(PropTypes.object),
     editorNode: PropTypes.object,
-    setLink: PropTypes.func,
-    focus: PropTypes.func,
+    setLink: PropTypes.func.isRequired,
+    focus: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    editorEnabled: false,
+    toggleBlockType: null,
+    toggleInlineStyle: null,
+    editorNode: null,
     blockButtons: BLOCK_BUTTONS,
     inlineButtons: INLINE_BUTTONS,
   };
@@ -56,7 +61,6 @@ export default class Toolbar extends React.Component {
           urlInputValue: '',
         });
       }
-      return;
     }
   }
 
@@ -94,20 +98,23 @@ export default class Toolbar extends React.Component {
     /*
     * Main logic for setting the toolbar position.
     */
-    toolbarNode.style.top =
-      `${(selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5)}px`;
+    toolbarNode.style.top = `${selectionBoundary.top -
+      parentBoundary.top -
+      toolbarBoundary.height -
+      5}px`;
     toolbarNode.style.width = `${toolbarBoundary.width}px`;
     const widthDiff = selectionBoundary.width - toolbarBoundary.width;
     if (widthDiff >= 0) {
       toolbarNode.style.left = `${widthDiff / 2}px`;
     } else {
-      const left = (selectionBoundary.left - parentBoundary.left);
-      toolbarNode.style.left = `${left + (widthDiff / 2)}px`;
+      const left = selectionBoundary.left - parentBoundary.left;
+      const margin = widthDiff / 2;
+      toolbarNode.style.left = `${left + margin}px`;
       // toolbarNode.style.width = toolbarBoundary.width + 'px';
       // if (left + toolbarBoundary.width > parentBoundary.width) {
-        // toolbarNode.style.right = '0px';
-        // toolbarNode.style.left = '';
-        // toolbarNode.style.width = toolbarBoundary.width + 'px';
+      // toolbarNode.style.right = '0px';
+      // toolbarNode.style.left = '';
+      // toolbarNode.style.width = toolbarBoundary.width + 'px';
       // }
       // else {
       //   toolbarNode.style.left = (left + widthDiff / 2) + 'px';
@@ -147,39 +154,57 @@ export default class Toolbar extends React.Component {
     const currentBlock = getCurrentBlock(editorState);
     let selectedEntity = '';
     let linkFound = false;
-    currentBlock.findEntityRanges((character) => {
-      const entityKey = character.getEntity();
-      selectedEntity = entityKey;
-      return entityKey !== null && editorState.getCurrentContent().getEntity(entityKey).getType() === Entity.LINK;
-    }, (start, end) => {
-      let selStart = selection.getAnchorOffset();
-      let selEnd = selection.getFocusOffset();
-      if (selection.getIsBackward()) {
-        selStart = selection.getFocusOffset();
-        selEnd = selection.getAnchorOffset();
-      }
-      if (start === selStart && end === selEnd) {
-        linkFound = true;
-        const { url } = editorState.getCurrentContent().getEntity(selectedEntity).getData();
-        this.setState({
+    currentBlock.findEntityRanges(
+      (character) => {
+        const entityKey = character.getEntity();
+        selectedEntity = entityKey;
+        return (
+          entityKey !== null &&
+          editorState
+            .getCurrentContent()
+            .getEntity(entityKey)
+            .getType() === Entity.LINK
+        );
+      },
+      (start, end) => {
+        let selStart = selection.getAnchorOffset();
+        let selEnd = selection.getFocusOffset();
+        if (selection.getIsBackward()) {
+          selStart = selection.getFocusOffset();
+          selEnd = selection.getAnchorOffset();
+        }
+        if (start === selStart && end === selEnd) {
+          linkFound = true;
+          const { url } = editorState
+            .getCurrentContent()
+            .getEntity(selectedEntity)
+            .getData();
+          this.setState(
+            {
+              showURLInput: true,
+              urlInputValue: url,
+            },
+            () => {
+              setTimeout(() => {
+                this.urlinput.focus();
+                this.urlinput.select();
+              }, 0);
+            },
+          );
+        }
+      },
+    );
+    if (!linkFound) {
+      this.setState(
+        {
           showURLInput: true,
-          urlInputValue: url,
-        }, () => {
+        },
+        () => {
           setTimeout(() => {
             this.urlinput.focus();
-            this.urlinput.select();
           }, 0);
-        });
-      }
-    });
-    if (!linkFound) {
-      this.setState({
-        showURLInput: true,
-      }, () => {
-        setTimeout(() => {
-          this.urlinput.focus();
-        }, 0);
-      });
+        },
+      );
     }
   }
 
@@ -188,10 +213,12 @@ export default class Toolbar extends React.Component {
       e.preventDefault();
       e.stopPropagation();
     }
-    this.setState({
-      showURLInput: false,
-      urlInputValue: '',
-    }, this.props.focus
+    this.setState(
+      {
+        showURLInput: false,
+        urlInputValue: '',
+      },
+      this.props.focus,
     );
   }
 
@@ -203,19 +230,23 @@ export default class Toolbar extends React.Component {
       isOpen = false;
     }
     if (showURLInput) {
-      let className = `md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`;
+      let className = `md-editor-toolbar${
+        isOpen ? ' md-editor-toolbar--isopen' : ''
+      }`;
       className += ' md-editor-toolbar--linkinput';
       return (
-        <div
-          className={className}
-        >
+        <div className={className}>
           <div
             className="md-RichEditor-controls md-RichEditor-show-link-input"
             style={{ display: 'block' }}
           >
-            <span className="md-url-input-close" onClick={this.hideLinkInput}>&times;</span>
+            <span className="md-url-input-close" onClick={this.hideLinkInput}>
+              &times;
+            </span>
             <input
-              ref={node => { this.urlinput = node; }}
+              ref={(node) => {
+                this.urlinput = node;
+              }}
               type="text"
               className="md-url-input"
               onKeyDown={this.onKeyDown}
@@ -244,7 +275,9 @@ export default class Toolbar extends React.Component {
     }
     return (
       <div
-        className={`md-editor-toolbar${(isOpen ? ' md-editor-toolbar--isopen' : '')}`}
+        className={`md-editor-toolbar${
+          isOpen ? ' md-editor-toolbar--isopen' : ''
+        }`}
       >
         {this.props.blockButtons.length > 0 ? (
           <BlockToolbar
@@ -356,7 +389,10 @@ export const INLINE_BUTTONS = [
                 <g transform="translate(19.000000, 0.000000)">
                   <g transform="translate(196.424621, 21.424621) rotate(45.000000) translate(-196.424621, -21.424621) translate(193.424621, 13.924621)">
                     <path d="M0.5,5.69098301 L0.5,2 C0.5,1.82069363 0.550664909,1.51670417 0.697213595,1.2236068 C0.927818928,0.762396132 1.32141313,0.5 2,0.5 L4,0.5 C4.67858687,0.5 5.07218107,0.762396132 5.3027864,1.2236068 C5.44933509,1.51670417 5.5,1.82069363 5.5,2 L5.5,6 C5.5,6.67858687 5.23760387,7.07218107 4.7763932,7.3027864 C4.53586606,7.42304998 4.28800365,7.47874077 4.1077327,7.49484936 L0.5,5.69098301 Z" />
-                    <path d="M0.5,12.690983 L0.5,9 C0.5,8.82069363 0.550664909,8.51670417 0.697213595,8.2236068 C0.927818928,7.76239613 1.32141313,7.5 2,7.5 L4,7.5 C4.67858687,7.5 5.07218107,7.76239613 5.3027864,8.2236068 C5.44933509,8.51670417 5.5,8.82069363 5.5,9 L5.5,13 C5.5,13.6785869 5.23760387,14.0721811 4.7763932,14.3027864 C4.53586606,14.42305 4.28800365,14.4787408 4.1077327,14.4948494 L0.5,12.690983 Z" transform="translate(3.000000, 11.000000) scale(-1, -1) translate(-3.000000, -11.000000) " />
+                    <path
+                      d="M0.5,12.690983 L0.5,9 C0.5,8.82069363 0.550664909,8.51670417 0.697213595,8.2236068 C0.927818928,7.76239613 1.32141313,7.5 2,7.5 L4,7.5 C4.67858687,7.5 5.07218107,7.76239613 5.3027864,8.2236068 C5.44933509,8.51670417 5.5,8.82069363 5.5,9 L5.5,13 C5.5,13.6785869 5.23760387,14.0721811 4.7763932,14.3027864 C4.53586606,14.42305 4.28800365,14.4787408 4.1077327,14.4948494 L0.5,12.690983 Z"
+                      transform="translate(3.000000, 11.000000) scale(-1, -1) translate(-3.000000, -11.000000) "
+                    />
                   </g>
                 </g>
               </g>
@@ -370,4 +406,3 @@ export const INLINE_BUTTONS = [
     description: 'Add a link',
   },
 ];
-

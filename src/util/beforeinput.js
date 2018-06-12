@@ -1,7 +1,6 @@
 import { resetBlockWithType, getCurrentBlock } from '../model';
 import { Block, HANDLED, NOT_HANDLED } from './constants';
 
-
 /*
 This is a key value pair where the key is the string that is input while typing.
 While typing in an empty block, if the entered text matches any of the keys in
@@ -21,7 +20,6 @@ export const StringToTypeMap = {
   '[]': Block.TODO,
 };
 
-
 /*
 This function is called before text is input in a block in `draft-js`. It checks
 whether the input string (first 2 cahracters only) is present in the `StringToTypeMap`
@@ -30,7 +28,12 @@ mapping or not. If present, it converts the current block's type and called the 
 is passed. In custom implementation, users can pass their own mapping or extend
 the current one.
 */
-const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeMap) => {
+const beforeInput = (
+  editorState,
+  inputString,
+  onChange,
+  mapping = StringToTypeMap,
+) => {
   const selection = editorState.getSelection();
   const block = getCurrentBlock(editorState);
   const blockType = block.getType();
@@ -71,11 +74,12 @@ const beforeInput = (editorState, inputString, onChange, mapping = StringToTypeM
       fType = finalType[2];
     }
   }
-  onChange(resetBlockWithType(editorState, fType, {
-    text: '',
-  }));
+  onChange(
+    resetBlockWithType(editorState, fType, {
+      text: '',
+    }),
+  );
   return HANDLED;
 };
-
 
 export default beforeInput;

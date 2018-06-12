@@ -13,16 +13,18 @@ import { Block } from '../util/constants';
 describe('model/index', () => {
   describe('getDefaultBlockData()', () => {
     it('returns proper data for todo block', () => {
-      expect(getDefaultBlockData(Block.TODO)).to.deep.equal({
+      expect(getDefaultBlockData(Block.TODO)).toEqual({
         checked: false,
       });
     });
 
     it('returns passed data for any other block', () => {
-      expect(getDefaultBlockData(Block.IMAGE, {
-        src: 'https://www.google.com',
-        alt: 'Google',
-      })).to.deep.equal({
+      expect(
+        getDefaultBlockData(Block.IMAGE, {
+          src: 'https://www.google.com',
+          alt: 'Google',
+        }),
+      ).toEqual({
         src: 'https://www.google.com',
         alt: 'Google',
       });
@@ -54,11 +56,11 @@ describe('model/index', () => {
 
   describe('getCurrentBlock()', () => {
     it('always returns currently focused/selected block', () => {
-      expect(getCurrentBlock(es).getKey()).to.equal(block1.key);
+      expect(getCurrentBlock(es).getKey()).toEqual(block1.key);
 
       const selection = SelectionState.createEmpty(block2.key);
       const es2 = EditorState.acceptSelection(es, selection);
-      expect(getCurrentBlock(es2).getKey()).to.equal(block2.key);
+      expect(getCurrentBlock(es2).getKey()).toEqual(block2.key);
     });
   });
 
@@ -66,48 +68,71 @@ describe('model/index', () => {
     it('change selected block type to provided type', () => {
       const es3 = resetBlockWithType(es, Block.UNSTYLED, { text: 'hola' });
       let currentBlock = getCurrentBlock(es3);
-      expect(currentBlock.getType()).to.equal(Block.UNSTYLED);
-      expect(currentBlock.getText()).to.equal('hola');
+      expect(currentBlock.getType()).toEqual(Block.UNSTYLED);
+      expect(currentBlock.getText()).toEqual('hola');
       const es4 = resetBlockWithType(es, Block.TODO);
       currentBlock = getCurrentBlock(es4);
-      expect(currentBlock.getType()).to.equal(Block.TODO);
-      expect(currentBlock.getData().toJS()).to.deep.equal({
+      expect(currentBlock.getType()).toEqual(Block.TODO);
+      expect(currentBlock.getData().toJS()).toEqual({
         checked: false,
       });
-      expect(currentBlock.getText()).to.equal(block1.text);
-      expect(es4.getLastChangeType()).to.equal('change-block-type');
+      expect(currentBlock.getText()).toEqual(block1.text);
+      expect(es4.getLastChangeType()).toEqual('change-block-type');
     });
   });
 
   describe('updateDataOfBlock()', () => {
     it('should update data of provided block', () => {
       const es3 = resetBlockWithType(es, Block.TODO);
-      const es4 = updateDataOfBlock(es3, getCurrentBlock(es), Map({
-        checked: true,
-      }));
-      expect(getCurrentBlock(es4).getData().toJS()).to.deep.equal({
+      const es4 = updateDataOfBlock(
+        es3,
+        getCurrentBlock(es),
+        Map({
+          checked: true,
+        }),
+      );
+      expect(
+        getCurrentBlock(es4)
+          .getData()
+          .toJS(),
+      ).toEqual({
         checked: true,
       });
-      expect(es4.getLastChangeType()).to.equal('change-block-data');
+      expect(es4.getLastChangeType()).toEqual('change-block-data');
     });
   });
 
   describe('addNewBlockAt()', () => {
     it('should add new block after pivot block', () => {
       const es3 = addNewBlockAt(es, block1.key);
-      expect(es3.getCurrentContent().getBlockMap().count()).to.equal(3);
+      expect(
+        es3
+          .getCurrentContent()
+          .getBlockMap()
+          .count(),
+      ).toEqual(3);
       let currentBlock = getCurrentBlock(es3);
-      expect(currentBlock.toJS()).to.deep.equal(
-        es3.getCurrentContent().getBlockMap().get(currentBlock.getKey()).toJS());
-      expect(currentBlock.getData().toJS()).to.deep.equal({});
+      expect(currentBlock.toJS()).toEqual(
+        es3
+          .getCurrentContent()
+          .getBlockMap()
+          .get(currentBlock.getKey())
+          .toJS(),
+      );
+      expect(currentBlock.getData().toJS()).toEqual({});
 
       const es4 = addNewBlockAt(es3, currentBlock.getKey(), Block.TODO, {
         checked: true,
       });
       currentBlock = getCurrentBlock(es4);
-      expect(es4.getCurrentContent().getBlockMap().count()).to.equal(4);
+      expect(
+        es4
+          .getCurrentContent()
+          .getBlockMap()
+          .count(),
+      ).toEqual(4);
 
-      expect(() => addNewBlockAt(es, 'random-key')).to.throw(Error);
+      expect(() => addNewBlockAt(es, 'random-key')).toThrow(Error);
     });
   });
 });

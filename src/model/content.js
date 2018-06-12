@@ -7,14 +7,12 @@ import {
 
 import Link, { findLinkEntities } from '../components/entities/link';
 
-
 const defaultDecorators = new CompositeDecorator([
   {
     strategy: findLinkEntities,
     component: Link,
   },
 ]);
-
 
 const createEditorState = (content = null, decorators = defaultDecorators) => {
   if (content === null) {

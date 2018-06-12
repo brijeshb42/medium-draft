@@ -4,7 +4,6 @@ import { RichUtils } from 'draft-js';
 
 import StyleButton from './stylebutton';
 
-
 const BlockToolbar = (props) => {
   if (props.buttons.length < 1) {
     return null;
@@ -32,9 +31,14 @@ const BlockToolbar = (props) => {
 };
 
 BlockToolbar.propTypes = {
-  buttons: PropTypes.array,
-  editorState: PropTypes.object.isRequired,
+  buttons: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  editorState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   onToggle: PropTypes.func,
+};
+
+BlockToolbar.defaultProps = {
+  buttons: [],
+  onToggle: null,
 };
 
 export default BlockToolbar;

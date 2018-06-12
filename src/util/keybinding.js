@@ -20,27 +20,36 @@ export default (e) => {
       switch (e.which) {
         // Alt + Shift + A
         // case 65: return addNewBlock();
-        default: return getDefaultKeyBinding(e);
+        default:
+          return getDefaultKeyBinding(e);
       }
     }
     switch (e.which) {
       // 1
-      case 49: return changeType('ordered-list-item');
+      case 49:
+        return changeType('ordered-list-item');
       // @
-      case 50: return showLinkInput();
+      case 50:
+        return showLinkInput();
       // #
-      case 51: return changeType('header-three');
+      case 51:
+        return changeType('header-three');
       // *
-      case 56: return changeType('unordered-list-item');
+      case 56:
+        return changeType('unordered-list-item');
       // <
-      case 188: return changeType('caption');
+      case 188:
+        return changeType('caption');
       // // -
       // case 189: return 'changetype:caption';
       // >
-      case 190: return changeType('unstyled');
+      case 190:
+        return changeType('unstyled');
       // "
-      case 222: return changeType('blockquote');
-      default: return getDefaultKeyBinding(e);
+      case 222:
+        return changeType('blockquote');
+      default:
+        return getDefaultKeyBinding(e);
     }
   }
   // if (e.keyCode === 46 && !e.ctrlKey) {

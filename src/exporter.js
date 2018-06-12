@@ -52,9 +52,11 @@ export const blockToHTML = (block) => {
     case Block.IMAGE: {
       const imgData = block.data;
       const text = block.text;
-      const extraClass = (text.length > 0 ? ' md-block-image-has-caption' : '');
+      const extraClass = text.length > 0 ? ' md-block-image-has-caption' : '';
       return {
-        start: `<figure class="md-block-image${extraClass}"><img src="${imgData.src}" alt="${block.text}" /><figcaption className="md-block-image-caption">`,
+        start: `<figure class="md-block-image${extraClass}"><img src="${
+          imgData.src
+        }" alt="${block.text}" /><figcaption class="md-block-image-caption">`,
         end: '</figcaption></figure>',
       };
     }
@@ -95,13 +97,17 @@ export const blockToHTML = (block) => {
       };
     case Block.UNSTYLED:
       if (block.text.length < 1) {
-        return <p className={`md-block-${blockType.toLowerCase()}`}><br /></p>;
+        return (
+          <p className={`md-block-${blockType.toLowerCase()}`}>
+            <br />
+          </p>
+        );
       }
       return <p className={`md-block-${blockType.toLowerCase()}`} />;
-    default: return null;
+    default:
+      return null;
   }
 };
-
 
 export const entityToHTML = (entity, originalText) => {
   if (entity.type === Entity.LINK) {
@@ -125,7 +131,8 @@ export const options = {
   entityToHTML,
 };
 
-export const setRenderOptions = (htmlOptions = options) => convertToHTML(htmlOptions);
+export const setRenderOptions = (htmlOptions = options) =>
+  convertToHTML(htmlOptions);
 
-
-export default (contentState, htmlOptions = options) => convertToHTML(htmlOptions)(contentState);
+export default (contentState, htmlOptions = options) =>
+  convertToHTML(htmlOptions)(contentState);

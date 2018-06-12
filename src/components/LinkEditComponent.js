@@ -7,7 +7,9 @@ const getRelativeParent = (element) => {
     return null;
   }
 
-  const position = window.getComputedStyle(element).getPropertyValue('position');
+  const position = window
+    .getComputedStyle(element)
+    .getPropertyValue('position');
   if (position !== 'static') {
     return element;
   }
@@ -16,9 +18,7 @@ const getRelativeParent = (element) => {
 };
 
 export default class LinkEditComponent extends React.Component {
-
   static propTypes = {
-    editorState: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     blockKey: PropTypes.string.isRequired,
     entityKey: PropTypes.string.isRequired,
@@ -41,7 +41,9 @@ export default class LinkEditComponent extends React.Component {
 
   shouldComponentUpdate(newProps) {
     if (this.renderedOnce) {
-      const ret = (this.props.blockKey !== newProps.blockKey || this.props.entityKey !== newProps.entityKey);
+      const ret =
+        this.props.blockKey !== newProps.blockKey ||
+        this.props.entityKey !== newProps.entityKey;
       if (ret) {
         this.renderedOnce = false;
       }
@@ -60,14 +62,16 @@ export default class LinkEditComponent extends React.Component {
       return;
     }
     const relativeParent = getRelativeParent(this.toolbar.parentElement);
-    const relativeRect = relativeParent ? relativeParent.getBoundingClientRect() : window.document.body.getBoundingClientRect();
+    const relativeRect = relativeParent
+      ? relativeParent.getBoundingClientRect()
+      : window.document.body.getBoundingClientRect();
     const selectionRect = getVisibleSelectionRect(window);
     if (!selectionRect) {
       return;
     }
     const position = {
-      top: (selectionRect.top - relativeRect.top) + 35,
-      left: (selectionRect.left - relativeRect.left) + (selectionRect.width / 2),
+      top: selectionRect.top - relativeRect.top + 35, // eslint-disable-line no-mixed-operators
+      left: selectionRect.left - relativeRect.left + selectionRect.width / 2, // eslint-disable-line no-mixed-operators
       transform: 'translate(-50%) scale(1)',
     };
     this.setState({ position });
@@ -98,9 +102,26 @@ export default class LinkEditComponent extends React.Component {
           this.toolbar = element;
         }}
       >
-        <a href={this.props.url} title={this.props.url} target="_blank" rel="noopener noreferrer">{url}</a>
-        <button className="md-editor-toolbar-unlink-button" onClick={this.removeLink}>Unlink</button>
-        <button className="md-editor-toolbar-edit-button" onClick={this.editLink}>Edit</button>
+        <a
+          href={this.props.url}
+          title={this.props.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {url}
+        </a>
+        <button
+          className="md-editor-toolbar-unlink-button"
+          onClick={this.removeLink}
+        >
+          Unlink
+        </button>
+        <button
+          className="md-editor-toolbar-edit-button"
+          onClick={this.editLink}
+        >
+          Edit
+        </button>
       </div>
     );
   }

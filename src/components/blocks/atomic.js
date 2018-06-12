@@ -1,3 +1,5 @@
+/* eslint-disable react/forbid-prop-types */
+
 import PropTypes from 'prop-types';
 // import './atomic.scss';
 
@@ -11,7 +13,7 @@ const AtomicBlock = (props) => {
   if (type === 'image') {
     return (
       <div className="md-block-atomic-wrapper">
-        <img role="presentation" src={data.src} />
+        <img alt="" src={data.src} />
         <div className="md-block-atomic-controls">
           <button>&times;</button>
         </div>
@@ -22,8 +24,8 @@ const AtomicBlock = (props) => {
 };
 
 AtomicBlock.propTypes = {
-  block: PropTypes.object,
-  getEditorState: PropTypes.func,
+  block: PropTypes.object.isRequired,
+  getEditorState: PropTypes.func.isRequired,
 };
 
 export default AtomicBlock;
