@@ -101,11 +101,15 @@ function getEntry(env) {
 
 function getLoaders(env) {
   var loaders = [];
+  var babelLoaders = ['babel-loader'];
+  if (env !== ENV_PROD) {
+     babelLoaders.push('react-hot-loader/webpack');
+  }
   loaders.push({
     test: /\.jsx?$/,
     include: APP_DIR,
-    loaders: ['react-hot-loader/webpack', 'babel-loader'],
-    exclude: /node_modules/
+    loaders: babelLoaders,
+    exclude: /node_modules/,
   });
 
   // loaders.push({
@@ -242,3 +246,4 @@ if (appExportType === 'exporter' || appExportType === 'importer') {
 }
 
 module.exports = options;
+
