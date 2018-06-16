@@ -126,17 +126,20 @@ class App extends React.Component {
     this.onChange = (editorState) => {
       this.setState({ editorState });
     };
+
+    this.refsEditor = React.createRef();
+
   }
 
   componentDidMount() {
-    this.refs.editor.focus();
+    this.refsEditor.current.focus();
   }
 
   render() {
     const { editorState } = this.state;
     return (
       <Editor
-        ref="editor"
+        ref={this.refsEditor}
         editorState={editorState}
         onChange={this.onChange} />
     );
