@@ -1,0 +1,46 @@
+{
+  "name": "medium-draft",
+  "version": "2.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "medium-draft.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --mode development --host=0.0.0.0 --port=8080",
+    "clean": "rm -rf lib dist local es *.d.ts",
+    "typing": "dts-generator --name medium-draft --project ./ --out ./medium-draft.d.ts",
+    "dist": "webpack --mode production",
+    "build:es": "tsc --outDir ./es --target es6 --module es6",
+    "build": "npm run clean && tsc && npm run build:es && npm run typing && npm run dist",
+    "local": "mkdir -p local && cp -r lib dist package.json local",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "Brijesh Bittu <brijesh@bitwiser.in> (http://bitwiser.in/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@types/draft-js": "0.10.25",
+    "@types/node": "^10.10.1",
+    "@types/react": "16.4.14",
+    "@types/react-dom": "16.0.7",
+    "babel-loader": "^8.0.2",
+    "css-loader": "^1.0.0",
+    "dts-generator": "^2.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "0.4.3",
+    "optimize-css-assets-webpack-plugin": "5.0.1",
+    "style-loader": "^0.23.0",
+    "ts-loader": "^5.1.1",
+    "typescript": "^3.0.3",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "dependencies": {
+    "draft-js": "0.10.5",
+    "draft-js-plugins-editor": "2.1.1",
+    "react": "16.5.2",
+    "react-dom": "16.5.2"
+  }
+}
