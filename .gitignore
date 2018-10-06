@@ -61,3 +61,8 @@ dist/
 hash.json
 lib/
 wiki/
+dist/
+lib/
+es/
+build/
+medium-draft.d.ts

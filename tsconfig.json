@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib/",
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "allowJs": false,
+    "removeComments": true,
+    "rootDir": "./src/",
+    "jsx": "react",
+    "lib": [ "dom", "es2015", "es2016" ],
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "./src/demo.tsx",
+    "node_modules",
+  ],
+}
