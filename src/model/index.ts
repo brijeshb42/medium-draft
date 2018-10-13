@@ -1,5 +1,7 @@
 import * as Draft from 'draft-js';
-import { Block } from '../util/constants';
+import * as Immutable from 'immutable';
+
+import { Block, Entity } from '../util/constants';
 
 export function createEditorState(content: string | Draft.RawDraftContentState = null): Draft.EditorState {
   if (content === null) {
@@ -121,4 +123,92 @@ export const updateDataOfBlock = (editorState: Draft.EditorState, block: Draft.C
     blockMap: contentState.getBlockMap().set(block.getKey(), newBlock),
   });
   return Draft.EditorState.push(editorState, newContentState, 'change-block-data');
+};
+
+/**
+ * Used from [react-rte](https://github.com/sstur/react-rte/blob/master/src/lib/insertBlockAfter.js)
+ * by [sstur](https://github.com/sstur)
+ * @param editorState 
+ * @param pivotBlockKey 
+ * @param newBlockType 
+ * @param initialData 
+ */
+export const addNewBlockAt = (
+  editorState: Draft.EditorState,
+  pivotBlockKey: string,
+  newBlockType = Block.UNSTYLED,
+  initialData = {}
+) => {
+const content = editorState.getCurrentContent();
+const blockMap = content.getBlockMap();
+const block = blockMap.get(pivotBlockKey);
+if (!block) {
+  throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
+}
+const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
+const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
+const newBlockKey = Draft.genKey();
+
+const newBlock = new Draft.ContentBlock({
+  key: newBlockKey,
+  type: newBlockType,
+  text: '',
+  characterList: Immutable.List(),
+  depth: 0,
+  data: Immutable.Map(getDefaultBlockData(newBlockType, initialData)),
+});
+
+const newBlockMap = blocksBefore.concat(
+  [[pivotBlockKey, block], [newBlockKey, newBlock]],
+  blocksAfter
+).toOrderedMap();
+
+const selection = editorState.getSelection();
+
+const newContent = <Draft.ContentState>content.merge({
+  blockMap: newBlockMap,
+  selectionBefore: selection,
+  selectionAfter: selection.merge({
+    anchorKey: newBlockKey,
+    anchorOffset: 0,
+    focusKey: newBlockKey,
+    focusOffset: 0,
+    isBackward: false,
+  }),
+});
+return Draft.EditorState.push(editorState, newContent, 'split-block');
+};
+
+/**
+* Check whether the cursor is between entity of type LINK
+*/
+export const isCursorBetweenLink = (editorState: Draft.EditorState) => {
+  let ret = null;
+  const selection = editorState.getSelection();
+  const content = editorState.getCurrentContent();
+  const currentBlock = getCurrentBlock(editorState);
+  if (!currentBlock) {
+    return ret;
+  }
+  let entityKey = null;
+  let blockKey = null;
+  if (currentBlock.getType() !== Block.ATOMIC && selection.isCollapsed()) {
+    if (currentBlock.getLength() > 0) {
+      if (selection.getAnchorOffset() > 0) {
+        entityKey = currentBlock.getEntityAt(selection.getAnchorOffset() - 1);
+        blockKey = currentBlock.getKey();
+        if (entityKey !== null) {
+          const entity = content.getEntity(entityKey);
+          if (entity.getType() === Entity.LINK) {
+            ret = {
+              entityKey,
+              blockKey,
+              url: entity.getData().url,
+            };
+          }
+        }
+      }
+    }
+  }
+  return ret;
 };

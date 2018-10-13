@@ -1,0 +1,12 @@
+.md-block-code {
+  background-color: rgba(0, 0, 0, 0.05);
+  position: relative;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+
+  &-settings {
+    position: absolute;
+    right: 0;
+    top: -20px;
+  }
+}

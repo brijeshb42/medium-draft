@@ -1,0 +1,25 @@
+.md-block-caption {
+    display: block;
+    position: relative;
+    font-style: normal;
+    padding: 10px 0;
+    font-family: 'Hoefler Text', 'Georgia', serif;
+    margin: 0 0 20px 0;
+    background-color: #F7F7F7;
+    border-radius: 5px;
+    line-height: 1.2em;
+
+    &::before {
+        content: '“';
+        color: #C6DFFF;
+        display: inline;
+        position: absolute;
+        left: -25px;
+        top: -5px;
+        font-size: 3em;
+    }
+
+    .public-DraftStyleDefault-ltr {
+        text-align: center;
+    }
+}

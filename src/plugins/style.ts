@@ -24,6 +24,8 @@ export default function createInlineStylePlugin(): DraftPlugin {
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph`;
         case Block.ATOMIC:
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-atomic`;
+        case Block.CODE:
+          return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code`;
         case Block.CAPTION:
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-caption`;
         case Block.TODO: {

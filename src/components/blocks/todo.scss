@@ -1,0 +1,26 @@
+.md-block-todo {
+    // margin: 10px 0;
+
+    input[type=checkbox] {
+        cursor: pointer;
+        float: left;
+        position: relative;
+        top: 4px;
+        left: -4px;
+    }
+
+    .public-DraftStyleDefault-block {
+        margin-left: 18px;
+    }
+
+    .md-block-todo-completed {
+        color: #949494;
+        text-decoration: line-through;
+    }
+}
+
+// .public-DraftEditor-content {
+//     .block-todo {
+//         margin: 10px 0px;
+//     }
+// }

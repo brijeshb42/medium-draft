@@ -1,0 +1,132 @@
+.md-block-header-one {
+    font-size: 2em;
+}
+.md-block-header-two {
+    font-size: 1.7em;
+}
+.md-block-header-three {
+    font-size: 1.3em;
+}
+.md-block-header-four {
+    font-size: 1em;
+}
+.md-block-header-five {
+    font-size: 0.8em;
+}
+.md-block-header-six {
+    font-size: 0.7em;
+}
+
+.md-block-header-one,
+.md-block-header-two,
+.md-block-header-three,
+.md-block-header-four,
+.md-block-header-five,
+.md-block-header-six {
+    margin-bottom: 5px;
+}
+
+.md-block-blockquote {
+    margin: 0;
+    padding-left: 15px;
+    border-left: 5px solid #4CA8DE;
+    padding: 10px 0 10px 20px;
+    background-color: #E2F2FF;
+    font-size: 1.1em;
+}
+
+.md-block-image {
+    margin: 0 0 10px 0;
+
+    img {
+        width: 100%;
+    }
+
+    figcaption {
+        text-align: center;
+        font-size: 0.9em;
+    }
+}
+
+.md-block-todo {
+    margin: 10px 0 10px 0;
+    
+    input[type=checkbox] {
+        float: left;
+        position: relative;
+        top: 0px;
+        left: -2px;
+    }
+    p {
+        margin-left: 18px;
+    }
+}
+
+.md-block-unordered-list-item, .md-block-ordered-list-item {
+    padding-left: 20px;
+
+    li {
+        margin-bottom: 5px;
+    }
+}
+
+.md-block-atomic-embed {
+  margin: 10px 0;
+}
+
+.md-block-atomic-break {
+    hr {
+        max-width: 100px;
+        border: 2px solid #ccc;
+    }
+}
+
+.md-inline-code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    margin: 4px 0px;
+    font-size: 0.9em;
+    padding: 1px 3px;
+    color: rgb(85, 85, 85);
+    background-color: rgb(252, 252, 252);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(187, 187, 187);
+    border-image: initial;
+    border-radius: 3px;
+    box-shadow: rgb(187, 187, 187) 0px -1px 0px inset;
+}
+
+
+.md-inline-link {
+    color: #08c;
+
+    &:visited {
+        color: #08c;
+    }
+}
+
+.md-inline-highlight {
+    background: yellow;
+    display: inline;
+    padding: 2px 4px;
+}
+
+p {
+    &.md-block-block-quote-caption {
+
+        &::before {
+            content: '\2013';
+            color: #999;
+            float: left;
+            font-weight: bold;
+            display: inline;
+            margin-right: 10px;
+        }
+        margin-top: 0;
+        font-size: 0.8em;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        background: #fafafa;
+    }
+}

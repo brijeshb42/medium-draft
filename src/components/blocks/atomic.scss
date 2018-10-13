@@ -1,0 +1,52 @@
+$control-btn-width: 22px;
+
+.md-block-atomic {
+    margin: 0;
+    img {
+        width: 100%;
+        border: 1px solid #eee;
+        box-sizing: border-box;
+    }
+}
+
+.md-block-atomic-wrapper {
+    position: relative;
+
+    // &:hover {
+    //     .block-atomic-controls {
+    //         display: block;
+    //     }
+    // }
+}
+
+.md-block-atomic-controls {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: all 0.2s ease;
+
+    button {
+        display: inline-block;
+        background-color: #EAEAEA;
+        border: none;
+        // border: 1px solid #A0A0A0;
+        color: #6D6D6D;
+        cursor: pointer;
+        height: $control-btn-width;
+        width: $control-btn-width;
+        border-radius: $control-btn-width/2;
+        position: absolute;
+        z-index: 1;
+        left: -27px;
+        font-weight: bold;
+        text-align: center;
+        transition: all 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #08c;
+            color: #08c;
+        }
+    }
+}
