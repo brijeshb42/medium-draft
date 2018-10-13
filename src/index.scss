@@ -1,3 +1,13 @@
+@import './components/addbutton';
+@import './components/toolbar';
+@import './components/blocks/atomic';
+@import './components/blocks/blockquotecaption';
+@import './components/blocks/caption';
+@import './components/blocks/image';
+@import './components/blocks/text';
+@import './components/blocks/todo';
+@import './components/blocks/code';
+
 .md-RichEditor-root {
   background: #fff;
   box-sizing: border-box;
@@ -20,28 +30,39 @@
   }
 }
 
-.md-RichEditor-editor .public-DraftEditorPlaceholder-root,
-.md-RichEditor-editor .public-DraftEditor-content {
-  margin: 0px -15px -15px;
-  padding: 15px;
-}
+.md-RichEditor-editor {
+  .public-DraftEditorPlaceholder-root,  .public-DraftEditor-content {
+    margin: 0px -15px -15px;
+    padding: 15px;
+  }
 
-.md-RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
+  .public-DraftEditor-content {
+    min-height: 100px;
+  }
+
+  .md-RichEditor-blockquote {
+    border-left: 5px solid #4CA8DE;
+    color: #555;
+    //font-family: 'Hoefler Text', 'Georgia', serif;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 10px 0 10px 20px;
+    background-color: #E2F2FF;
+
+    .public-DraftStyleDefault-block:first-child {
+      padding-top: 10px;
+    }
+
+    cite {
+      .public-DraftStyleDefault-block:first-child {
+        padding-top: 0;
+      }
+    }
+  }
 }
 
 .md-RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
   display: none;
-}
-
-.md-RichEditor-editor .md-RichEditor-blockquote {
-  border-left: 5px solid #4CA8DE;
-  color: #555;
-  //font-family: 'Hoefler Text', 'Georgia', serif;
-  font-size: 1.2em;
-  margin: 0;
-  padding: 10px 0 10px 20px;
-  background-color: #E2F2FF;
 }
 
 .md-RichEditor-blockquote {
@@ -57,12 +78,11 @@
   }
 }
 
-.md-RichEditor-editor .public-DraftStyleDefault-pre {
-  background-color: rgba(0, 0, 0, 0.05);
-  //font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-  font-size: 16px;
-  padding: 20px;
-}
+// .md-RichEditor-editor .public-DraftStyleDefault-pre {
+//   //font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+//   font-size: 16px;
+//   margin: 0;
+// }
 
 .public-DraftStyleDefault-unorderedListItem,
 .public-DraftStyleDefault-orderedListItem {

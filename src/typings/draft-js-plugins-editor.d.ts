@@ -1,3 +1,11 @@
+declare module "draft-js/lib/isSoftNewlineEvent" {
+  import * as React from 'react';
+
+  function isSoftNewlineEvent(ev: React.KeyboardEvent<{}>): boolean;
+
+  export default isSoftNewlineEvent;
+}
+
 declare module "draft-js-plugins-editor" {
   import * as React from 'react';
   import * as Draft from 'draft-js';
@@ -5,7 +13,7 @@ declare module "draft-js-plugins-editor" {
 
   interface PluginFunctions {
     getPlugins: () => Array<Plugin>,
-    getProps: () => Draft.EditorProps,
+    getProps: () => Object,
     setEditorState: (editorState: Draft.EditorState) => void,
     getEditorState: () => Draft.EditorState,
     getReadOnly: () => boolean,
@@ -17,20 +25,22 @@ declare module "draft-js-plugins-editor" {
     plugins?: Array<DraftPlugin>,
   }
 
+  type HandlerReturn = 'handled' | 'not_handled';
+
   interface DraftPlugin {
-    blockRendererFn?: (cb: Draft.ContentBlock) => {
-      component: React.Component<any> | React.SFC,
+    blockRendererFn?: (cb: Draft.ContentBlock, draftPluginFns: PluginFunctions) => {
+      component: React.ComponentType | React.StatelessComponent,
       editable?: boolean,
       props?: Object,
     } | null,
-    keyBindingFn?: any,
+    keyBindingFn?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => string,
     blockStyleFn?: (contentBlock: Draft.ContentBlock) => string,
     blockRenderMap?: Immutable.Map<string, {element: string, aliasedElements?: Array<string>}>,
     customStyleMap?: Object,
-    handleReturn?: any,
-    handleKeyCommand?: any,
-    handleBeforeInput?: any,
-    handlePastedText?: any,
+    handleReturn?: (ev: React.KeyboardEvent<{}>, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
+    handleKeyCommand?: (command: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
+    handleBeforeInput?: (input: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
+    handlePastedText?: (text: string, html: string, editorState: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
     handlePastedFiles?: any,
     handleDroppedFiles?: any,
     handleDrop?: any,

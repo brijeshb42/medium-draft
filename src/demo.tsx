@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import 'draft-js/dist/Draft.css';
+import './index.scss';
+import './demo.css';
 
 import { Editor } from './';
 

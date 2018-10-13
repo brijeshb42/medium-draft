@@ -4,19 +4,26 @@ import PluginsEditor, { DraftPlugin } from 'draft-js-plugins-editor';
 
 import stylePlugin from './plugins/style';
 import rendererPlugin from './plugins/blockRendererFn';
+import keyboardPlugin from './plugins/keyboardPlugin';
 import { createEditorState } from './model';
+import { StringToTypeMap, Block } from './util/constants';
 
 type State = {
   editorState: Draft.EditorState,
 };
 
-type Props = {
+export type EditorProps = {
   placeholder: string,
   autoFocus: boolean,
+  disableToolbar: boolean,
+  handleKeyCommand?: (command: string) => 'handled' | 'not_handled' | boolean,
+  stringToTypeMap: {[key: string]: string},
+  continuousBlocks: Array<String>,
+  editorEnabled: boolean,
 };
 type RefCb = (editor: PluginsEditor) => void;
 
-export default class Editor extends React.Component<Props, State> {
+export default class Editor extends React.Component<EditorProps, State> {
   editorRef: React.RefObject<PluginsEditor> | RefCb;
   editor?: PluginsEditor;
   plugins: Array<DraftPlugin>;
@@ -24,9 +31,20 @@ export default class Editor extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: 'Write your story...',
     autoFocus: false,
+    disableToolbar: false,
+    stringToTypeMap: StringToTypeMap,
+    continuousBlocks: [
+      Block.UNSTYLED,
+      Block.BLOCKQUOTE,
+      Block.OL,
+      Block.UL,
+      Block.CODE,
+      Block.TODO,
+    ],
+    editorEnabled: true,
   };
 
-  constructor(props: Props) {
+  constructor(props: EditorProps) {
     super(props);
 
     this.state = {
@@ -41,7 +59,11 @@ export default class Editor extends React.Component<Props, State> {
       }
     }
 
-    this.plugins = [stylePlugin(), rendererPlugin()];
+    this.plugins = [
+      stylePlugin(),
+      rendererPlugin(),
+      keyboardPlugin(),
+    ];
   }
 
   componentDidMount() {
@@ -65,14 +87,21 @@ export default class Editor extends React.Component<Props, State> {
   }
 
   render() {
+    const { editorEnabled } = this.props;
+
+    const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     return (
-      <PluginsEditor
-        ref={this.editorRef}
-        plugins={this.plugins}
-        placeholder={this.props.placeholder}
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-      />
+      <div className="md-RichEditor-root">
+        <div className={editorClass}>
+          <PluginsEditor
+            ref={this.editorRef}
+            plugins={this.plugins}
+            placeholder={this.props.placeholder}
+            editorState={this.state.editorState}
+            onChange={this.onChange}
+          />
+        </div>
+      </div>
     );
   }
 }

@@ -50,11 +50,12 @@ module.exports = (env, argv) => {
           'ts-loader',
         ],
       }, {
-        test: /\.css$/,
+        test: /\.(sa|sc|c)ss$/,
         // exclude: /node_modules/,
         use: [
           isProd ? MiniCssExtractPlugin.loader : 'style-loader',
           'css-loader',
+          'sass-loader'
         ],
       }],
     },
@@ -73,7 +74,7 @@ module.exports = (env, argv) => {
       }),
     ],
     externals: isProd ? {
-      'react': {
+      react: {
         root: 'React',
         commonjs: 'react',
         commonjs2: 'react',
