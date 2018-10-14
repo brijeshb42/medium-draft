@@ -1,5 +1,5 @@
-import { DraftPlugin, PluginFunctions } from 'draft-js-plugins-editor';
-import { KeyBindingUtil, getDefaultKeyBinding, RichUtils, Modifier, EditorState } from 'draft-js';
+import { DraftPlugin } from 'draft-js-plugins-editor';
+import { KeyBindingUtil, getDefaultKeyBinding, RichUtils } from 'draft-js';
 const isSoftNewlineEvent = require('draft-js/lib/isSoftNewlineEvent');
 
 import { KEY_COMMANDS, KEY_CODES, Block, HANDLED, NOT_HANDLED, StringToTypeMap, continuousBlocks } from '../util/constants';
@@ -9,7 +9,7 @@ const { changeType, showLinkInput, unlink } = KEY_COMMANDS;
 
 export default function keyboardPlugin(): DraftPlugin {
   return {
-    keyBindingFn(ev: React.KeyboardEvent<{}>, pluginFns: PluginFunctions) {
+    keyBindingFn(ev: React.KeyboardEvent<{}>) {
       if (KeyBindingUtil.hasCommandModifier(ev) && ev.which === KEY_CODES.K) {
         if (ev.shiftKey) {
           return unlink();
@@ -42,7 +42,6 @@ export default function keyboardPlugin(): DraftPlugin {
     },
 
     handleKeyCommand(command, editorState, pluginFns) {
-      console.log(command);
       const {
         setEditorState
       } = pluginFns;
@@ -157,7 +156,7 @@ export default function keyboardPlugin(): DraftPlugin {
       const currentBlock = getCurrentBlock(editorState);
       const blockType = currentBlock.getType();
 
-      if (isSoftNewlineEvent(ev) || (blockType === Block.CODE && !KeyBindingUtil.hasCommandModifier(ev))) {
+      if (isSoftNewlineEvent(ev)) {
         setEditorState(RichUtils.insertSoftNewline(editorState));
         return HANDLED;
       }
@@ -201,27 +200,12 @@ export default function keyboardPlugin(): DraftPlugin {
       return NOT_HANDLED;
     },
 
-    handlePastedText(text, html, editorState, { setEditorState }) {
-      const currentBlock = getCurrentBlock(editorState);
-      const blockType = currentBlock.getType();
-
-      if (blockType !== Block.CODE) {
-        return NOT_HANDLED;
+    onTab(ev, { getEditorState, setEditorState }) {
+      const editorState = getEditorState();
+      const newEditorState = RichUtils.onTab(ev, editorState, 2);
+      if (newEditorState !== editorState) {
+        setEditorState(newEditorState);
       }
-
-      const content = editorState.getCurrentContent();
-      setEditorState(
-        EditorState.push(
-          editorState,
-          Modifier.insertText(
-            content,
-            editorState.getSelection(),
-            text
-          ),
-          'insert-characters'
-        )
-      );
-      return HANDLED;
     }
   };
 }

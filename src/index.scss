@@ -11,7 +11,6 @@
 .md-RichEditor-root {
   background: #fff;
   box-sizing: border-box;
-  //font-family: 'Georgia', serif;
   padding: 15px 30px;
   position: relative;
   line-height: 1.4em;
@@ -31,11 +30,6 @@
 }
 
 .md-RichEditor-editor {
-  .public-DraftEditorPlaceholder-root,  .public-DraftEditor-content {
-    margin: 0px -15px -15px;
-    padding: 15px;
-  }
-
   .public-DraftEditor-content {
     min-height: 100px;
   }
@@ -78,11 +72,9 @@
   }
 }
 
-// .md-RichEditor-editor .public-DraftStyleDefault-pre {
-//   //font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-//   font-size: 16px;
-//   margin: 0;
-// }
+.md-RichEditor-editor .public-DraftStyleDefault-pre {
+  margin-top: 10px;
+}
 
 .public-DraftStyleDefault-unorderedListItem,
 .public-DraftStyleDefault-orderedListItem {
