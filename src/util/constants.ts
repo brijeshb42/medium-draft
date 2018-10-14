@@ -40,7 +40,7 @@ export const Entity = {
 
 export const HYPERLINK = 'hyperlink';
 export const HANDLED = 'handled';
-export const NOT_HANDLED = 'not_handled';
+export const NOT_HANDLED = 'not-handled';
 
 export const KEY_COMMANDS = {
   addNewBlock: () => 'add-new-block',
@@ -83,6 +83,8 @@ export const continuousBlocks = [
   Block.UL,
   Block.TODO,
 ];
+
+export const BASE_BLOCK_CLASS = 'md-block';
 
 export default {
   Block,

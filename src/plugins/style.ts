@@ -4,16 +4,13 @@ import { DraftPlugin } from 'draft-js-plugins-editor';
 
 import { Block, Inline } from '../util/constants';
 
-/**
- * Get custom classnames for each of the different block types supported.
- */
 const BASE_BLOCK_CLASS = 'md-block';
 
 /**
  * Base plugin that provides styling and structuring to the editor.
  */
 export default function createInlineStylePlugin(): DraftPlugin {
-  const plugin: DraftPlugin = {
+  return {
     blockStyleFn(contentBlock) {
       const blockType = contentBlock.getType();
 
@@ -24,8 +21,6 @@ export default function createInlineStylePlugin(): DraftPlugin {
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-paragraph`;
         case Block.ATOMIC:
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-atomic`;
-        case Block.CODE:
-          return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code`;
         case Block.CAPTION:
           return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-caption`;
         case Block.TODO: {
@@ -36,8 +31,6 @@ export default function createInlineStylePlugin(): DraftPlugin {
           finalClass += `${BASE_BLOCK_CLASS}-todo ${checkedClass}`;
           return finalClass;
         }
-        case Block.IMAGE:
-          return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-image`;
         case Block.BLOCKQUOTE_CAPTION: {
           const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
           return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
@@ -85,6 +78,4 @@ export default function createInlineStylePlugin(): DraftPlugin {
       },
     })),
   };
-
-  return plugin;
 }

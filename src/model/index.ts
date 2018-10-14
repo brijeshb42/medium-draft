@@ -30,6 +30,11 @@ export function getDefaultBlockData(blockType: string, initialData: Object = {})
       return {
         checked: false,
       };
+    case Block.CODE: {
+      return {
+        language: '',
+      };
+    }
     default:
       return initialData;
   }
@@ -187,11 +192,14 @@ export const isCursorBetweenLink = (editorState: Draft.EditorState) => {
   const selection = editorState.getSelection();
   const content = editorState.getCurrentContent();
   const currentBlock = getCurrentBlock(editorState);
+
   if (!currentBlock) {
     return ret;
   }
+
   let entityKey = null;
   let blockKey = null;
+
   if (currentBlock.getType() !== Block.ATOMIC && selection.isCollapsed()) {
     if (currentBlock.getLength() > 0) {
       if (selection.getAnchorOffset() > 0) {

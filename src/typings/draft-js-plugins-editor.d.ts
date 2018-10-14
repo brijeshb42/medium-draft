@@ -6,6 +6,13 @@ declare module "draft-js/lib/isSoftNewlineEvent" {
   export default isSoftNewlineEvent;
 }
 
+declare module "draft-js-prism-plugin" {
+
+  function prismPlugin(options: Object): any;
+
+  export default prismPlugin;
+}
+
 declare module "draft-js-plugins-editor" {
   import * as React from 'react';
   import * as Draft from 'draft-js';
@@ -37,21 +44,22 @@ declare module "draft-js-plugins-editor" {
     blockStyleFn?: (contentBlock: Draft.ContentBlock) => string,
     blockRenderMap?: Immutable.Map<string, {element: string, aliasedElements?: Array<string>}>,
     customStyleMap?: Object,
-    handleReturn?: (ev: React.KeyboardEvent<{}>, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
-    handleKeyCommand?: (command: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
-    handleBeforeInput?: (input: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
-    handlePastedText?: (text: string, html: string, editorState: Draft.EditorState, draftPluginFns: PluginFunctions) => HandlerReturn,
+    handleReturn?: (ev: React.KeyboardEvent<{}>, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+    handleKeyCommand?: (command: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+    handleBeforeInput?: (input: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+    handlePastedText?: (text: string, html: string, editorState: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
     handlePastedFiles?: any,
-    handleDroppedFiles?: any,
-    handleDrop?: any,
+    handleDroppedFiles?: (selection: Draft.SelectionState, files: Array<Blob>, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+    handleDrop?: (selection: Draft.EditorState, dataTransfer: DataTransfer, isInternal: Draft.DraftDragType, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
     onEscape?: any,
-    onTab?: any,
+    onTab?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
     onUpArrow?: any,
     onRightArrow?: any,
     onDownArrow?: any,
     onLeftArrow?: any,
     onFocus?: any,
     onBlur?: any,
+    decorators?: Array<any>,
   }
 
   class Editor extends React.Component<EditorProps> {
