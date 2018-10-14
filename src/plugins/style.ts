@@ -36,7 +36,7 @@ export default function createInlineStylePlugin(): DraftPlugin {
           return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
         }
         default:
-          return BASE_BLOCK_CLASS;
+          return null;
       }
     },
     customStyleMap: {

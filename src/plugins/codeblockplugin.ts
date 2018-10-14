@@ -38,7 +38,7 @@ export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
 
       const data = block.getData();
       const lang = data.get('language', 'no-lang');
-      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code language-${lang}`;
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code language-${lang || 'no-lang'}`;
     },
 
     handleKeyCommand(command, editorState) {

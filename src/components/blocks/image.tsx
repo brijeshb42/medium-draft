@@ -35,6 +35,7 @@ class ImageBlock extends React.Component<Props> {
     const { block } = this.props;
     const data = block.getData();
     const src = data.get('src');
+
     if (src !== null) {
       return (
         <div>

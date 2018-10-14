@@ -53,7 +53,7 @@ declare module "draft-js-plugins-editor" {
     handleDrop?: (selection: Draft.EditorState, dataTransfer: DataTransfer, isInternal: Draft.DraftDragType, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
     onEscape?: any,
     onTab?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
-    onUpArrow?: any,
+    onUpArrow?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
     onRightArrow?: any,
     onDownArrow?: any,
     onLeftArrow?: any,
