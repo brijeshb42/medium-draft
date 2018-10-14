@@ -1,9 +1,10 @@
 import { DraftPlugin } from 'draft-js-plugins-editor';
-import { KeyBindingUtil, getDefaultKeyBinding, RichUtils } from 'draft-js';
+import { KeyBindingUtil, getDefaultKeyBinding, RichUtils, ContentBlock, genKey, ContentState, EditorState, SelectionState } from 'draft-js';
 const isSoftNewlineEvent = require('draft-js/lib/isSoftNewlineEvent');
 
 import { KEY_COMMANDS, KEY_CODES, Block, HANDLED, NOT_HANDLED, StringToTypeMap, continuousBlocks } from '../util/constants';
 import { getCurrentBlock, resetBlockWithType, addNewBlockAt } from '../model';
+import { OrderedMap } from 'immutable';
 
 const { changeType, showLinkInput, unlink } = KEY_COMMANDS;
 
@@ -205,6 +206,51 @@ export default function keyboardPlugin(): DraftPlugin {
       const newEditorState = RichUtils.onTab(ev, editorState, 2);
       if (newEditorState !== editorState) {
         setEditorState(newEditorState);
+      }
+    },
+
+    onUpArrow(ev, { getEditorState, setEditorState }) {
+      const editorState = getEditorState();
+      const content = editorState.getCurrentContent();
+      const selection = editorState.getSelection();
+      const key = selection.getAnchorKey();
+      const currentBlock = content.getBlockForKey(key);
+      const firstBlock = content.getFirstBlock();
+
+      if (firstBlock.getKey() === key) {
+        if (firstBlock.getType().indexOf(Block.ATOMIC) === 0) {
+          ev.preventDefault();
+          const newBlock = new ContentBlock({
+            type: Block.UNSTYLED,
+            key: genKey(),
+          });
+          const newBlockMap = OrderedMap([[newBlock.getKey(), newBlock]]).concat(content.getBlockMap());
+          const newContent = <ContentState>content.merge({
+            blockMap: newBlockMap,
+            selectionAfter: selection.merge({
+              anchorKey: newBlock.getKey(),
+              focusKey: newBlock.getKey(),
+              anchorOffset: 0,
+              focusOffset: 0,
+              isBackward: false,
+            }),
+          });
+          setEditorState(EditorState.push(editorState, newContent, 'insert-characters'));
+        }
+      } else if (currentBlock.getType().indexOf(Block.ATOMIC) === 0) {
+        const blockBefore = content.getBlockBefore(key);
+        if (!blockBefore) {
+          return;
+        }
+        ev.preventDefault();
+        const newSelection = <SelectionState>selection.merge({
+          anchorKey: blockBefore.getKey(),
+          focusKey: blockBefore.getKey(),
+          anchorOffset: blockBefore.getLength(),
+          focusOffset: blockBefore.getLength(),
+          isBackward: false,
+        });
+        setEditorState(EditorState.forceSelection(editorState, newSelection));
       }
     }
   };
