@@ -1,10 +1,10 @@
-import { DraftPlugin } from 'draft-js-plugins-editor';
 import { KeyBindingUtil, getDefaultKeyBinding, RichUtils, ContentBlock, genKey, ContentState, EditorState, SelectionState } from 'draft-js';
 const isSoftNewlineEvent = require('draft-js/lib/isSoftNewlineEvent');
+import { OrderedMap } from 'immutable';
 
 import { KEY_COMMANDS, KEY_CODES, Block, HANDLED, NOT_HANDLED, StringToTypeMap, continuousBlocks } from '../util/constants';
 import { getCurrentBlock, resetBlockWithType, addNewBlockAt } from '../model';
-import { OrderedMap } from 'immutable';
+import { DraftPlugin } from '../plugin_editor/Editor';
 
 const { changeType, showLinkInput, unlink } = KEY_COMMANDS;
 

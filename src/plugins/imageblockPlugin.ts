@@ -1,8 +1,7 @@
-import { DraftPlugin } from "draft-js-plugins-editor";
-
 import { Block, BASE_BLOCK_CLASS, NOT_HANDLED, HANDLED } from "../util/constants";
 import ImageBlock from "../components/blocks/image";
 import { addNewBlockAt, addNewBlock } from "../model";
+import { DraftPlugin } from "../plugin_editor/Editor";
 
 type OptionType = {
   uploadImage?: (files: Array<Blob>) => Promise<Array<string>>;

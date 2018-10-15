@@ -1,12 +1,13 @@
 import * as Immutable from 'immutable';
-import { DraftPlugin } from 'draft-js-plugins-editor';
 
 import { Block, Inline } from '../util/constants';
+import { DraftPlugin } from '../plugin_editor/Editor';
+import Link, { findLinkEntities } from '../components/entities/link';
 
 const BASE_BLOCK_CLASS = 'md-block';
 
 /**
- * Base plugin that provides styling and structuring to the editor.
+ * Base plugin that provides styling and structure to the editor.
  */
 export default function createInlineStylePlugin(): DraftPlugin {
   return {
@@ -76,5 +77,9 @@ export default function createInlineStylePlugin(): DraftPlugin {
         aliasedElements: ['p', 'div'],
       },
     }),
+    decorators: [{
+      strategy: findLinkEntities,
+      component: Link,
+    }],
   };
 }

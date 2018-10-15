@@ -9,7 +9,8 @@
     "rootDir": "./src/",
     "jsx": "react",
     "lib": [ "dom", "es2015", "es2016" ],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "skipLibCheck": true
   },
   "exclude": [
     "./src/demo.tsx",

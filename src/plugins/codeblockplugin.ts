@@ -1,9 +1,9 @@
 import { KeyBindingUtil, RichUtils, EditorState, Modifier } from "draft-js";
-import { DraftPlugin } from "draft-js-plugins-editor";
 
 import CodeBlock from '../components/blocks/code';
 import { getCurrentBlock } from "../model";
 import { Block, NOT_HANDLED, HANDLED, BASE_BLOCK_CLASS } from "../util/constants";
+import { DraftPlugin } from "../plugin_editor/Editor";
 
 type OptionType = {
   ignoreCommands?: Array<string>,

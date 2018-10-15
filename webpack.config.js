@@ -9,7 +9,6 @@ const banner = [
   `${package.name}`,
   `Version - ${package.version}`,
   `Author - ${package.author}`,
-  '',
 ].join('\n');
 
 function getOutput(isProd = false) {
