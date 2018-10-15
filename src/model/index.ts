@@ -144,44 +144,44 @@ export const addNewBlockAt = (
   newBlockType = Block.UNSTYLED,
   initialData = {}
 ) => {
-const content = editorState.getCurrentContent();
-const blockMap = content.getBlockMap();
-const block = blockMap.get(pivotBlockKey);
-if (!block) {
-  throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
-}
-const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
-const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
-const newBlockKey = Draft.genKey();
+  const content = editorState.getCurrentContent();
+  const blockMap = content.getBlockMap();
+  const block = blockMap.get(pivotBlockKey);
+  if (!block) {
+    throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
+  }
+  const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
+  const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
+  const newBlockKey = Draft.genKey();
 
-const newBlock = new Draft.ContentBlock({
-  key: newBlockKey,
-  type: newBlockType,
-  text: '',
-  characterList: Immutable.List(),
-  depth: 0,
-  data: Immutable.Map(getDefaultBlockData(newBlockType, initialData)),
-});
+  const newBlock = new Draft.ContentBlock({
+    key: newBlockKey,
+    type: newBlockType,
+    text: '',
+    characterList: Immutable.List(),
+    depth: 0,
+    data: Immutable.Map(getDefaultBlockData(newBlockType, initialData)),
+  });
 
-const newBlockMap = blocksBefore.concat(
-  [[pivotBlockKey, block], [newBlockKey, newBlock]],
-  blocksAfter
-).toOrderedMap();
+  const newBlockMap = blocksBefore.concat(
+    [[pivotBlockKey, block], [newBlockKey, newBlock]],
+    blocksAfter
+  ).toOrderedMap();
 
-const selection = editorState.getSelection();
+  const selection = editorState.getSelection();
 
-const newContent = <Draft.ContentState>content.merge({
-  blockMap: newBlockMap,
-  selectionBefore: selection,
-  selectionAfter: selection.merge({
-    anchorKey: newBlockKey,
-    anchorOffset: 0,
-    focusKey: newBlockKey,
-    focusOffset: 0,
-    isBackward: false,
-  }),
-});
-return Draft.EditorState.push(editorState, newContent, 'split-block');
+  const newContent = <Draft.ContentState>content.merge({
+    blockMap: newBlockMap,
+    selectionBefore: selection,
+    selectionAfter: selection.merge({
+      anchorKey: newBlockKey,
+      anchorOffset: 0,
+      focusKey: newBlockKey,
+      focusOffset: 0,
+      isBackward: false,
+    }),
+  });
+  return Draft.EditorState.push(editorState, newContent, 'split-block');
 };
 
 /**
@@ -220,3 +220,25 @@ export const isCursorBetweenLink = (editorState: Draft.EditorState) => {
   }
   return ret;
 };
+
+
+export function swapBlocks(editorState: Draft.EditorState, block: Draft.ContentBlock, toBlock: Draft.ContentBlock): Draft.EditorState {
+  let newContent = editorState.getCurrentContent();
+  let blockMap = newContent.getBlockMap();
+  const fromBlockKey = block.getKey();
+  const toBlockKey = toBlock.getKey();
+
+  blockMap = blockMap
+    .set(fromBlockKey, <Draft.ContentBlock>toBlock.set('key', fromBlockKey))
+    .set(toBlockKey, <Draft.ContentBlock>block.set('key', toBlockKey));
+  let newSelection = editorState.getSelection();
+  newSelection = <Draft.SelectionState>newSelection.merge({
+    anchorKey: toBlockKey,
+    focusKey: toBlockKey,
+  });
+
+  return Draft.EditorState.push(editorState, <Draft.ContentState>newContent.merge({
+    blockMap,
+    selectionAfter: newSelection,
+  }), 'change-block-type');
+}

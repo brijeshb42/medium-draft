@@ -43,15 +43,15 @@
     padding: 10px 0 10px 20px;
     background-color: #E2F2FF;
 
-    .public-DraftStyleDefault-block:first-child {
-      padding-top: 10px;
-    }
+    // .public-DraftStyleDefault-block:first-child {
+    //   padding-top: 10px;
+    // }
 
-    cite {
-      .public-DraftStyleDefault-block:first-child {
-        padding-top: 0;
-      }
-    }
+    // cite {
+    //   .public-DraftStyleDefault-block:first-child {
+    //     padding-top: 0;
+    //   }
+    // }
   }
 }
 
@@ -65,12 +65,12 @@
   }
 }
 
-.public-DraftEditor-content {
-  .md-block:first-child {
-    margin-top: 0;
-    padding-top: 0;
-  }
-}
+// .public-DraftEditor-content {
+//   .md-block:first-child {
+//     margin-top: 0;
+//     padding-top: 0;
+//   }
+// }
 
 .md-RichEditor-editor .public-DraftStyleDefault-pre {
   margin-top: 10px;

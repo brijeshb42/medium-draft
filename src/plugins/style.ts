@@ -1,5 +1,4 @@
 import * as Immutable from 'immutable';
-import { DefaultDraftBlockRenderMap } from 'draft-js';
 import { DraftPlugin } from 'draft-js-plugins-editor';
 
 import { Block, Inline } from '../util/constants';
@@ -56,7 +55,7 @@ export default function createInlineStylePlugin(): DraftPlugin {
         boxShadow: 'inset 0 -1px 0 #bbb',
       },
     },
-    blockRenderMap: DefaultDraftBlockRenderMap.merge(Immutable.Map({
+    blockRenderMap: Immutable.Map({
       [Block.CAPTION]: {
         element: 'cite',
       },
@@ -76,6 +75,6 @@ export default function createInlineStylePlugin(): DraftPlugin {
         element: 'div',
         aliasedElements: ['p', 'div'],
       },
-    })),
+    }),
   };
 }

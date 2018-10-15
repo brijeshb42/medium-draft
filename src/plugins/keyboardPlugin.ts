@@ -210,9 +210,18 @@ export default function keyboardPlugin(): DraftPlugin {
     },
 
     onUpArrow(ev, { getEditorState, setEditorState }) {
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) {
+        return false;
+      }
+
       const editorState = getEditorState();
       const content = editorState.getCurrentContent();
       const selection = editorState.getSelection();
+
+      if (!selection.isCollapsed()) {
+        return false;
+      }
+
       const key = selection.getAnchorKey();
       const currentBlock = content.getBlockForKey(key);
       const firstBlock = content.getFirstBlock();
@@ -236,6 +245,7 @@ export default function keyboardPlugin(): DraftPlugin {
             }),
           });
           setEditorState(EditorState.push(editorState, newContent, 'insert-characters'));
+          return true;
         }
       } else if (currentBlock.getType().indexOf(Block.ATOMIC) === 0) {
         const blockBefore = content.getBlockBefore(key);
@@ -251,6 +261,7 @@ export default function keyboardPlugin(): DraftPlugin {
           isBackward: false,
         });
         setEditorState(EditorState.forceSelection(editorState, newSelection));
+        return true;
       }
     }
   };
