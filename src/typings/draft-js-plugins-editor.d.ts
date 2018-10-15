@@ -25,7 +25,7 @@ declare module "draft-js-plugins-editor" {
     getEditorState: () => Draft.EditorState,
     getReadOnly: () => boolean,
     setReadOnly: (readOnly: boolean) => void,
-    getEditorRef: () => null | undefined | HTMLElement,
+    getEditorRef?: () => any,
   }
 
   interface EditorProps extends Draft.EditorProps {
@@ -42,7 +42,11 @@ declare module "draft-js-plugins-editor" {
     } | null,
     keyBindingFn?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => string,
     blockStyleFn?: (contentBlock: Draft.ContentBlock) => string,
-    blockRenderMap?: Immutable.Map<string, {element: string, aliasedElements?: Array<string>}>,
+    blockRenderMap?: Immutable.Map<string, {
+      element: string;
+      wrapper?: React.ReactElement<any>;
+      aliasedElements?: Array<string>;
+    }>,
     customStyleMap?: Object,
     handleReturn?: (ev: React.KeyboardEvent<{}>, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
     handleKeyCommand?: (command: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
