@@ -1,10 +1,17 @@
 import * as React from 'react';
 import * as Draft from 'draft-js';
+import { CompositeDecorator } from 'draft-js';
 import * as Immutable from 'immutable';
 import memoizeOne from 'memoize-one';
 import { DraftPlugin, PluginFunctions } from 'draft-js-plugins-editor';
 
+import MultiDecorator from './MultiDecorator';
 import { HANDLED, NOT_HANDLED } from '../util/constants';
+
+export type DraftDecoratorType = Array<{
+  strategy: (contentBlock: Draft.ContentBlock, callback: (start: number, end: number) => void, contentState?: Draft.ContentState) => void,
+  component: React.SFC<any> | React.Component<any>,
+} | Draft.CompositeDecorator>
 
 type ExtraPropTypes = {
   plugins?: Array<DraftPlugin>,
@@ -77,11 +84,33 @@ function getMainPropsFromPlugins(plugins: Array<DraftPlugin>, getters?: () => Pl
   return mainProps;
 }
 
-function getBlockRenderMap(plugins: Array<DraftPlugin>): Immutable.Map<string, Object> {
+function getBlockRenderMap(plugins: Array<DraftPlugin>): Immutable.Map<string, any> {
   const blockRenderMap = plugins
     .filter(plugin => !!plugin.blockRenderMap)
     .reduce((acc, plugin) => (acc.merge(plugin.blockRenderMap)), Immutable.Map({}));
-  return blockRenderMap.merge(Draft.DefaultDraftBlockRenderMap);
+  return blockRenderMap.merge(Draft.DefaultDraftBlockRenderMap) as Immutable.Map<string, any>;
+}
+
+function getDecorators(plugins: Array<DraftPlugin>): MultiDecorator {
+  const finalDecorators = plugins.filter(pl => !!pl.decorators).reduce(
+    (acc, plugin) => {
+      plugin.decorators.forEach((dec) => {
+        if (dec.strategy) {
+          acc.push(new CompositeDecorator([dec]));
+        } else {
+          acc.push(dec);
+        }
+      });
+      return acc;
+    },
+    []
+  );
+
+  if (!finalDecorators.length) {
+    return null;
+  }
+
+  return new MultiDecorator(finalDecorators);
 }
 
 class PluginsEditor extends React.PureComponent<PluginEditorProps> {
@@ -89,15 +118,36 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
     plugins: [],
   };
 
-  parsePlugins: (plugins: Array<DraftPlugin>, getters?: () => PluginFunctions) => any;
-  blockRenderMapPlugins: (plugins : Array<DraftPlugin>) => Immutable.Map<string, Object>;
-  editor: HTMLElement;
+  parsePlugins: (plugins: Array<DraftPlugin>, getters?: () => PluginFunctions) => Draft.EditorProps;
+  blockRenderMapPlugins: (plugins : Array<DraftPlugin>) => Immutable.Map<string, any>;
+  pluginDecorators: (plugins : Array<DraftPlugin>) => MultiDecorator;
+  editor: Draft.Editor;
 
   constructor(props: PluginEditorProps) {
     super(props);
 
     this.parsePlugins = memoizeOne(getMainPropsFromPlugins);
     this.blockRenderMapPlugins = memoizeOne(getBlockRenderMap);
+    this.pluginDecorators = memoizeOne(getDecorators);
+
+    const decorator = this.pluginDecorators(props.plugins);
+    props.onChange(Draft.EditorState.set(props.editorState, {
+      decorator,
+    }));
+  }
+
+  componentDidUpdate(prevProps: PluginEditorProps) {
+    const { plugins, editorState, onChange } = this.props;
+
+    if (prevProps.plugins !== plugins) {
+      const decorator = this.pluginDecorators(plugins);
+
+      if (decorator !== editorState.getDecorator()) {
+        onChange(Draft.EditorState.set(editorState, {
+          decorator,
+        }));
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -107,7 +157,7 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
     }))
   }
 
-  editorRefCb = (node: HTMLElement) => {
+  editorRefCb = (node: Draft.Editor) => {
     this.editor = node;
   };
 
@@ -138,32 +188,32 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
   });
 
   onChange = (editorState: Draft.EditorState) => {
-    const plugins = this.parsePlugins(this.props.plugins, this.getters);
-    let newEditorState = editorState;
+    // const plugins = this.parsePlugins(this.props.plugins, this.getters);
+    // let newEditorState = editorState;
 
-    if (plugins.onChange) {
-      plugins.onChange.forEach((onCh: Function) => {
-        const es = onCh(newEditorState);
-        if (es) {
-          newEditorState = es;
-        }
-      });
-    }
+    // if (plugins.onChange) {
+    //   plugins.onChange.forEach((onChange: (Draft.EditorState) => void) => {
+    //     const es = onChange(newEditorState);
+    //     if (es) {
+    //       newEditorState = es;
+    //     }
+    //   });
+    // }
 
-    this.props.onChange(newEditorState);
+    this.props.onChange(editorState);
   }
 
   render() {
     const draftProps = this.parsePlugins(this.props.plugins, this.getters);
-    const blockRenderMap = this.blockRenderMapPlugins(this.props.plugins);
+    const blockRenderMap = this.blockRenderMapPlugins(this.props.plugins) as Immutable.Map<Draft.DraftBlockType, any>;
 
     return (
       <Draft.Editor
         {...this.props}
         {...draftProps}
-        blockRenderMap={blockRenderMap}
-        onChange={this.onChange}
         ref={this.editorRefCb}
+        onChange={this.onChange}
+        blockRenderMap={blockRenderMap}
       />
     );
   }

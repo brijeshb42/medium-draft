@@ -31,7 +31,6 @@ function moveBlock(keyFilterFunction: KeyBoardFilterFunc, ev: React.KeyboardEven
   const isUp = (direction === MoveDirection.UP);
   const isDown = (direction === MoveDirection.DOWN);
 
-  console.log(isUp);
   if (
     (isUp && blockToMove.getKey() === firstBlock.getKey()) ||
     (isDown && blockToMove.getKey() === lastBlock.getKey())
