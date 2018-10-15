@@ -5,3 +5,5 @@ node_modules/
 *.log
 build/
 medium-draft.d.ts
+docs/
+.DS_Store
