@@ -35,9 +35,9 @@ export default class CodeBlock extends React.Component<Props> {
 
     return (
       <div>
-        <span contentEditable={false}>
+        {/* <span contentEditable={false}>
           <button onClick={this.handleLanguage}>L</button>
-        </span>
+        </span> */}
         <EditorBlock {...this.props} />
       </div>
     );

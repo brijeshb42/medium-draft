@@ -19,7 +19,7 @@ declare module "draft-js-plugins-editor" {
   import * as Immutable from 'immutable';
 
   interface PluginFunctions {
-    getPlugins: () => Array<Plugin>,
+    getPlugins: () => Array<DraftPlugin>,
     getProps: () => Object,
     setEditorState: (editorState: Draft.EditorState) => void,
     getEditorState: () => Draft.EditorState,
@@ -55,11 +55,15 @@ declare module "draft-js-plugins-editor" {
     onTab?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
     onUpArrow?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
     onRightArrow?: any,
-    onDownArrow?: any,
+    onDownArrow?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
     onLeftArrow?: any,
     onFocus?: any,
     onBlur?: any,
     decorators?: Array<any>,
+    willUnmount?: (draftPluginFns: {
+      getEditorState: () => Draft.EditorState,
+      setEditorState: (es: Draft.EditorState) => void,
+    }) => void,
   }
 
   class Editor extends React.Component<EditorProps> {
