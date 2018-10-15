@@ -1,6 +1,7 @@
 import { EditorState } from 'draft-js';
-import { DraftPlugin } from 'draft-js-plugins-editor';
+
 import { swapBlocks } from '../model';
+import { DraftPlugin } from '../plugin_editor/Editor';
 
 type KeyBoardFilterFunc = (ev: React.KeyboardEvent<{}> | KeyboardEvent) => boolean;
 

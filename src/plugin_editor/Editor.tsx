@@ -3,15 +3,68 @@ import * as Draft from 'draft-js';
 import { CompositeDecorator } from 'draft-js';
 import * as Immutable from 'immutable';
 import memoizeOne from 'memoize-one';
-import { DraftPlugin, PluginFunctions } from 'draft-js-plugins-editor';
 
 import MultiDecorator from './MultiDecorator';
 import { HANDLED, NOT_HANDLED } from '../util/constants';
 
-export type DraftDecoratorType = Array<{
-  strategy: (contentBlock: Draft.ContentBlock, callback: (start: number, end: number) => void, contentState?: Draft.ContentState) => void,
-  component: React.SFC<any> | React.Component<any>,
-} | Draft.CompositeDecorator>
+export interface PluginFunctions {
+  getPlugins: () => Array<DraftPlugin>,
+  getProps: () => Object,
+  setEditorState: (editorState: Draft.EditorState) => void,
+  getEditorState: () => Draft.EditorState,
+  getReadOnly: () => boolean,
+  setReadOnly: (readOnly: boolean) => void,
+  getEditorRef?: () => any,
+}
+
+export interface EditorProps extends Draft.EditorProps {
+  plugins?: Array<DraftPlugin>,
+}
+
+export type SimpleDecorator = {
+  strategy: (block: Draft.ContentBlock, callback: (start: number, end: number) => void, contentState: Draft.ContentState) => void;
+  component: Function;
+  props?: Object;
+};
+
+export type DraftDecoratorType = SimpleDecorator | Draft.CompositeDecorator;
+
+export type HandlerReturn = 'handled' | 'not_handled';
+
+export interface DraftPlugin {
+  blockRendererFn?: (cb: Draft.ContentBlock, draftPluginFns: PluginFunctions) => {
+    component: React.ComponentType | React.StatelessComponent,
+    editable?: boolean,
+    props?: Object,
+  } | null,
+  keyBindingFn?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => string,
+  blockStyleFn?: (contentBlock: Draft.ContentBlock) => string,
+  blockRenderMap?: Immutable.Map<string, {
+    element: string;
+    wrapper?: React.ReactElement<any>;
+    aliasedElements?: Array<string>;
+  }>,
+  customStyleMap?: Object,
+  handleReturn?: (ev: React.KeyboardEvent<{}>, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  handleKeyCommand?: (command: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  handleBeforeInput?: (input: string, es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  handlePastedText?: (text: string, html: string, editorState: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  handlePastedFiles?: any,
+  handleDroppedFiles?: (selection: Draft.SelectionState, files: Array<Blob>, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  handleDrop?: (selection: Draft.EditorState, dataTransfer: DataTransfer, isInternal: Draft.DraftDragType, draftPluginFns: PluginFunctions) => Draft.DraftHandleValue,
+  onEscape?: any,
+  onTab?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
+  onUpArrow?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
+  onchange?: (es: Draft.EditorState, draftPluginFns: PluginFunctions) => Draft.EditorState,
+  onRightArrow?: any,
+  onDownArrow?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => void,
+  onLeftArrow?: any,
+  onFocus?: any,
+  onBlur?: any,
+  decorators?: Array<DraftDecoratorType>,
+  willUnmount?: (draftPluginFns: PluginFunctions) => void,
+  initialize?: (draftPluginFns: PluginFunctions) => void,
+}
 
 type ExtraPropTypes = {
   plugins?: Array<DraftPlugin>,
@@ -57,9 +110,6 @@ function getMainPropsFromPlugins(plugins: Array<DraftPlugin>, getters?: () => Pl
         });
       }
     } else if (key.indexOf('Fn') === (key.length - 'Fn'.length)) {
-      // switch (key) {
-      //   case 'blockRendererFn':
-      //   case 'blockStyleFn':
         mainProps[key] = function (...args: any[]) {
           for(let i=0; i<handlers.length; i++) {
             const handler = handlers[i];
@@ -70,7 +120,6 @@ function getMainPropsFromPlugins(plugins: Array<DraftPlugin>, getters?: () => Pl
             }
           }
           return null;
-          // }
       }
     } else {
       switch (key) {
@@ -95,8 +144,8 @@ function getDecorators(plugins: Array<DraftPlugin>): MultiDecorator {
   const finalDecorators = plugins.filter(pl => !!pl.decorators).reduce(
     (acc, plugin) => {
       plugin.decorators.forEach((dec) => {
-        if (dec.strategy) {
-          acc.push(new CompositeDecorator([dec]));
+        if (!(dec instanceof CompositeDecorator)) {
+          acc.push(new CompositeDecorator([dec as SimpleDecorator]));
         } else {
           acc.push(dec);
         }
@@ -126,14 +175,17 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
   constructor(props: PluginEditorProps) {
     super(props);
 
+    const { plugins } = props;
     this.parsePlugins = memoizeOne(getMainPropsFromPlugins);
     this.blockRenderMapPlugins = memoizeOne(getBlockRenderMap);
     this.pluginDecorators = memoizeOne(getDecorators);
 
-    const decorator = this.pluginDecorators(props.plugins);
+    const decorator = this.pluginDecorators(plugins);
     props.onChange(Draft.EditorState.set(props.editorState, {
       decorator,
     }));
+    // Only for compatibility with other draft-js plugins
+    plugins.filter(pl => !!pl.initialize).forEach(pl => pl.initialize(this.getters()));
   }
 
   componentDidUpdate(prevProps: PluginEditorProps) {
@@ -151,14 +203,29 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
   }
 
   componentWillUnmount() {
-    this.props.plugins.filter(pl => !!pl.willUnmount).forEach(pl => pl.willUnmount({
-      getEditorState: () => this.props.editorState,
-      setEditorState: () => this.onChange,
-    }))
+    this.props.plugins.filter(pl => !!pl.willUnmount).forEach(pl => pl.willUnmount(this.getters()))
   }
 
   editorRefCb = (node: Draft.Editor) => {
     this.editor = node;
+  };
+
+  onChange = (es: Draft.EditorState) => {
+    let newEs = es;
+    const { plugins, onChange } = this.props;
+    plugins.filter(pl => !!pl.onchange).forEach(pl => {
+      const tmpEs = pl.onchange(newEs, this.getters());
+
+      if (tmpEs) {
+        newEs = tmpEs;
+      }
+    })
+
+    if (newEs === es) {
+      return;
+    }
+
+    onChange(newEs);
   };
 
   focus() {
@@ -187,22 +254,6 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
     getEditorRef: () => this.editor,
   });
 
-  onChange = (editorState: Draft.EditorState) => {
-    // const plugins = this.parsePlugins(this.props.plugins, this.getters);
-    // let newEditorState = editorState;
-
-    // if (plugins.onChange) {
-    //   plugins.onChange.forEach((onChange: (Draft.EditorState) => void) => {
-    //     const es = onChange(newEditorState);
-    //     if (es) {
-    //       newEditorState = es;
-    //     }
-    //   });
-    // }
-
-    this.props.onChange(editorState);
-  }
-
   render() {
     const draftProps = this.parsePlugins(this.props.plugins, this.getters);
     const blockRenderMap = this.blockRenderMapPlugins(this.props.plugins) as Immutable.Map<Draft.DraftBlockType, any>;
@@ -212,8 +263,8 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
         {...this.props}
         {...draftProps}
         ref={this.editorRefCb}
-        onChange={this.onChange}
         blockRenderMap={blockRenderMap}
+        onChange={this.onChange}
       />
     );
   }

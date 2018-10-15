@@ -1,10 +1,9 @@
 import * as React from 'react';
 import * as Draft from 'draft-js';
-import { DraftPlugin } from 'draft-js-plugins-editor';
-import * as Prism from 'prismjs';
-import prismPlugin from 'draft-js-prism-plugin';
+// import * as Prism from 'prismjs';
+// import prismPlugin from 'draft-js-prism-plugin';
 
-import PluginsEditor from './plugin_editor/Editor';
+import PluginsEditor, { DraftPlugin } from './plugin_editor/Editor';
 import blockMovePlugin from './plugins/blockMovePlugin';
 import stylePlugin from './plugins/style';
 import rendererPlugin from './plugins/blockRendererFn';
@@ -73,9 +72,9 @@ export default class Editor extends React.Component<EditorProps, State> {
       rendererPlugin(),
       blockMovePlugin(),
       keyboardPlugin(),
-      prismPlugin({
-        prism: Prism,
-      }),
+      // prismPlugin({
+      //   prism: Prism,
+      // }),
     ];
   }
 
