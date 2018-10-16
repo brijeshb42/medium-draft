@@ -37,7 +37,7 @@ export interface DraftPlugin {
     editable?: boolean,
     props?: Object,
   } | null,
-  keyBindingFn?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => string,
+  keyBindingFn?: (ev: React.KeyboardEvent<{}>, draftPluginFns: PluginFunctions) => string | void,
   blockStyleFn?: (contentBlock: Draft.ContentBlock) => string,
   blockRenderMap?: Immutable.Map<string, {
     element: string;
@@ -181,7 +181,7 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
     this.pluginDecorators = memoizeOne(getDecorators);
 
     const decorator = this.pluginDecorators(plugins);
-    props.onChange(Draft.EditorState.set(props.editorState, {
+    this.onChange(Draft.EditorState.set(props.editorState, {
       decorator,
     }));
     // Only for compatibility with other draft-js plugins
@@ -189,13 +189,13 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
   }
 
   componentDidUpdate(prevProps: PluginEditorProps) {
-    const { plugins, editorState, onChange } = this.props;
+    const { plugins, editorState } = this.props;
 
     if (prevProps.plugins !== plugins) {
       const decorator = this.pluginDecorators(plugins);
 
       if (decorator !== editorState.getDecorator()) {
-        onChange(Draft.EditorState.set(editorState, {
+        this.onChange(Draft.EditorState.set(editorState, {
           decorator,
         }));
       }
@@ -219,11 +219,7 @@ class PluginsEditor extends React.PureComponent<PluginEditorProps> {
       if (tmpEs) {
         newEs = tmpEs;
       }
-    })
-
-    if (newEs === es) {
-      return;
-    }
+    });
 
     onChange(newEs);
   };
