@@ -32,9 +32,11 @@ export default class CodeBlock extends React.Component<Props> {
   };
 
   render() {
+    const { block } = this.props;
+    const lang = block.getData().get('language', '');
 
     return (
-      <div>
+      <div className="md-block-code-wrapper" data-language={lang}>
         {/* <span contentEditable={false}>
           <button onClick={this.handleLanguage}>L</button>
         </span> */}

@@ -53,6 +53,7 @@ export const KEY_COMMANDS = {
 
 export const KEY_CODES = {
   K: 75,
+  L: 76,
   ONE: 49,
   TWO: 50,
   THREE: 51,
