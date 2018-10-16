@@ -11,7 +11,6 @@ import keyboardPlugin from './plugins/keyboardPlugin';
 import codeBlockPlugin from './plugins/codeblockplugin';
 import imageBlockPlugin from './plugins/imageblockPlugin';
 
-import { createEditorState } from './model';
 import { StringToTypeMap, Block } from './util/constants';
 
 type State = {
@@ -19,13 +18,15 @@ type State = {
 };
 
 export type EditorProps = {
-  placeholder: string,
-  autoFocus: boolean,
-  disableToolbar: boolean,
+  placeholder?: string,
+  autoFocus?: boolean,
+  disableToolbar?: boolean,
   stringToTypeMap: {[key: string]: string},
   continuousBlocks: Array<String>,
   editorEnabled: boolean,
   handleKeyCommand?: (command: string) => 'handled' | 'not_handled' | boolean,
+  editorState: Draft.EditorState,
+  onChange: (es: Draft.EditorState) => void,
 };
 type RefCb = (editor: PluginsEditor) => void;
 
@@ -52,10 +53,6 @@ export default class Editor extends React.Component<EditorProps, State> {
 
   constructor(props: EditorProps) {
     super(props);
-
-    this.state = {
-      editorState: createEditorState(),
-    };
 
     if (React.createRef) {
       this.editorRef = React.createRef();
@@ -88,12 +85,6 @@ export default class Editor extends React.Component<EditorProps, State> {
     });
   }
 
-  onChange = (es: Draft.EditorState) => {
-    this.setState({
-      editorState: es,
-    });
-  }
-
   focus() {
     if (typeof this.editorRef === 'object' && this.editorRef.current) {
       this.editorRef.current.focus();
@@ -103,7 +94,7 @@ export default class Editor extends React.Component<EditorProps, State> {
   }
 
   render() {
-    const { editorEnabled } = this.props;
+    const { editorEnabled, editorState, onChange, placeholder } = this.props;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
 
     return (
@@ -112,9 +103,9 @@ export default class Editor extends React.Component<EditorProps, State> {
           <PluginsEditor
             ref={this.editorRef}
             plugins={this.plugins}
-            placeholder={this.props.placeholder}
-            editorState={this.state.editorState}
-            onChange={this.onChange}
+            placeholder={placeholder}
+            editorState={editorState}
+            onChange={onChange}
           />
         </div>
       </div>
