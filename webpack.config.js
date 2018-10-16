@@ -35,6 +35,10 @@ module.exports = (env, argv) => {
     mode: argv.mode,
     entry: {
       'medium-draft': isProd ? './src/index.ts' : './src/demo.tsx',
+      'index': isProd ? [
+        'draft-js/dist/Draft.css',
+        './src/index.scss',
+      ] : './src/demo.css',
     },
     output: getOutput(isProd),
     resolve: {

@@ -12,7 +12,8 @@
     "typing": "dts-generator --name medium-draft --project ./ --out ./medium-draft.d.ts",
     "dist": "webpack --mode production",
     "build:es": "tsc --outDir ./es --target es6 --module es6",
-    "build": "npm run clean && tsc && npm run build:es && npm run typing && npm run dist && npm run docs",
+    "build": "npm run clean && tsc && npm run build:es && npm run typing && npm run dist && npm run docs && npm run moveFiles",
+    "moveFiles": "rm dist/index.js && cp dist/index.css lib && cp dist/index.css es",
     "local": "mkdir -p local && cp -r es lib dist medium-draft.d.ts package.json local",
     "docs": "typedoc --out docs ./src/index.ts --mode file --name 'Medium Draft'",
     "prepublishOnly": "npm run build"
