@@ -17,7 +17,7 @@ export interface PluginFunctions {
   getEditorRef?: () => any,
 }
 
-export interface EditorProps extends Draft.EditorProps {
+export interface PluginEditorProps extends Draft.EditorProps {
   plugins?: Array<DraftPlugin>,
 }
 
@@ -69,8 +69,6 @@ export interface DraftPlugin {
 type ExtraPropTypes = {
   plugins?: Array<DraftPlugin>,
 };
-
-export type PluginEditorProps = Draft.EditorProps & ExtraPropTypes;
 
 function getMainPropsFromPlugins(plugins: Array<DraftPlugin>, getters?: () => PluginFunctions): any {
   const props: { [key: string]: Array<any> } = {};

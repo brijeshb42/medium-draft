@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
+    "outDir": "./lib/cjs",
     "noImplicitAny": true,
     "module": "commonjs",
     "target": "es5",

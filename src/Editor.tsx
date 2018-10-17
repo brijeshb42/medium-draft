@@ -3,7 +3,7 @@ import * as Draft from 'draft-js';
 // import * as Prism from 'prismjs';
 // import prismPlugin from 'draft-js-prism-plugin';
 
-import PluginsEditor, { DraftPlugin } from './plugin_editor/Editor';
+import PluginsEditor, { DraftPlugin, PluginEditorProps } from './plugin_editor/Editor';
 import blockMovePlugin from './plugins/blockMovePlugin';
 import stylePlugin from './plugins/style';
 import rendererPlugin from './plugins/blockRendererFn';
@@ -13,24 +13,16 @@ import imageBlockPlugin from './plugins/imageblockPlugin';
 
 import { StringToTypeMap, Block } from './util/constants';
 
-type State = {
-  editorState: Draft.EditorState,
-};
-
-export type EditorProps = {
-  placeholder?: string,
+export type EditorProps = PluginEditorProps & {
   autoFocus?: boolean,
   disableToolbar?: boolean,
   stringToTypeMap: {[key: string]: string},
   continuousBlocks: Array<String>,
   editorEnabled: boolean,
-  handleKeyCommand?: (command: string) => 'handled' | 'not_handled' | boolean,
-  editorState: Draft.EditorState,
-  onChange: (es: Draft.EditorState) => void,
 };
 type RefCb = (editor: PluginsEditor) => void;
 
-export default class Editor extends React.Component<EditorProps, State> {
+export default class Editor extends React.Component<EditorProps> {
   editorRef: React.RefObject<PluginsEditor> | RefCb;
   editor?: PluginsEditor;
   plugins: Array<DraftPlugin>;
@@ -94,18 +86,23 @@ export default class Editor extends React.Component<EditorProps, State> {
   }
 
   render() {
-    const { editorEnabled, editorState, onChange, placeholder } = this.props;
+    const {
+      disableToolbar,
+      editorEnabled,
+      autoFocus,
+      stringToTypeMap,
+      continuousBlocks,
+      ...restProps
+    } = this.props;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
 
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
           <PluginsEditor
+            {...restProps}
             ref={this.editorRef}
             plugins={this.plugins}
-            placeholder={placeholder}
-            editorState={editorState}
-            onChange={onChange}
           />
         </div>
       </div>
