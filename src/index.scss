@@ -22,6 +22,7 @@
   margin-top: 10px;
   position: relative;
   margin: 0 auto;
+  z-index: 0;
 
   h3 {
     font-size: 1.3em;
@@ -92,5 +93,29 @@
 
   button {
     display: block;
+  }
+}
+
+.md-modal-container {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .md-modal-input {
+    max-width: 60%;
+    margin: 0 auto;
+
+    label {
+      display: block;
+      text-align: center;
+    }
+
+    input[type=text] {
+      display: block;
+      width: 100%;
+    }
   }
 }

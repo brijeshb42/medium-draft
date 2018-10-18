@@ -1,21 +1,37 @@
+import * as Draft from 'draft-js';
+
 import { Block, BASE_BLOCK_CLASS, NOT_HANDLED, HANDLED } from "../util/constants";
 import ImageBlock from "../components/blocks/image";
-import { addNewBlockAt, addNewBlock } from "../model";
+import { addNewBlockAt, addNewBlock, updateDataOfBlock, resetBlockWithType } from "../model";
 import { DraftPlugin } from "../plugin_editor/Editor";
 
-type OptionType = {
-  uploadImage?: (files: Array<Blob>) => Promise<Array<string>>;
+export type ImageUploadFunction = (files: Array<Blob>) => Promise<Array<string>>;
+
+export interface ImagePluginOptionType {
+  /**
+   * A method that returns a Promise and resolves with the url of uploaded image.
+   */
+  uploadImage?: ImageUploadFunction;
 };
 
 function shouldEarlyReturn(block: Draft.ContentBlock): boolean {
   return (block.getType() !== Block.IMAGE);
 }
 
-export default function imageBlockPlugin(options?: OptionType): DraftPlugin {
-  const uploadImage: (files: Array<Blob>) => Promise<Array<string>> = (options && options.uploadImage) ? options.uploadImage : (files: Array<Blob>) => {
-    return Promise.resolve(files.map(fl => URL.createObjectURL(fl)));
-  };
+/**
+ * If file upload function is not provided, this is used to simulate
+ * uploading for 1 sec.
+ * @param files
+ */
+function dummyUploadImage(files: Array<Blob>): Promise<Array<string>> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(files.map(fl => URL.createObjectURL(fl)));
+    }, 1000);
+  });
+};
 
+export default function imageBlockPlugin(options?: ImagePluginOptionType): DraftPlugin {
   return {
     blockRendererFn(block, { getEditorState, setEditorState }) {
       if (shouldEarlyReturn(block)) {
@@ -36,7 +52,11 @@ export default function imageBlockPlugin(options?: OptionType): DraftPlugin {
         return null;
       }
 
-      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-image`;
+      const blockData = block.getData()
+      const uploading = blockData.has('uploading') && blockData.get('uploading', false);
+      const imgClass = `${BASE_BLOCK_CLASS}-image`;
+
+      return `${BASE_BLOCK_CLASS} ${imgClass} ${uploading ? `${imgClass}__uploading` : ''}`;
     },
 
     handleDroppedFiles(selection, files, { getEditorState, setEditorState }) {
@@ -55,32 +75,52 @@ export default function imageBlockPlugin(options?: OptionType): DraftPlugin {
       const block = editorState.getCurrentContent().getBlockForKey(currentBlockKey);
       
       let newEditorState: Draft.EditorState;
+      let src = URL.createObjectURL(imageFiles[0]);
+      let newBlockKey: string;
 
-      uploadImage(imageFiles).then((images) => {
-        console.log(images);
-        const src = images[0];
-        if (!block.getLength() && block.getType().indexOf('atomic') < 0) {
-          newEditorState = addNewBlock(editorState, Block.IMAGE, {
+      if (!block.getLength() && block.getType().indexOf('atomic') < 0) {
+        newBlockKey = block.getKey();
+        newEditorState = addNewBlock(editorState, Block.IMAGE, {
+          src,
+          uploading: true,
+        });
+      } else {
+        newBlockKey = Draft.genKey();
+        newEditorState = addNewBlockAt(
+          editorState,
+          currentBlockKey,
+          Block.IMAGE, {
             src,
-          });
-        } else {
-          newEditorState = addNewBlockAt(
-            editorState,
-            currentBlockKey,
-            Block.IMAGE, {
-              src,
-            }
-          );
-        }
+            uploading: true,
+          },
+          newBlockKey,
+        );
+      }
 
+      setEditorState(Draft.EditorState.forceSelection(newEditorState, new Draft.SelectionState({
+        focusKey: newBlockKey,
+        anchorKey: newBlockKey,
+        focusOffset: 0,
+      })));
+
+      const uploadImage = (options && options.uploadImage) ? options.uploadImage : dummyUploadImage;
+      uploadImage(imageFiles).then((images) => {
+        const editorState = getEditorState();
+        const block = editorState.getCurrentContent().getBlockForKey(newBlockKey);
+        newEditorState = updateDataOfBlock(editorState, block, {
+          src: images[0],
+        });
+        URL.revokeObjectURL(src);
         setEditorState(newEditorState);
+      }).catch(() => {
+        const editorState = getEditorState();
+        resetBlockWithType(editorState, Block.UNSTYLED, {});
       });
       return HANDLED;
     },
 
-    handleDrop(selection, dt, isInternal) {
-      console.log(selection.toJS(), dt, isInternal);
-      return NOT_HANDLED;
-    },
+    // handleDrop(selection, dt, isInternal) {
+    //   return NOT_HANDLED;
+    // },
   };
 }

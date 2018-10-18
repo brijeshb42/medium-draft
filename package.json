@@ -14,7 +14,7 @@
     "build": "npm run clean && tsc --declaration && npm run build:esm && npm run dist && npm run docs && npm run moveFiles",
     "moveFiles": "rm dist/index.js && cp dist/index.css lib/cjs && cp dist/index.css lib/esm",
     "local": "mkdir -p local && cp -r lib dist package.json local",
-    "docs": "typedoc --out docs ./src/index.ts --mode file --name 'Medium Draft'",
+    "docs": "typedoc --out docs ./src/index.ts --mode file --name 'Medium Draft' --theme minimal",
     "prepublishOnly": "npm run build"
   },
   "repository": {
