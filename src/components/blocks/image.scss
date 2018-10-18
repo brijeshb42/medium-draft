@@ -1,8 +1,16 @@
+@keyframes fadein {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
 figure.md-block-image {
     // margin: 0;
     margin: 10px 0;
     background: #fbfbfb;
     img {
+        display: block;
+        margin: 0 auto;
         cursor: default;
         max-width: 100%;
         border: 1px solid #eee;
@@ -11,6 +19,10 @@ figure.md-block-image {
         &.is-selected {
             box-shadow: 0 0 0 3px #02b875;
         }
+    }
+
+    &__uploading {
+        animation: fadein 1s infinite;
     }
 
     figcaption {

@@ -8,17 +8,38 @@ import MultiDecorator from './MultiDecorator';
 import { HANDLED, NOT_HANDLED } from '../util/constants';
 
 export interface PluginFunctions {
+  /**
+   * Get the list of plugins passed to the editor
+   */
   getPlugins: () => Array<DraftPlugin>,
-  getProps: () => Object,
+  /**
+   * Get all the props passed to the editor
+   */
+  getProps: () => PluginEditorProps,
+  /**
+   * Update the editorState
+   */
   setEditorState: (editorState: Draft.EditorState) => void,
+  /**
+   * Get the latest editorState
+   */
   getEditorState: () => Draft.EditorState,
+  /**
+   * Get if the editor is readOnly or not
+   */
   getReadOnly: () => boolean,
+  /**
+   * Make the editor non-editable
+   */
   setReadOnly: (readOnly: boolean) => void,
   getEditorRef?: () => any,
 }
 
 export interface PluginEditorProps extends Draft.EditorProps {
   plugins?: Array<DraftPlugin>,
+  getParentMethods?: () => {
+    getInput: (title: string) => Promise<string>,
+  },
 }
 
 export type SimpleDecorator = {
@@ -141,11 +162,11 @@ function getBlockRenderMap(plugins: Array<DraftPlugin>): Immutable.Map<string, a
 function getDecorators(plugins: Array<DraftPlugin>): MultiDecorator {
   const finalDecorators = plugins.filter(pl => !!pl.decorators).reduce(
     (acc, plugin) => {
-      plugin.decorators.forEach((dec) => {
-        if (!(dec instanceof CompositeDecorator)) {
-          acc.push(new CompositeDecorator([dec as SimpleDecorator]));
-        } else {
+      plugin.decorators.forEach((dec: DraftDecoratorType) => {
+        if ((dec as CompositeDecorator).getComponentForKey) {
           acc.push(dec);
+        } else {
+          acc.push(new CompositeDecorator([dec as SimpleDecorator]));
         }
       });
       return acc;

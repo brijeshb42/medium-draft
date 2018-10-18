@@ -142,7 +142,8 @@ export const addNewBlockAt = (
   editorState: Draft.EditorState,
   pivotBlockKey: string,
   newBlockType = Block.UNSTYLED,
-  initialData = {}
+  initialData = {},
+  newBlockKey: string = null,
 ) => {
   const content = editorState.getCurrentContent();
   const blockMap = content.getBlockMap();
@@ -150,9 +151,13 @@ export const addNewBlockAt = (
   if (!block) {
     throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
   }
+
   const blocksBefore = blockMap.toSeq().takeUntil((v) => (v === block));
   const blocksAfter = blockMap.toSeq().skipUntil((v) => (v === block)).rest();
-  const newBlockKey = Draft.genKey();
+
+  if (!newBlockKey) {
+    newBlockKey = Draft.genKey();
+  }
 
   const newBlock = new Draft.ContentBlock({
     key: newBlockKey,

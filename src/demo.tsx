@@ -7,7 +7,7 @@ import 'draft-js/dist/Draft.css';
 import './index.scss';
 import './demo.css';
 
-import { Editor, EditorStateFunctions } from './';
+import { Editor, createEditorState } from './';
 
 type State = {
   editorState: Draft.EditorState,
@@ -18,7 +18,7 @@ class App extends React.Component<any, State> {
     super(props);
 
     this.state = {
-      editorState: EditorStateFunctions.createEditorState(),
+      editorState: createEditorState(),
     };
   }
 

@@ -52,7 +52,7 @@ export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
       }
     },
 
-    handleKeyCommand(command, editorState, { setEditorState }) {
+    handleKeyCommand(command, editorState, { setEditorState, getProps }) {
       const block = getCurrentBlock(editorState);
 
       if (shouldEarlyReturn(block)) {
@@ -65,13 +65,25 @@ export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
 
       if (command === 'code-block-add-language') {
         const data = block.getData();
-        const lang = prompt('Set Language:', data.get('language') || '');
+        const props = getProps();
 
-        if (lang) {
-          const newData = data.set('language', lang);
-          setEditorState(updateDataOfBlock(editorState, block, newData));
+        if (props.getParentMethods) {
+          props.getParentMethods()
+            .getInput('Enter language for the code block')
+            .then((lang) => {
+              const newData = data.set('language', lang);
+              setEditorState(updateDataOfBlock(editorState, block, newData));
+            });
+          return HANDLED;
+        } else {
+          const lang = prompt('Set Language:', data.get('language') || '');
+
+          if (lang) {
+            const newData = data.set('language', lang);
+            setEditorState(updateDataOfBlock(editorState, block, newData));
+          }
+          return HANDLED;
         }
-        return HANDLED;
       }
 
       return NOT_HANDLED;

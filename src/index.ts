@@ -9,7 +9,7 @@ export { default as BreakBlock } from './components/blocks/break';
 export { default as TextBlock } from './components/blocks/text';
 
 import Editor from './Editor';
-import * as EditorStateFunctions from './model';
+export * from './model';
 
 export { default as PluginsEditor } from './plugin_editor/Editor';
 export { default as MultiDecorator } from './plugin_editor/MultiDecorator';
@@ -23,6 +23,5 @@ export { default as stylePlugin } from './plugins/style';
 
 export {
   Editor,
-  EditorStateFunctions,
 };
 export default Editor;
