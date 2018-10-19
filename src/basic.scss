@@ -130,3 +130,16 @@ p {
         background: #fafafa;
     }
 }
+
+.md-block-code-container {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+}
+
+.md-block-code-block {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

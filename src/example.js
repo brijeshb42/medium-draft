@@ -456,7 +456,7 @@ class App extends React.Component {
     try {
       const blockData = JSON.parse(data);
       console.log(blockData);
-      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
+      this.onChange(EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
     } catch(e) {
       console.log(e);
     }

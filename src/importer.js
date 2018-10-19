@@ -109,6 +109,11 @@ export const htmlToBlock = (nodeName, node) => {
       type: Block.UNSTYLED,
       data: {},
     };
+  } else if (nodeName === 'pre' && node.className && node.className === 'md-block-code-block') {
+    return {
+      type: Block.CODE,
+      data: {},
+    };
   }
 
   return undefined;
