@@ -207,22 +207,18 @@ if (appExportType === 'exporter' || appExportType === 'importer') {
   };
   var globalName = 'MediumDraft' + appExportType[0].toUpperCase() + appExportType[1] + 'porter';
   options.output.library = globalName
-  options.externals.push({
-    'react-dom/server': {
-      root: 'ReactDOMServer',
-      commonjs2: 'react-dom/server',
-      commonjs: 'react-dom/server',
-      amd: 'react-dom/server'
-    }
-  });
-  options.externals.push({
-    'draft-convert': {
-      root: 'DraftConvert',
-      commonjs2: 'draft-convert',
-      commonjs: 'draft-convert',
-      amd: 'draft-convert'
-    }
-  });
+  options.externals['react-dom/server'] = {
+    root: 'ReactDOMServer',
+    commonjs2: 'react-dom/server',
+    commonjs: 'react-dom/server',
+    amd: 'react-dom/server'
+  };
+  options.externals['draft-convert']= {
+    root: 'DraftConvert',
+    commonjs2: 'draft-convert',
+    commonjs: 'draft-convert',
+    amd: 'draft-convert'
+  };
 }
 
 module.exports = options;
