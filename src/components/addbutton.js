@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 // import './addbutton.scss';
 
 import React from 'react';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { getSelectedBlockNode } from '../util';
 
 
-/*
-Implementation of the medium-link side `+` button to insert various rich blocks
-like Images/Embeds/Videos.
-*/
+/**
+ * Implementation of the medium-link side `+` button to insert various rich blocks
+ * like Images/Embeds/Videos.
+ */
 export default class AddButton extends React.Component {
   constructor(props) {
     super(props);
@@ -72,32 +72,6 @@ export default class AddButton extends React.Component {
     }
     setTimeout(this.findNode, 0);
   }
-
-  // Show + button regardless of block length
-  // componentWillReceiveProps(newProps) {
-  //   const { editorState } = newProps;
-  //   const contentState = editorState.getCurrentContent();
-  //   const selectionState = editorState.getSelection();
-  //   if (!selectionState.isCollapsed() || selectionState.anchorKey != selectionState.focusKey) {
-  //     this.hideBlock();
-  //     return;
-  //   }
-  //   const block = contentState.getBlockForKey(selectionState.anchorKey);
-  //   const bkey = block.getKey();
-  //   if (block.getType() !== this.blockType) {
-  //     this.blockType = block.getType();
-  //     setTimeout(this.findNode, 0);
-  //     return;
-  //   }
-  //   if (this.blockKey === bkey) {
-  //     this.setState({
-  //       visible: true
-  //     });
-  //     return;
-  //   }
-  //   this.blockKey = bkey;
-  //   setTimeout(this.findNode, 0);
-  // }
 
   hideBlock() {
     if (this.state.visible) {
@@ -163,27 +137,31 @@ export default class AddButton extends React.Component {
           </svg>
         </button>
         {this.state.isOpen ? (
-          <CSSTransitionGroup
-            transitionName="md-example"
-            transitionEnterTimeout={200}
-            transitionLeaveTimeout={100}
-            transitionAppearTimeout={100}
-            transitionAppear
-          >
+          <TransitionGroup>
             {this.props.sideButtons.map((button) => {
               const Button = button.component;
               const extraProps = button.props ? button.props : {};
               return (
-                <Button
+                <CSSTransition
                   key={button.title}
-                  {...extraProps}
-                  getEditorState={this.props.getEditorState}
-                  setEditorState={this.props.setEditorState}
-                  close={this.openToolbar}
-                />
+                  classNames="md-add-btn-anim"
+                  appear
+                  timeout={{
+                    enter: 200,
+                    exit: 100,
+                    appear: 100,
+                  }}
+                >
+                  <Button
+                    {...extraProps}
+                    getEditorState={this.props.getEditorState}
+                    setEditorState={this.props.setEditorState}
+                    close={this.openToolbar}
+                  />
+                </CSSTransition>
               );
             })}
-          </CSSTransitionGroup>
+          </TransitionGroup>
         ) : null}
       </div>
     );

@@ -1,7 +1,7 @@
 {
   "presets": ["es2015", "react"],
   "ignore": ["*.scss", "*.css"],
-  "plugins": ["transform-class-properties"],
+  "plugins": ["react-hot-loader/babel", "transform-class-properties"],
   "env": {
     "production": {
       "plugins": [

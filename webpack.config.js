@@ -104,16 +104,9 @@ function getLoaders(env) {
   loaders.push({
     test: /\.jsx?$/,
     include: APP_DIR,
-    loader: env !== ENV_PROD ? 'react-hot-loader!babel-loader' : 'babel-loader',
+    loader: 'babel-loader',
     exclude: /node_modules/
   });
-
-  // loaders.push({
-  //   test: /\.jsx?$/,
-  //   loaders: 'eslint-loader',
-  //   enforce: "pre",
-  //   include: APP_DIR,
-  // });
 
   loaders.push({
     test: /\.(jpe?g|png|gif|svg)$/i,
@@ -171,47 +164,38 @@ var options = {
 };
 
 if (isProd) {
-  options.externals = [{
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react'
-      }
+  options.externals = {
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react'
     },
-    {
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd: 'react-dom'
-      }
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom'
     },
-    {
-      'react-transition-group/CSSTransitionGroup': {
-        root: ['React', 'addons', 'CSSTransitionGroup'],
-        commonjs2: 'react-transition-group/CSSTransitionGroup',
-        commonjs: 'react-transition-group/CSSTransitionGroup',
-        amd: 'react-transition-group/CSSTransitionGroup',
-      }
+    'react-transition-group': {
+      root: 'ReactTransitionGroup',
+      commonjs2: 'react-transition-group',
+      commonjs: 'react-transition-group',
+      amd: 'react-transition-group',
     },
-    {
-      immutable: {
-        root: 'Immutable',
-        commonjs2: 'immutable',
-        commonjs: 'immutable',
-        amd: 'immutable'
-      }
+    immutable: {
+      root: 'Immutable',
+      commonjs2: 'immutable',
+      commonjs: 'immutable',
+      amd: 'immutable'
     },
-    {
-      'draft-js': {
-        root: 'Draft',
-        commonjs2: 'draft-js',
-        commonjs: 'draft-js',
-        amd: 'draft-js'
-      }
+    'draft-js': {
+      root: 'Draft',
+      commonjs2: 'draft-js',
+      commonjs: 'draft-js',
+      amd: 'draft-js'
     }
-  ];
+  };
 }
 
 var appExportType = process.env.APP_EXPORT_TYPE || '';
