@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "repository": "https://github.com/brijeshb42/medium-draft",
@@ -36,8 +36,8 @@
   "peerDependencies": {
     "prop-types": "^15.6.2",
     "draft-convert": "^2.0.0",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react": "^15.0.0 || ^16.0.0",
+    "react-dom": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
