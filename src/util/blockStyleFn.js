@@ -30,6 +30,8 @@ export default (block) => {
       const cls = `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote`;
       return `${cls} md-RichEditor-blockquote ${BASE_BLOCK_CLASS}-quote-caption`;
     }
+    case Block.CODE:
+      return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code-block`;
     default: return BASE_BLOCK_CLASS;
   }
 };
