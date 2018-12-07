@@ -137,6 +137,15 @@ p {
     word-spacing: normal;
     word-break: normal;
     word-wrap: normal;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    padding: 20px;
+    margin: 1em 0px;
+
+    > pre {
+        margin-top: 0;
+        padding-top: 0;
+    }
 }
 
 .md-block-code-block {
