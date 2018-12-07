@@ -39,9 +39,10 @@ export default class LinkEditComponent extends React.Component {
     setTimeout(this.calculatePosition, 0);
   }
 
-  shouldComponentUpdate(newProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     if (this.renderedOnce) {
-      const ret = (this.props.blockKey !== newProps.blockKey || this.props.entityKey !== newProps.entityKey);
+      const { blockKey, entityKey } = this.props;
+      const ret = !this.hasPosition(nextState.position) || blockKey !== nextProps.blockKey || entityKey !== nextProps.entityKey;
       if (ret) {
         this.renderedOnce = false;
       }
@@ -54,6 +55,14 @@ export default class LinkEditComponent extends React.Component {
   componentDidUpdate() {
     setTimeout(this.calculatePosition, 0);
   }
+
+  hasPosition = (position) => {
+    if (Object.keys(this.state.position).length === 0) {
+      return false;
+    }
+    const { top, left } = this.state.position;
+    return position.top === top && position.left === left;
+  };
 
   calculatePosition = () => {
     if (!this.toolbar) {
