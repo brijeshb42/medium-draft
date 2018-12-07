@@ -109,7 +109,7 @@ export const htmlToBlock = (nodeName, node) => {
       type: Block.UNSTYLED,
       data: {},
     };
-  } else if (nodeName === 'div' && node.className && node.className === 'md-block-code-container') {
+  } else if (['div', 'pre'].includes(nodeName) && node.className === 'md-block-code-container') {
     return {
       type: Block.CODE,
       data: {},
