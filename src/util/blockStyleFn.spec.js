@@ -78,4 +78,12 @@ describe('blockStyleFn()', () => {
     expect(blockStyleFn(todoBlockChecked)).to.equal(
       `${baseTodoClass} ${BASE_BLOCK_CLASS}-todo ${BASE_BLOCK_CLASS}-todo-checked`);
   });
+
+  it('should return block class for CODE', () => {
+    const normalBlock = new ContentBlock({
+      type: Block.CODE,
+    });
+    expect(blockStyleFn(normalBlock)).to.equal(
+      `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-code-block`);
+  });
 });

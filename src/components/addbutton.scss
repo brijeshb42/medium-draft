@@ -46,7 +46,7 @@ $add-btn-width: 30px;
 }
 
 .md-add-button {
-  &-button {
+  &.md-open-button {
     transform: rotate(45deg);
   }
 }
