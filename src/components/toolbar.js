@@ -97,23 +97,18 @@ export default class Toolbar extends React.Component {
     toolbarNode.style.top =
       `${(selectionBoundary.top - parentBoundary.top - toolbarBoundary.height - 5)}px`;
     toolbarNode.style.width = `${toolbarBoundary.width}px`;
-    const widthDiff = selectionBoundary.width - toolbarBoundary.width;
-    if (widthDiff >= 0) {
-      toolbarNode.style.left = `${widthDiff / 2}px`;
-    } else {
-      const left = (selectionBoundary.left - parentBoundary.left);
-      toolbarNode.style.left = `${left + (widthDiff / 2)}px`;
-      // toolbarNode.style.width = toolbarBoundary.width + 'px';
-      // if (left + toolbarBoundary.width > parentBoundary.width) {
-        // toolbarNode.style.right = '0px';
-        // toolbarNode.style.left = '';
-        // toolbarNode.style.width = toolbarBoundary.width + 'px';
-      // }
-      // else {
-      //   toolbarNode.style.left = (left + widthDiff / 2) + 'px';
-      //   toolbarNode.style.right = '';
-      // }
+
+    // The left side of the tooltip should be:
+    // center of selection relative to parent - half width of toolbar
+    const selectionCenter = (selectionBoundary.left + (selectionBoundary.width / 2)) - parentBoundary.left;
+    let left = selectionCenter - (toolbarBoundary.width / 2);
+    const screenLeft = parentBoundary.left + left;
+    if (screenLeft < 0) {
+      // If the toolbar would be off-screen
+      // move it as far left as it can without going off-screen
+      left = -parentBoundary.left;
     }
+    toolbarNode.style.left = `${left}px`;
   }
 
   onKeyDown(e) {
@@ -370,4 +365,3 @@ export const INLINE_BUTTONS = [
     description: 'Add a link',
   },
 ];
-
