@@ -7,6 +7,7 @@ import { DraftPlugin } from "../plugin_editor/Editor";
 
 type OptionType = {
   ignoreCommands?: Array<string>,
+  tabSize?: 2 | 4,
 };
 
 function shouldEarlyReturn(block: Draft.ContentBlock): boolean {
@@ -15,6 +16,7 @@ function shouldEarlyReturn(block: Draft.ContentBlock): boolean {
 
 export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
   const ignoreCommands = (options && options.ignoreCommands) || ['bold', 'italic', 'underline'];
+  const tabSize = (options && options.tabSize) ? options.tabSize : 2;
 
   return {
     blockRendererFn(block, { setEditorState, getEditorState }) {
@@ -73,7 +75,7 @@ export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
             .then((lang) => {
               const newData = data.set('language', lang);
               setEditorState(updateDataOfBlock(editorState, block, newData));
-            });
+            }).catch(() => {});
           return HANDLED;
         } else {
           const lang = prompt('Set Language:', data.get('language') || '');
@@ -125,5 +127,25 @@ export default function codeBlockPlugin(options?: OptionType): DraftPlugin {
       );
       return HANDLED;
     },
+
+    onTab(ev, { getEditorState, setEditorState }) {
+      const editorState = getEditorState();
+      const currentBlock = getCurrentBlock(editorState);
+      const selection = editorState.getSelection();
+
+      if (shouldEarlyReturn(currentBlock) || !selection.isCollapsed()) {
+        return null;
+      }
+
+      ev.preventDefault();
+      let str: string = '';
+      for(let i = 0; i < tabSize; i++) {
+        str += ' ';
+      }
+
+      const contentState = Modifier.insertText(editorState.getCurrentContent(), selection, str);
+      const newEditorState = EditorState.push(editorState, contentState, 'insert-characters');
+      setEditorState(EditorState.forceSelection(newEditorState, contentState.getSelectionAfter()));
+    }
   };
 };

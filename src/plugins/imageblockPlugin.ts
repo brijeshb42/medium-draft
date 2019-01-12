@@ -80,10 +80,13 @@ export default function imageBlockPlugin(options?: ImagePluginOptionType): Draft
 
       if (!block.getLength() && block.getType().indexOf('atomic') < 0) {
         newBlockKey = block.getKey();
-        newEditorState = addNewBlock(editorState, Block.IMAGE, {
-          src,
-          uploading: true,
-        });
+        newEditorState = addNewBlock(
+          editorState,
+          Block.IMAGE, {
+            src,
+            uploading: true,
+          }
+        );
       } else {
         newBlockKey = Draft.genKey();
         newEditorState = addNewBlockAt(

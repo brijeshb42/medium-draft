@@ -105,17 +105,23 @@
   bottom: 0;
 
   .md-modal-input {
-    max-width: 60%;
+    position: absolute;
     margin: 0 auto;
+    left: 0;
+    right: 0;
 
-    label {
-      display: block;
-      text-align: center;
-    }
+    &__wrapper {
+      label {
+        display: block;
+        text-align: center;
+        width: 60%;
+        margin: 0 auto;
+      }
 
-    input[type=text] {
-      display: block;
-      width: 100%;
+      input[type=text] {
+        display: block;
+        width: 100%;
+      }
     }
   }
 }

@@ -39,3 +39,7 @@ a, a:visited {
 .md-block-atomic-wrapper.md-block-atomic-wrapper-separator {
   border-color: transparent;
 }
+
+pre[class*="language-"] {
+  padding: 0;
+}

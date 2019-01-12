@@ -1,6 +1,4 @@
 import * as React from 'react';
-// import * as Prism from 'prismjs';
-// import prismPlugin from 'draft-js-prism-plugin';
 
 import PluginsEditor, { DraftPlugin, PluginEditorProps } from './plugin_editor/Editor';
 import blockMovePlugin from './plugins/blockMovePlugin';
@@ -11,14 +9,14 @@ import codeBlockPlugin from './plugins/codeblockplugin';
 import imageBlockPlugin from './plugins/imageblockPlugin';
 
 import { StringToTypeMap, Block } from './util/constants';
-import { getSelectionRect, getSelection } from './util';
+import { getSelectionRect, getSelection, getSelectedBlockNode } from './util';
 
-export type EditorProps = PluginEditorProps & {
+export interface EditorProps extends PluginEditorProps {
   autoFocus?: boolean,
   disableToolbar?: boolean,
-  stringToTypeMap: {[key: string]: string},
-  continuousBlocks: Array<String>,
-  editorEnabled: boolean,
+  stringToTypeMap?: {[key: string]: string},
+  continuousBlocks?: Array<String>,
+  editorEnabled?: boolean,
 };
 type EditorRefCb = (editor: PluginsEditor) => void;
 type InputRefCb = (node: HTMLInputElement) => void;
@@ -29,7 +27,10 @@ type State = {
   style: Object;
 };
 
-export default class Editor extends React.Component<EditorProps, State> {
+/**
+ * The main editor component with all the bells and whistles
+ */
+export default class Editor extends React.PureComponent<EditorProps, State> {
   editorRef: React.RefObject<PluginsEditor> | EditorRefCb;
   inputRef: React.RefObject<HTMLInputElement> | InputRefCb;
   editor?: PluginsEditor;
@@ -79,17 +80,16 @@ export default class Editor extends React.Component<EditorProps, State> {
       style: {},
     };
 
-    this.plugins = props.plugins.length ? props.plugins : [
+    this.plugins = [
       codeBlockPlugin(),
       imageBlockPlugin(),
       stylePlugin(),
       rendererPlugin(),
       blockMovePlugin(),
       keyboardPlugin(),
-      // prismPlugin({
-      //   prism: Prism,
-      // }),
-    ];
+    ].concat(
+      props.plugins.length ? props.plugins : [],
+    );
   }
 
   componentDidMount() {
@@ -147,16 +147,20 @@ export default class Editor extends React.Component<EditorProps, State> {
   };
 
   getInput = (title: string): Promise<string> => {
-    // const selection = this.props.editorState.getSelection();
-    // const anchorKey = selection.getAnchorKey();
-    const rect = getSelectionRect(getSelection(window));
+    const currentBlockElement = getSelectedBlockNode(window);
+
+    let style = {
+      top: 0,
+    };
+
+    if (currentBlockElement) {
+      style.top = currentBlockElement.getBoundingClientRect().top + window.scrollY;
+    }
 
     this.setState({
       title,
+      style,
       showInput: true,
-      style: (rect) ? {
-        top: rect.top,
-      } : {},
     });
 
     return new Promise<string>((resolve, reject) => {
@@ -173,6 +177,32 @@ export default class Editor extends React.Component<EditorProps, State> {
     };
   };
 
+  renderInput() {
+    const { showInput, title, style } = this.state;
+
+    if (!showInput) {
+      return null;
+    }
+
+    return (
+      <div className="md-modal-container" tabIndex={-1}>
+        <div className="md-modal-input" style={style}>
+          <div className="md-modal-input__wrapper">
+            <label>
+              {title}
+              <input
+                type="text"
+                defaultValue=""
+                ref={this.inputRef}
+                onKeyDown={this.handleInputKeyDown}
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const {
       disableToolbar,
@@ -182,7 +212,6 @@ export default class Editor extends React.Component<EditorProps, State> {
       continuousBlocks,
       ...restProps
     } = this.props;
-    const { showInput, title, style } = this.state;
 
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
 
@@ -196,23 +225,7 @@ export default class Editor extends React.Component<EditorProps, State> {
             getParentMethods={this.getMethods}
           />
         </div>
-        {
-          showInput && (
-            <div className="md-modal-container" tabIndex={-1}>
-              <div className="md-modal-input" style={style}>
-                <label>
-                  {title}
-                  <input
-                    type="text"
-                    defaultValue=""
-                    ref={this.inputRef}
-                    onKeyDown={this.handleInputKeyDown}
-                  />
-                </label>
-              </div>
-            </div>
-          )
-        }
+        {this.renderInput()}
       </div>
     );
   }
