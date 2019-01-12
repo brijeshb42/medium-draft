@@ -190,9 +190,14 @@ export const addNewBlockAt = (
 };
 
 /**
-* Check whether the cursor is between entity of type LINK
-*/
-export const isCursorBetweenLink = (editorState: Draft.EditorState) => {
+ * Check whether the cursor is between entity of type LINK
+ * @param editorState
+ */
+export const isCursorBetweenLink = (editorState: Draft.EditorState): null | {
+  entityKey: string,
+  blockKey: string,
+  url: string,
+} => {
   let ret = null;
   const selection = editorState.getSelection();
   const content = editorState.getCurrentContent();
@@ -226,7 +231,12 @@ export const isCursorBetweenLink = (editorState: Draft.EditorState) => {
   return ret;
 };
 
-
+/**
+ * Swap two blocks with the given keys
+ * @param editorState Current editor state
+ * @param block block to swap
+ * @param toBlock block to swap with
+ */
 export function swapBlocks(editorState: Draft.EditorState, block: Draft.ContentBlock, toBlock: Draft.ContentBlock): Draft.EditorState {
   let newContent = editorState.getCurrentContent();
   let blockMap = newContent.getBlockMap();

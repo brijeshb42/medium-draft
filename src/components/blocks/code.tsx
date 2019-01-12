@@ -11,7 +11,6 @@ type Props = {
   };
 };
 
-
 export default class CodeBlock extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
@@ -36,7 +35,7 @@ export default class CodeBlock extends React.Component<Props> {
     const lang = block.getData().get('language', '');
 
     return (
-      <div className="md-block-code-wrapper" data-language={lang}>
+      <div className="md-block-code-wrapper" data-language={lang} spellCheck={false}>
         {/* <span contentEditable={false}>
           <button onClick={this.handleLanguage}>L</button>
         </span> */}
