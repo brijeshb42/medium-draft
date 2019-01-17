@@ -173,4 +173,5 @@ AddButton.propTypes = {
   getEditorState: PropTypes.func.isRequired,
   setEditorState: PropTypes.func.isRequired,
   sideButtons: PropTypes.arrayOf(PropTypes.object),
+  addButtonAutoclose: PropTypes.bool.isRequired,
 };
