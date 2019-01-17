@@ -122,7 +122,7 @@ export default class AddButton extends React.Component {
   }
 
   render() {
-    if (!this.state.visible) {
+    if (!this.state.visible && this.props.addButtonAutoclose) {
       return null;
     }
     return (
