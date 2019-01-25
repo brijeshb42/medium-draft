@@ -89,6 +89,7 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
+    getInitialBlockData: PropTypes.func,
   };
 
   static defaultProps = {
@@ -372,7 +373,9 @@ class MediumDraftEditor extends React.Component {
       const blockType = currentBlock.getType();
 
       if (blockType.indexOf(Block.ATOMIC) === 0) {
-        this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
+        const newBlockType = Block.UNSTYLED;
+        const initialData = this.props.getInitialBlockData ? this.props.getInitialBlockData(newBlockType) : {};
+        this.onChange(addNewBlockAt(editorState, currentBlock.getKey(), newBlockType, initialData));
         return HANDLED;
       }
 
@@ -398,7 +401,9 @@ class MediumDraftEditor extends React.Component {
 
       if (selection.isCollapsed() && currentBlock.getLength() === selection.getStartOffset()) {
         if (this.props.continuousBlocks.indexOf(blockType) < 0) {
-          this.onChange(addNewBlockAt(editorState, currentBlock.getKey()));
+          const newBlockType = Block.UNSTYLED;
+          const initialData = this.props.getInitialBlockData ? this.props.getInitialBlockData(newBlockType) : {};
+          this.onChange(addNewBlockAt(editorState, currentBlock.getKey(), newBlockType, initialData));
           return HANDLED;
         }
         return NOT_HANDLED;
