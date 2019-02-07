@@ -1,4 +1,4 @@
-import * as Immutable from 'immutable';
+import Immutable from 'immutable';
 import { ContentBlock, ContentState } from 'draft-js';
 
 interface CompositeDecoratorType {

@@ -1,4 +1,4 @@
-import * as Draft from 'draft-js';
+import Draft from 'draft-js';
 
 import { Block, BASE_BLOCK_CLASS, NOT_HANDLED, HANDLED } from "../util/constants";
 import ImageBlock from "../components/blocks/image";

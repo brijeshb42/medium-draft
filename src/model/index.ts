@@ -1,5 +1,5 @@
-import * as Draft from 'draft-js';
-import * as Immutable from 'immutable';
+import Draft from 'draft-js';
+import Immutable from 'immutable';
 
 import { Block, Entity } from '../util/constants';
 

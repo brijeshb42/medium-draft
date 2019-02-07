@@ -1,4 +1,4 @@
-import * as Immutable from 'immutable';
+import Immutable from 'immutable';
 
 import { Block, Inline } from '../util/constants';
 import { DraftPlugin } from '../plugin_editor/Editor';

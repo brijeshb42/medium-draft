@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import PluginsEditor, { DraftPlugin, PluginEditorProps } from './plugin_editor/Editor';
 import blockMovePlugin from './plugins/blockMovePlugin';

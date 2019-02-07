@@ -1,5 +1,5 @@
 declare module "draft-js/lib/isSoftNewlineEvent" {
-  import * as React from 'react';
+  import React from 'react';
 
   function isSoftNewlineEvent(ev: React.KeyboardEvent<{}>): boolean;
 
@@ -14,7 +14,7 @@ declare module "draft-js-prism-plugin" {
 }
 
 declare module "draft-js/lib/isSoftNewlineEvent" {
-  import * as React from 'react';
+  import React from 'react';
 
   function isSoftNewlineEvent(ev: React.KeyboardEvent<{}>): boolean;
 

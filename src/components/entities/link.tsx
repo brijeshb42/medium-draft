@@ -1,5 +1,5 @@
-import * as Draft from 'draft-js';
-import * as React from 'react';
+import Draft from 'draft-js';
+import React from 'react';
 
 import { Entity } from '../../util/constants';
 

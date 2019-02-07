@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
+import React from 'react';
+import Draft from 'draft-js';
 
 type Props = {
   block: Draft.ContentBlock;
