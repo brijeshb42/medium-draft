@@ -234,10 +234,11 @@ class MediumDraftEditor extends React.Component {
    * };
    */
   configureToolbarBlockOptions(toolbarConfig) {
+    const { blockButtons } = this.props;
     return toolbarConfig && toolbarConfig.block
-      ? toolbarConfig.block.map(type => BLOCK_BUTTONS.find(button => button.style === type))
+      ? toolbarConfig.block.map(type => blockButtons.find(button => button.style === type))
         .filter(button => button !== undefined)
-      : this.props.blockButtons;
+      : blockButtons;
   }
 
   /**
@@ -251,10 +252,11 @@ class MediumDraftEditor extends React.Component {
    * };
    */
   configureToolbarInlineOptions(toolbarConfig) {
+    const { inlineButtons } = this.props;
     return toolbarConfig && toolbarConfig.inline
-      ? toolbarConfig.inline.map(type => INLINE_BUTTONS.find(button => button.style === type))
+      ? toolbarConfig.inline.map(type => inlineButtons.find(button => button.style === type))
         .filter(button => button !== undefined)
-      : this.props.inlineButtons;
+      : inlineButtons;
   }
 
   /*
