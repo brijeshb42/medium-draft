@@ -34,8 +34,8 @@
     "react-transition-group": "^2.5.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.2",
     "draft-convert": "^2.0.0",
+    "prop-types": "^15.6.2",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"
   },
@@ -76,7 +76,7 @@
     "sass-loader": "^6.0.7",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.0",
-    "webpack-dev-server": "^3.1.113.1.113.1.11"
+    "webpack-dev-server": "2.11.3"
   },
   "bugs": {
     "url": "https://github.com/brijeshb42/medium-draft/issues"
