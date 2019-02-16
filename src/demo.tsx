@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { EditorState } from 'draft-js';
-import * as Prism from 'prismjs';
+import Prism from 'prismjs';
 import prismPlugin from 'draft-js-prism-plugin';
 
 import 'prismjs/components/prism-python';

@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as Draft from 'draft-js';
+import React from 'react';
+import Draft from 'draft-js';
 import { CompositeDecorator } from 'draft-js';
-import * as Immutable from 'immutable';
+import Immutable from 'immutable';
 import memoizeOne from 'memoize-one';
 
 import MultiDecorator from './MultiDecorator';
