@@ -278,6 +278,62 @@ class App extends React.Component {
 };
 ```
 
+### Removing side buttons
+
+To remove the side buttons entirely, so that the circular add button never appears, just pass an empty array:
+
+`sideButtons={[]}`
+
+### Customizing toolbar
+
+There are three props you can use to customize the buttons in the toolbar that appears whenever you select text within the editor:
+
+- `blockButtons`
+- `inlineButtons`
+- `toolbarConfig`
+
+The default block-level editor buttons are `['header-three', 'unordered-list-item', 'ordered-list-item', 'blockquote', 'todo']`, and the default inline editor buttons `['BOLD', 'ITALIC', 'UNDERLINE', 'HIGHLIGHT', 'hyperlink']`.
+
+For example, if you want to keep the default block buttons and add a few more, you can do something like the following:
+
+```js
+import { BLOCK_BUTTONS } from 'medium-draft';
+
+const blockButtons = [{
+    label: 'H1',
+    style: 'header-one',
+    icon: 'header',
+    description: 'Heading 1',
+  },
+  {
+    label: 'H2',
+    style: 'header-two',
+    icon: 'header',
+    description: 'Heading 2',
+}].concat(BLOCK_BUTTONS);
+
+// in your component
+<Editor blockButtons={blockButtons} ... />
+```
+
+If you want to __remove__ some buttons or __reorder__ them, you could use functions like `array.slice` on the default `BLOCK_BUTTONS` and `INLINE_BUTTONS`, but this is probably more trouble than it's worth.
+
+For this purpose it's better to use the `toolbarConfig` prop:
+
+```js
+// custom ordering for block and inline buttons, and removes some buttons
+const toolbarConfig = {
+  block: ['unordered-list-item', 'header-one', 'header-three'],
+  inline: ['BOLD', 'UNDERLINE', 'hyperlink'],
+}
+
+<Editor toolbarConfig={toolbarConfig} ... />
+```
+
+The strings inside the `block` and `inline` arrays must match the `style` attribute inside `blockButtons` and `inlineButtons` arrays.
+
+To summarize: if you need add, remove, and reorder buttons, it's probably easiest to use `blockButtons`, `inlineButtons`, and `toolbarConfig` together.
+
 ### Render data to HTML
 
 The feature to export HTML is available from version `0.4.1` onwards.
