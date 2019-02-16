@@ -69,3 +69,6 @@ medium-draft.d.ts
 docs/
 .DS_Store
 local/
+coverage/
+.eslintcache
+hash.json
