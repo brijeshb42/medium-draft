@@ -50,7 +50,6 @@ module.exports = (env, argv) => {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
-          'babel-loader',
           'ts-loader',
         ],
       }, {
