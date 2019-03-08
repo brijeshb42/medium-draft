@@ -1,7 +1,16 @@
+@import './components/addbutton';
+@import './components/toolbar';
+@import './components/blocks/atomic';
+@import './components/blocks/blockquotecaption';
+@import './components/blocks/caption';
+@import './components/blocks/image';
+@import './components/blocks/text';
+@import './components/blocks/todo';
+@import './components/blocks/code';
+
 .md-RichEditor-root {
   background: #fff;
   box-sizing: border-box;
-  //font-family: 'Georgia', serif;
   padding: 15px 30px;
   position: relative;
   line-height: 1.4em;
@@ -13,6 +22,7 @@
   margin-top: 10px;
   position: relative;
   margin: 0 auto;
+  z-index: 0;
 
   h3 {
     font-size: 1.3em;
@@ -20,28 +30,34 @@
   }
 }
 
-.md-RichEditor-editor .public-DraftEditorPlaceholder-root,
-.md-RichEditor-editor .public-DraftEditor-content {
-  margin: 0px -15px -15px;
-  padding: 15px;
-}
+.md-RichEditor-editor {
+  .public-DraftEditor-content {
+    min-height: 100px;
+  }
 
-.md-RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
+  .md-RichEditor-blockquote {
+    border-left: 5px solid #4CA8DE;
+    color: #555;
+    //font-family: 'Hoefler Text', 'Georgia', serif;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 10px 0 10px 20px;
+    background-color: #E2F2FF;
+
+    // .public-DraftStyleDefault-block:first-child {
+    //   padding-top: 10px;
+    // }
+
+    // cite {
+    //   .public-DraftStyleDefault-block:first-child {
+    //     padding-top: 0;
+    //   }
+    // }
+  }
 }
 
 .md-RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
   display: none;
-}
-
-.md-RichEditor-editor .md-RichEditor-blockquote {
-  border-left: 5px solid #4CA8DE;
-  color: #555;
-  //font-family: 'Hoefler Text', 'Georgia', serif;
-  font-size: 1.2em;
-  margin: 0;
-  padding: 10px 0 10px 20px;
-  background-color: #E2F2FF;
 }
 
 .md-RichEditor-blockquote {
@@ -50,18 +66,15 @@
   }
 }
 
-.public-DraftEditor-content {
-  .md-block:first-child {
-    margin-top: 0;
-    padding-top: 0;
-  }
-}
+// .public-DraftEditor-content {
+//   .md-block:first-child {
+//     margin-top: 0;
+//     padding-top: 0;
+//   }
+// }
 
 .md-RichEditor-editor .public-DraftStyleDefault-pre {
-  background-color: rgba(0, 0, 0, 0.05);
-  //font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-  font-size: 16px;
-  padding: 20px;
+  margin-top: 10px;
 }
 
 .public-DraftStyleDefault-unorderedListItem,
@@ -76,5 +89,35 @@
 
   button {
     display: block;
+  }
+}
+
+.md-modal-container {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .md-modal-input {
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+
+    &__wrapper {
+      label {
+        display: block;
+        text-align: center;
+        width: 60%;
+        margin: 0 auto;
+      }
+
+      input[type=text] {
+        display: block;
+        width: 100%;
+      }
+    }
   }
 }

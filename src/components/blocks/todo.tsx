@@ -1,13 +1,19 @@
-import PropTypes from 'prop-types';
-// import './todo.scss';
-
 import React from 'react';
 import { EditorBlock } from 'draft-js';
 
 import { updateDataOfBlock } from '../../model/';
 
-export default class TodoBlock extends React.Component {
-  constructor(props) {
+type Props = {
+  block: Draft.ContentBlock;
+  blockProps: {
+    getEditorState: () => Draft.EditorState;
+    setEditorState: (es: Draft.EditorState) => void;
+  };
+};
+
+
+export default class TodoBlock extends React.Component<Props> {
+  constructor(props: Props) {
     super(props);
     this.updateData = this.updateData.bind(this);
   }
@@ -34,9 +40,3 @@ export default class TodoBlock extends React.Component {
     );
   }
 }
-
-
-TodoBlock.propTypes = {
-  block: PropTypes.object,
-  blockProps: PropTypes.object,
-};

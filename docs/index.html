@@ -1,644 +1,229 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="default no-js">
 <head>
-    <meta charset="utf-8">
-    <title>medium-draft - a rich text editor built using draft-js - Bitwiser.in</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/medium-draft/dist/medium-draft.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
-    <!--[if lt IE 9]>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
-    <![endif]-->
-    <meta name="description" content="A medium like rich text editor built using draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts. It also has implementations of some custom blocks like caption and todo." />
-    <meta property="fb:admins" content="1554290006" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://bitwiser.in/medium-draft/" />
-    <meta property="og:site_name" content="medium-draft - Bitwiser.in" />
-    <meta name="og:image" content="http://i1051.photobucket.com/albums/s432/brijeshb42/ghost-blog/draft-logo.png" />
-    <meta name="article:publisher" content="https://www.facebook.com/brijeshb42">
-    <meta name="twitter:image" content="http://i1051.photobucket.com/albums/s432/brijeshb42/ghost-blog/draft-logo.png" />
-    <style type="text/css">
-    body {
-        font-size: 18px;
-        padding-top: 40px;
-    }
-    a, a:visited {
-      color: #08c;
-    }
-
-    .md-RichEditor-root {
-        font-family: 'Georgia', serif;
-    }
-
-    .md-RichEditor-editor {
-        max-width: 700px;
-        /*padding: 0 10px;*/
-        background: #fbffff;
-    }
-    .md-block-atomic-wrapper {
-        position: relative;
-        border: 1px solid #e8ebec;
-    }
-    .md-block-atomic-embed button {
-        background: #fff;
-        border: 1px solid #7d7d7d;
-    }
-    .md-block-atomic-wrapper hr {
-        border: none;
-        background: #5a5a5a;
-        min-height: 3px;
-        max-width: 50px;
-    }
-
-    .md-block-atomic-wrapper.md-block-atomic-wrapper-separator {
-        border-color: transparent;
-    }
-
-    .md-RichEditor-editor .md-RichEditor-blockquote {
-        font-family: 'Hoefler Text', 'Georgia', serif;
-    }
-    .md-RichEditor-editor .public-DraftStyleDefault-pre {
-        font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-    }
-
-    .github-fork-ribbon:before {
-        background-color: #090;
-    }
-    .editor-action {
-        bottom: 5px;
-        top: auto;
-    }
-    .menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 10px 20px;
-        background: #eee;
-        z-index: 100;
-        color: #555;
-        font-family: Hoefler Text,Georgia,serif;
-        font-size: 1.2em;
-    }
-    .md-editor-toolbar-edit-link a {
-        color: #fff;
-    }
-    </style>
-    <script type="text/javascript">
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-47902363-1', 'bitwiser.in');
-    ga('require', 'displayfeatures');
-    ga('send', 'pageview');
-    </script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Medium Draft</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-    <div id="app">
-      <p>Loading Editor...</p>
-    </div>
-    <div class="menu">
-        <a href="/">Bitwiser.in</a>
-    </div>
-    <a class="github-fork-ribbon" href="https://github.com/brijeshb42/medium-draft" title="Fork me on GitHub" target="_blank">Fork me on GitHub</a>
-    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/react@16.6.3/umd/react.production.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/react-dom@16.6.3/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/prop-types@15.6.2/prop-types.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/immutable@3.8.1/dist/immutable.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/draft-js@0.10.5/dist/Draft.min.js"></script>
-    <script src="https://unpkg.com/react-transition-group@2.5.0/dist/react-transition-group.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/medium-draft/dist/medium-draft.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/react-dom@16.6.3/umd/react-dom-server.browser.production.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/draft-convert@1.3.3/dist/draft-convert.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/medium-draft/dist/medium-draft-exporter.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/medium-draft/dist/medium-draft-importer.js"></script>
-<script type="text/babel">
-const {
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-  KeyBindingUtil,
-  Modifier,
-  AtomicBlockUtils,
-  Entity,
-} = Draft;
-
-const {
-  Editor,
-  StringToTypeMap,
-  Block,
-  keyBindingFn,
-  createEditorState,
-  addNewBlockAt,
-  beforeInput,
-  getCurrentBlock,
-  ImageSideButton,
-  rendererFn,
-  HANDLED,
-  NOT_HANDLED
-} = MediumDraft;
-
-const {
-  setRenderOptions,
-  blockToHTML,
-  entityToHTML,
-  styleToHTML
-} = MediumDraftExporter;
-
-const newBlockToHTML = (block) => {
-  const blockType = block.type;
-  if (block.type === Block.ATOMIC) {
-    if (block.text === 'E') {
-      return {
-        start: '<figure class="md-block-atomic md-block-atomic-embed">',
-        end: '</figure>',
-      };
-    } else if (block.text === '-') {
-      return <div className="md-block-atomic md-block-atomic-break"><hr/></div>;
-    }
-  }
-  return blockToHTML(block);
-};
-
-const newEntityToHTML = (entity, originalText) => {
-  if (entity.type === 'embed') {
-    return (
-      <div>
-        <a
-          className="embedly-card"
-          href={entity.data.url}
-          data-card-controls="0"
-          data-card-theme="dark"
-        >Embedded ― {entity.data.url}
-        </a>
-      </div>
-    );
-  }
-  return entityToHTML(entity, originalText);
-};
-
-
-const newTypeMap = StringToTypeMap;
-newTypeMap['2.'] = Block.OL;
-
-const { hasCommandModifier } = KeyBindingUtil;
-
-/*
-A demo for example editor. (Feature not built into medium-draft as too specific.)
-Convert quotes to curly quotes.
-*/
-const DQUOTE_START = '“';
-const DQUOTE_END = '”';
-const SQUOTE_START = '‘';
-const SQUOTE_END = '’';
-
-const handleBeforeInput = (editorState, str, onChange) => {
-  if (str === '"' || str === '\'') {
-    const currentBlock = getCurrentBlock(editorState);
-    const selectionState = editorState.getSelection();
-    const contentState = editorState.getCurrentContent();
-    const text = currentBlock.getText();
-    const len = text.length;
-    if (selectionState.getAnchorOffset() === 0) {
-      onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
-      return HANDLED;
-    } else if (len > 0) {
-      const lastChar = text[len - 1];
-      if (lastChar !== ' ') {
-        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_END : SQUOTE_END)), 'transpose-characters'));
-      } else {
-        onChange(EditorState.push(editorState, Modifier.insertText(contentState, selectionState, (str === '"' ? DQUOTE_START : SQUOTE_START)), 'transpose-characters'));
-      }
-      return HANDLED;
-    }
-  }
-  return beforeInput(editorState, str, onChange, newTypeMap);
-};
-
-
-class SeparatorSideButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
-  }
-
-  onClick() {
-    const entityKey = Entity.create('separator', 'IMMUTABLE', {});
-    this.props.setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(
-        this.props.getEditorState(),
-        entityKey,
-        '-'
-      )
-    );
-    this.props.close();
-  }
-
-  render() {
-    return (
-      <button
-        className="md-sb-button md-sb-img-button"
-        type="button"
-        title="Add a separator"
-        onClick={this.onClick}
-      >
-        <i className="fa fa-minus" />
-      </button>
-    );
-  }
-}
-
-
-class EmbedSideButton extends React.Component {
-
-  static propTypes = {
-    setEditorState: PropTypes.func,
-    getEditorState: PropTypes.func,
-    close: PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
-    this.addEmbedURL = this.addEmbedURL.bind(this);
-  }
-
-  onClick() {
-    const url = window.prompt('Enter a URL', 'https://www.youtube.com/watch?v=PMNFaAUs2mo');
-    this.props.close();
-    if (!url) {
-      return;
-    }
-    this.addEmbedURL(url);
-  }
-
-  addEmbedURL(url) {
-    const entityKey = Entity.create('embed', 'IMMUTABLE', {url});
-    this.props.setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(
-        this.props.getEditorState(),
-        entityKey,
-        'E'
-      )
-    );
-  }
-
-  render() {
-    return (
-      <button
-        className="md-sb-button md-sb-img-button"
-        type="button"
-        title="Add an Embed"
-        onClick={this.onClick}
-      >
-        <i className="fa fa-code" />
-      </button>
-    );
-  }
-
-}
-
-
-class AtomicEmbedComponent extends React.Component {
-
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showIframe: false,
-    };
-
-    this.enablePreview = this.enablePreview.bind(this);
-  }
-
-  componentDidMount() {
-    this.renderEmbedly();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.showIframe !== this.state.showIframe && this.state.showIframe === true) {
-      this.renderEmbedly();
-    }
-  }
-
-  getScript() {
-    const script = document.createElement('script');
-    script.async = 1;
-    script.src = '//cdn.embedly.com/widgets/platform.js';
-    script.onload = () => {
-      window.embedly();
-    };
-    document.body.appendChild(script);
-  }
-
-  renderEmbedly() {
-    if (window.embedly) {
-      window.embedly();
-    } else {
-      this.getScript();
-    }
-  }
-
-  enablePreview() {
-    this.setState({
-      showIframe: true,
-    });
-  }
-
-  render() {
-    const { url } = this.props.data;
-    const innerHTML = `<div><a class="embedly-card" href="${url}" data-card-controls="0" data-card-theme="dark">Embedded ― ${url}</a></div>`;
-    return (
-      <div className="md-block-atomic-embed">
-        <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </div>
-    );
-  }
-
-  /*render() {
-    const { url } = this.props.data;
-    const innerHTML = `<div><a class="embedly-card" href="${url}" data-card-controls="0" data-card-theme="dark">Embedded ― ${url}</a></div>`;
-    return (
-      <div className="md-block-atomic-embed">
-        {this.state.showIframe ? <div dangerouslySetInnerHTML={{ __html: innerHTML }} /> : (
-          <div>
-            <p>Embedded URL - <a href={url} target="_blank">{url}</a></p>
-            <button type="button" onClick={this.enablePreview}>Show Preview</button>
-          </div>
-        )}
-      </div>
-    );
-  }*/
-}
-
-const AtomicSeparatorComponent = (props) => (
-  <hr />
-);
-
-const AtomicBlock = (props) => {
-  const { blockProps, block, contentState } = props;
-  const entity = contentState.getEntity(block.getEntityAt(0));
-  const data = entity.getData();
-  const type = entity.getType();
-  if (blockProps.components[type]) {
-    const AtComponent = blockProps.components[type];
-    return (
-      <div className={`md-block-atomic-wrapper md-block-atomic-wrapper-${type}`}>
-        <AtComponent data={data} />
-      </div>
-    );
-  }
-  return <p>Block of type <b>{type}</b> is not supported.</p>;
-};
-
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      editorState: createEditorState(),
-      editorEnabled: true,
-      placeholder: 'Write here...',
-    };
-
-    this.onChange = (editorState, callback = null) => {
-      if (this.state.editorEnabled) {
-        this.setState({ editorState }, () => {
-          if (callback) {
-            callback();
-          }
-        });
-      }
-    };
-
-    this.sideButtons = [{
-      title: 'Image',
-      component: ImageSideButton,
-    }, {
-      title: 'Embed',
-      component: EmbedSideButton,
-    }, {
-      title: 'Separator',
-      component: SeparatorSideButton,
-    }];
-
-    this.exporter = setRenderOptions({
-      styleToHTML,
-      blockToHTML: newBlockToHTML,
-      entityToHTML: newEntityToHTML,
-    });
-
-    this.getEditorState = () => this.state.editorState;
-
-    this.logData = this.logData.bind(this);
-    this.renderHTML = this.renderHTML.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
-    this.fetchData = this.fetchData.bind(this);
-    this.loadSavedData = this.loadSavedData.bind(this);
-    this.keyBinding = this.keyBinding.bind(this);
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.handleDroppedFiles = this.handleDroppedFiles.bind(this);
-    this.handleReturn = this.handleReturn.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({
-      placeholder: 'Loading...',
-    });
-    setTimeout(this.fetchData, 1000);
-    // this.refs.editor.focus();
-  }
-
-  rendererFn(setEditorState, getEditorState) {
-    const atomicRenderers = {
-      embed: AtomicEmbedComponent,
-      separator: AtomicSeparatorComponent,
-    };
-    const rFnOld = rendererFn(setEditorState, getEditorState);
-    const rFnNew = (contentBlock) => {
-      const type = contentBlock.getType();
-      switch(type) {
-        case Block.ATOMIC:
-          return {
-            component: AtomicBlock,
-            editable: false,
-            props: {
-              components: atomicRenderers,
-            },
-          };
-        default: return rFnOld(contentBlock);
-      }
-    };
-    return rFnNew;
-  }
-
-  keyBinding(e) {
-    if (hasCommandModifier(e)) {
-      if (e.which === 83) {  /* Key S */
-        return 'editor-save';
-      }
-      // else if (e.which === 74 /* Key J */) {
-      //  return 'do-nothing';
-      //}
-    }
-    if (e.altKey === true) {
-      if (e.shiftKey === true) {
-        switch (e.which) {
-          /* Alt + Shift + L */
-          case 76: return 'load-saved-data';
-          /* Key E */
-          // case 69: return 'toggle-edit-mode';
-        }
-      }
-      if (e.which === 72 /* Key H */) {
-        return 'toggleinline:HIGHLIGHT';
-      }
-    }
-    return keyBindingFn(e);
-  }
-
-  handleKeyCommand(command) {
-    if (command === 'editor-save') {
-      window.localStorage['editor'] = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-      window.ga('send', 'event', 'draftjs', command);
-      return true;
-    } else if (command === 'load-saved-data') {
-      this.loadSavedData();
-      return true;
-    } else if (command === 'toggle-edit-mode') {
-      this.toggleEdit();
-    }
-    return false;
-  }
-
-  fetchData() {
-    window.ga('send', 'event', 'draftjs', 'load-data', 'ajax');
-    const req = new XMLHttpRequest();
-    req.open('GET', 'data.json', true);
-    req.onreadystatechange = () => {
-      if (req.readyState === 4) {
-        const data = JSON.parse(req.responseText);
-        this.setState({
-          editorState: createEditorState(data),
-          placeholder: 'Write here...'
-        }, () => {
-          this._editor.focus();
-        });
-        window.ga('send', 'event', 'draftjs', 'data-success');
-      }
-    };
-    req.send();
-  }
-
-  logData(e) {
-    const es = convertToRaw(this.state.editorState.getCurrentContent());
-    console.log(es);
-    console.log(this.state.editorState.getSelection().toJS());
-    window.ga('send', 'event', 'draftjs', 'log-data');
-  }
-
-  renderHTML(e) {
-    const currentContent = this.state.editorState.getCurrentContent();
-    const eHTML = this.exporter(currentContent);
-    var newWin = window.open(
-      `${window.location.pathname}rendered.html`,
-      'windowName',`height=${window.screen.height},width=${window.screen.wdith}`);
-    newWin.onload = () => {
-      newWin.postMessage(eHTML, window.location.origin);
-      window.ga('send', 'event', 'draftjs', 'render-window-loaded');
-    };
-    window.ga('send', 'event', 'draftjs', 'render-window-opened');
-  }
-
-  loadSavedData() {
-    const data = window.localStorage.getItem('editor');
-    if (data === null) {
-      return;
-    }
-    try {
-      const blockData = JSON.parse(data);
-      console.log(blockData);
-      this.onChange( EditorState.push(this.state.editorState, convertFromRaw(blockData)), this._editor.focus);
-    } catch(e) {
-      console.log(e);
-    }
-    window.ga('send', 'event', 'draftjs', 'load-data', 'localstorage');
-  }
-
-  toggleEdit(e) {
-    this.setState({
-      editorEnabled: !this.state.editorEnabled
-    }, () => {
-      window.ga('send', 'event', 'draftjs', 'toggle-edit', this.state.editorEnabled + '');
-    });
-  }
-
-  handleDroppedFiles(selection, files) {
-    window.ga('send', 'event', 'draftjs', 'filesdropped', files.length + ' files');
-    const file = files[0];
-    if (file.type.indexOf('image/') === 0) {
-      // eslint-disable-next-line no-undef
-      const src = URL.createObjectURL(file);
-      this.onChange(addNewBlockAt(
-        this.state.editorState,
-        selection.getAnchorKey(),
-        Block.IMAGE, {
-          src,
-        }
-      ));
-      return HANDLED;
-    }
-    return NOT_HANDLED
-  }
-
-  handleReturn(e) {
-    // const currentBlock = getCurrentBlock(this.state.editorState);
-    // var text = currentBlock.getText();
-    return NOT_HANDLED;
-  }
-
-  render() {
-    const { editorState, editorEnabled } = this.state;
-    return (
-      <div>
-        <div className="editor-action">
-          <button onClick={this.logData}>Log State</button>
-          <button onClick={this.renderHTML}>Render HTML</button>
-          <button onClick={this.toggleEdit}>Toggle Edit</button>
-        </div>
-        <Editor
-          ref={(e) => {this._editor = e;}}
-          editorState={editorState}
-          onChange={this.onChange}
-          editorEnabled={editorEnabled}
-          handleDroppedFiles={this.handleDroppedFiles}
-          handleKeyCommand={this.handleKeyCommand}
-          placeholder={this.state.placeholder}
-          keyBindingFn={this.keyBinding}
-          beforeInput={handleBeforeInput}
-          handleReturn={this.handleReturn}
-          sideButtons={this.sideButtons}
-          rendererFn={this.rendererFn}
-        />
-      </div>
-    );
-  }
-};
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('app')
-);
-
-</script>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Medium Draft</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Medium Draft</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="medium-draft-demo">medium-draft - <a href="http://bitwiser.in/medium-draft/">demo</a></h1>
+				<p><a href="https://travis-ci.org/brijeshb42/medium-draft"><img src="https://travis-ci.org/brijeshb42/medium-draft.svg?branch=master" alt="Build Status"></a></p>
+				<p>A medium like rich text editor built upon <a href="https://facebook.github.io/draft-js/">draft-js</a> with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.</p>
+				<p>This branch supports draft-js-plugins and can accept an array of plugins to
+				extend the functionalities.</p>
+				<h3 id="developer">Developer</h3>
+				<ul>
+					<li>Clone this repo <code>git clone https://github.com/brijeshb42/medium-draft.git</code>.</li>
+					<li>Install node packages <code>yarn install</code> or <code>npm install</code>.</li>
+					<li>Start local demo <code>npm run start</code> or <code>yarn start</code>. This will start a local server on port <code>8080</code>.</li>
+				</ul>
+				<h4 id="license">LICENSE</h4>
+				<p>MIT</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_editor_.html">"<wbr>Editor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_atomic_.html">"components/blocks/atomic"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_blockquotecaption_.html">"components/blocks/blockquotecaption"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_break_.html">"components/blocks/break"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_caption_.html">"components/blocks/caption"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_code_.html">"components/blocks/code"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_image_.html">"components/blocks/image"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_text_.html">"components/blocks/text"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_blocks_todo_.html">"components/blocks/todo"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_components_entities_link_.html">"components/entities/link"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_model_index_.html">"model/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugin_editor_editor_.html">"plugin_<wbr>editor/<wbr>Editor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugin_editor_multidecorator_.html">"plugin_<wbr>editor/<wbr>Multi<wbr>Decorator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_blockmoveplugin_.html">"plugins/block<wbr>Move<wbr>Plugin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_blockrendererfn_.html">"plugins/block<wbr>Renderer<wbr>Fn"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_codeblockplugin_.html">"plugins/codeblockplugin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_imageblockplugin_.html">"plugins/imageblock<wbr>Plugin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_keyboardplugin_.html">"plugins/keyboard<wbr>Plugin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_plugins_style_.html">"plugins/style"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_constants_.html">"util/constants"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_index_.html">"util/index"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

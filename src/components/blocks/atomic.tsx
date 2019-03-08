@@ -1,13 +1,17 @@
-import PropTypes from 'prop-types';
-// import './atomic.scss';
-
 import React from 'react';
+import Draft from 'draft-js';
 
-const AtomicBlock = (props) => {
+type Props = {
+  block: Draft.ContentBlock;
+  getEditorState: () => Draft.EditorState;
+};
+
+const AtomicBlock: React.StatelessComponent<Props> = (props: Props) => {
   const content = props.getEditorState().getCurrentContent();
   const entity = content.getEntity(props.block.getEntityAt(0));
   const data = entity.getData();
   const type = entity.getType();
+
   if (type === 'image') {
     return (
       <div className="md-block-atomic-wrapper">
@@ -18,12 +22,8 @@ const AtomicBlock = (props) => {
       </div>
     );
   }
-  return <p>No supported block for {type}</p>;
-};
 
-AtomicBlock.propTypes = {
-  block: PropTypes.object,
-  getEditorState: PropTypes.func,
+  return <p>No supported atomic block of type {type}.</p>;
 };
 
 export default AtomicBlock;

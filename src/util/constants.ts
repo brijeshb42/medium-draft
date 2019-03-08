@@ -40,7 +40,7 @@ export const Entity = {
 
 export const HYPERLINK = 'hyperlink';
 export const HANDLED = 'handled';
-export const NOT_HANDLED = 'not_handled';
+export const NOT_HANDLED = 'not-handled';
 
 export const KEY_COMMANDS = {
   addNewBlock: () => 'add-new-block',
@@ -50,6 +50,42 @@ export const KEY_COMMANDS = {
   toggleInline: (type = '') => `toggleinline:${type}`,
   deleteBlock: () => 'delete-block',
 };
+
+export const KEY_CODES = {
+  K: 75,
+  L: 76,
+  ONE: 49,
+  TWO: 50,
+  THREE: 51,
+  EIGHT: 56,
+  COMMA: 188,
+  PERIOD: 190,
+  QUOTE: 222,
+};
+
+export const StringToTypeMap: {[key: string]: string} = {
+  '--': `${Block.BLOCKQUOTE}:${Block.BLOCKQUOTE_CAPTION}:${Block.CAPTION}`,
+  '> ': Block.BLOCKQUOTE,
+  '*.': Block.UL,
+  '* ': Block.UL,
+  '- ': Block.UL,
+  '1.': Block.OL,
+  '# ': Block.H1,
+  '##': Block.H2,
+  '==': Block.UNSTYLED,
+  '[]': Block.TODO,
+  '``': Block.CODE,
+};
+
+export const continuousBlocks = [
+  Block.UNSTYLED,
+  Block.BLOCKQUOTE,
+  Block.OL,
+  Block.UL,
+  Block.TODO,
+];
+
+export const BASE_BLOCK_CLASS = 'md-block';
 
 export default {
   Block,

@@ -1,0 +1,45 @@
+body {
+  font-size: 16px;
+}
+
+a, a:visited {
+  color: #08c;
+}
+
+.md-RichEditor-root {
+  font-family: 'Georgia', serif;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.md-RichEditor-editor {
+  background: #fbffff;
+}
+.md-block-atomic-wrapper {
+  position: relative;
+  border: 1px solid #f7f7f7;
+}
+.md-block-atomic-embed button {
+  background: #fff;
+  border: 1px solid #7d7d7d;
+}
+.md-block-atomic-wrapper hr {
+  border: none;
+  background: #5a5a5a;
+  min-height: 3px;
+  max-width: 50px;
+}
+.md-RichEditor-editor .md-RichEditor-blockquote {
+  font-family: 'Hoefler Text', 'Georgia', serif;
+}
+.md-RichEditor-editor .public-DraftStyleDefault-pre {
+  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+}
+.md-block-atomic-wrapper.md-block-atomic-wrapper-separator {
+  border-color: transparent;
+}
+
+pre[class*="language-"] {
+  padding: 0;
+}

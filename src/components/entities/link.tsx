@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
+import Draft from 'draft-js';
 import React from 'react';
 
 import { Entity } from '../../util/constants';
 
 
-export const findLinkEntities = (contentBlock, callback, contentState) => {
+export const findLinkEntities = (contentBlock: Draft.ContentBlock, callback: (start: number, end: number) => void, contentState: Draft.ContentState) => {
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
@@ -17,7 +17,13 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
   );
 };
 
-const Link = (props) => {
+type Props = {
+  contentState: Draft.ContentState,
+  entityKey: string,
+  children: React.ReactNode,
+};
+
+const Link = (props: Props) => {
   const { contentState, entityKey } = props;
   const { url } = contentState.getEntity(entityKey).getData();
   return (
@@ -29,12 +35,6 @@ const Link = (props) => {
       aria-label={url}
     >{props.children}</a>
   );
-};
-
-Link.propTypes = {
-  children: PropTypes.node,
-  entityKey: PropTypes.string,
-  contentState: PropTypes.object.isRequired,
 };
 
 export default Link;
