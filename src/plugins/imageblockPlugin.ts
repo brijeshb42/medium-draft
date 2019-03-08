@@ -1,4 +1,4 @@
-import Draft from 'draft-js';
+import { genKey, EditorState, ContentBlock, SelectionState } from 'draft-js';
 
 import { Block, BASE_BLOCK_CLASS, NOT_HANDLED, HANDLED } from "../util/constants";
 import ImageBlock from "../components/blocks/image";
@@ -14,7 +14,7 @@ export interface ImagePluginOptionType {
   uploadImage?: ImageUploadFunction;
 };
 
-function shouldEarlyReturn(block: Draft.ContentBlock): boolean {
+function shouldEarlyReturn(block: ContentBlock): boolean {
   return (block.getType() !== Block.IMAGE);
 }
 
@@ -56,7 +56,7 @@ export default function imageBlockPlugin(options?: ImagePluginOptionType): Draft
       const uploading = blockData.has('uploading') && blockData.get('uploading', false);
       const imgClass = `${BASE_BLOCK_CLASS}-image`;
 
-      return `${BASE_BLOCK_CLASS} ${imgClass} ${uploading ? `${imgClass}__uploading` : ''}`;
+      return `${BASE_BLOCK_CLASS} ${imgClass} ${uploading ? `${imgClass}--uploading` : ''}`;
     },
 
     handleDroppedFiles(selection, files, { getEditorState, setEditorState }) {
@@ -74,7 +74,7 @@ export default function imageBlockPlugin(options?: ImagePluginOptionType): Draft
       const currentBlockKey = selection.getIsBackward() ? selection.getFocusKey() : selection.getAnchorKey();
       const block = editorState.getCurrentContent().getBlockForKey(currentBlockKey);
       
-      let newEditorState: Draft.EditorState;
+      let newEditorState: EditorState;
       let src = URL.createObjectURL(imageFiles[0]);
       let newBlockKey: string;
 
@@ -88,7 +88,7 @@ export default function imageBlockPlugin(options?: ImagePluginOptionType): Draft
           }
         );
       } else {
-        newBlockKey = Draft.genKey();
+        newBlockKey = genKey();
         newEditorState = addNewBlockAt(
           editorState,
           currentBlockKey,
@@ -100,7 +100,7 @@ export default function imageBlockPlugin(options?: ImagePluginOptionType): Draft
         );
       }
 
-      setEditorState(Draft.EditorState.forceSelection(newEditorState, new Draft.SelectionState({
+      setEditorState(EditorState.forceSelection(newEditorState, new SelectionState({
         focusKey: newBlockKey,
         anchorKey: newBlockKey,
         focusOffset: 0,
