@@ -60,7 +60,7 @@ export default class AddButton extends React.Component {
         this.hideBlock();
       } else {
         this.setState({
-          visible: true && hasFocus,
+          visible: hasFocus,
         });
       }
       return;
@@ -117,7 +117,7 @@ export default class AddButton extends React.Component {
     // const rect = node.getBoundingClientRect();
     this.node = node;
     this.setState({
-      visible: true && hasFocus,
+      visible: hasFocus,
       style: {
         top: node.offsetTop - 3,
       },
