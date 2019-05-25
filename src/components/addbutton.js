@@ -98,7 +98,8 @@ export default class AddButton extends React.Component {
   }
 
   findNode() {
-    const { editorState } = this.props;
+    const { getEditorState } = this.props;
+    const editorState = getEditorState();
     const hasFocus = editorState.getSelection().getHasFocus();
     // eslint-disable-next-line no-undef
     const node = getSelectedBlockNode(window);
