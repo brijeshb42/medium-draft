@@ -7,7 +7,7 @@ import BreakBlock from './blocks/break';
 
 import { Block } from '../util/constants';
 
-export default (setEditorState, getEditorState) => (contentBlock) => {
+export default (setEditorState, getEditorState, extraProps) => (contentBlock) => {
   // console.log(editorState, onChange);
   const type = contentBlock.getType();
   switch (type) {
@@ -36,6 +36,7 @@ export default (setEditorState, getEditorState) => (contentBlock) => {
       props: {
         setEditorState,
         getEditorState,
+        placeholder: extraProps ? extraProps.imageCaptionPlaceholder : '',
       },
     };
     case Block.BREAK: return {
