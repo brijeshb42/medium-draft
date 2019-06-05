@@ -75,6 +75,7 @@ class MediumDraftEditor extends React.Component {
       description: PropTypes.string,
     })),
     placeholder: PropTypes.string,
+    imageCaptionPlaceholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
     sideButtons: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -104,6 +105,7 @@ class MediumDraftEditor extends React.Component {
     blockButtons: BLOCK_BUTTONS,
     inlineButtons: INLINE_BUTTONS,
     placeholder: 'Write your story...',
+    imageCaptionPlaceholder: 'Write a caption...',
     continuousBlocks: [
       Block.UNSTYLED,
       Block.BLOCKQUOTE,
@@ -140,7 +142,7 @@ class MediumDraftEditor extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
-    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState, this.props);
   }
 
   /**
@@ -202,10 +204,6 @@ class MediumDraftEditor extends React.Component {
   Adds a hyperlink on the selected text with some basic checks.
   */
   setLink(url) {
-    let { editorState } = this.props;
-    const selection = editorState.getSelection();
-    const content = editorState.getCurrentContent();
-    let entityKey = null;
     let newUrl = url;
     if (this.props.processURL) {
       newUrl = this.props.processURL(url);
@@ -217,11 +215,25 @@ class MediumDraftEditor extends React.Component {
       }
     }
     if (newUrl !== '') {
-      const contentWithEntity = content.createEntity(E.LINK, 'MUTABLE', { url: newUrl });
-      editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
-      entityKey = contentWithEntity.getLastCreatedEntityKey();
+      this.onChange(this.applyEntity(E.LINK, { url: newUrl }));
+    } else {
+      this.onChange(this.applyEntity(E.LINK, null));
     }
-    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey), this.focus);
+  }
+
+  applyEntity(type, data = null, mutable = true) {
+    const { editorState } = this.props;
+    const selection = editorState.getSelection();
+    let content = editorState.getCurrentContent();
+
+    if (!data) {
+      content = Modifier.applyEntity(content, selection, null);
+    } else {
+      const contentWithEntity = content.createEntity(type, mutable ? 'MUTABLE' : 'IMMUTABLE', data);
+      const entityKey = contentWithEntity.getLastCreatedEntityKey();
+      content = Modifier.applyEntity(content, selection, entityKey);
+    }
+    return EditorState.push(editorState, content, 'apply-entity');
   }
 
   /**
@@ -302,23 +314,12 @@ class MediumDraftEditor extends React.Component {
         return HANDLED;
       }
     }
-    /* else if (command === KEY_COMMANDS.addNewBlock()) {
-      const { editorState } = this.props;
-      this.onChange(addNewBlock(editorState, Block.BLOCKQUOTE));
-      return HANDLED;
-    } */
+
     const block = getCurrentBlock(editorState);
     const currentBlockType = block.getType();
-    // if (command === KEY_COMMANDS.deleteBlock()) {
-    //   if (currentBlockType.indexOf(Block.ATOMIC) === 0 && block.getText().length === 0) {
-    //     this.onChange(resetBlockWithType(editorState, Block.UNSTYLED, { text: '' }));
-    //     return HANDLED;
-    //   }
-    //   return NOT_HANDLED;
-    // }
+
     if (command.indexOf(`${KEY_COMMANDS.changeType()}`) === 0) {
       let newBlockType = command.split(':')[1];
-      // const currentBlockType = block.getType();
       if (currentBlockType === Block.ATOMIC) {
         return HANDLED;
       }
@@ -432,7 +433,29 @@ class MediumDraftEditor extends React.Component {
   The function documented in `draft-js` to be used to toggle inline styles of selection (mainly
   for some key combinations handled by default inside draft-js).
   */
-  _toggleInlineStyle(inlineStyle) {
+  _toggleInlineStyle(inlineStyle, entity) {
+    if (entity === 'entity') {
+      // Hard coded for now till merged in master
+      if (inlineStyle === E.COLOR) {
+        const input = window.prompt('Enter comma separated color value:');
+
+        if (!input) {
+          return;
+        }
+
+        const colors = input.split(',');
+        if (!colors.length === 2) {
+          return;
+        }
+
+        this.onChange(this.applyEntity(inlineStyle, {
+          textColor: colors[0],
+          backgroundColor: colors[1],
+        }));
+      }
+      return;
+    }
+
     this.onChange(
       RichUtils.toggleInlineStyle(
         this.props.editorState,

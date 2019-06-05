@@ -122,6 +122,28 @@ export const entityToHTML = (entity, originalText) => {
         {originalText}
       </a>
     );
+  } else if (entity.type === Entity.COLOR) {
+    const { textColor, backgroundColor } = entity.data;
+
+    const extraProps = {
+      style: {},
+      className: 'md-entity-color',
+    };
+
+    if (textColor) {
+      extraProps.style.color = textColor;
+      extraProps['data-text-color'] = textColor;
+    }
+
+    if (backgroundColor) {
+      extraProps.style.backgroundColor = backgroundColor;
+      extraProps['data-background-color'] = backgroundColor;
+    }
+    return (
+      <span {...extraProps}>
+        {originalText}
+      </span>
+    );
   }
   return originalText;
 };

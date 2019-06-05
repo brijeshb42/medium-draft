@@ -36,11 +36,13 @@ export const Inline = {
 
 export const Entity = {
   LINK: 'LINK',
+  COLOR: 'COLOR',
 };
 
 export const HYPERLINK = 'hyperlink';
 export const HANDLED = 'handled';
 export const NOT_HANDLED = 'not_handled';
+export const COLORPICKER = 'colorpicker';
 
 export const KEY_COMMANDS = {
   addNewBlock: () => 'add-new-block',

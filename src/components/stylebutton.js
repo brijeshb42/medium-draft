@@ -8,7 +8,13 @@ export default class StyleButton extends React.Component {
     super(props);
     this.onToggle = (e) => {
       e.preventDefault();
-      this.props.onToggle(this.props.style);
+      const { style, entity } = this.props;
+
+      if (entity) {
+        this.props.onToggle(entity, true);
+      } else {
+        this.props.onToggle(style);
+      }
     };
   }
 
@@ -21,6 +27,7 @@ export default class StyleButton extends React.Component {
       className += ' md-RichEditor-activeButton';
     }
     className += ` md-RichEditor-styleButton-${this.props.style.toLowerCase()}`;
+
     return (
       <span
         className={`${className} hint--top`}
@@ -37,6 +44,7 @@ export default class StyleButton extends React.Component {
 StyleButton.propTypes = {
   onToggle: PropTypes.func,
   style: PropTypes.string,
+  entity: PropTypes.string,
   active: PropTypes.bool,
   icon: PropTypes.string,
   label: PropTypes.oneOfType([
@@ -45,4 +53,6 @@ StyleButton.propTypes = {
     PropTypes.object,
   ]),
   description: PropTypes.string,
+  getProps: PropTypes.func,
 };
+

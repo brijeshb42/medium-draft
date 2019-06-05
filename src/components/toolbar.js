@@ -361,7 +361,12 @@ export const INLINE_BUTTONS = [
       </svg>
     ),
     style: HYPERLINK,
-    icon: 'link',
     description: 'Add a link',
+  },
+  {
+    label: 'Cc',
+    entity: Entity.COLOR,
+    style: Entity.COLOR,
+    description: 'Pick a color',
   },
 ];

@@ -28,6 +28,11 @@ export const htmlToStyle = (nodeName, node, currentStyle) => {
 export const htmlToEntity = (nodeName, node, createEntity) => {
   if (nodeName === 'a') {
     return createEntity(EntityType.LINK, 'MUTABLE', { url: node.href });
+  } else if (nodeName === 'span' && node.className === 'md-entity-color') {
+    return createEntity(EntityType.COLOR, 'MUTABLE', {
+      textColor: node.getAttribute('data-text-color'),
+      backgroundColor: node.getAttribute('data-background-color'),
+    });
   }
   return undefined;
 };

@@ -12,15 +12,21 @@ const InlineToolbar = (props) => {
   return (
     <div className="md-RichEditor-controls md-RichEditor-controls-inline">
       {props.buttons.map(type => {
-        const iconLabel = {};
-        iconLabel.label = type.label;
+        const extraProps = {};
+        extraProps.label = type.label;
+
+        if (type.getProps) {
+          extraProps.getProps = type.getProps;
+        }
+
         return (
           <StyleButton
-            {...iconLabel}
+            {...extraProps}
             key={type.style}
             active={currentStyle.has(type.style)}
             onToggle={props.onToggle}
             style={type.style}
+            entity={type.entity}
             description={type.description}
           />
         );
