@@ -12,6 +12,11 @@ export default class StyleButton extends React.Component {
     };
   }
 
+  onMouseDown = (e) => {
+    this.onToggle(e);
+    this.props.onClick();
+  }
+
   render() {
     if (this.props.style === HYPERLINK) {
       return null;
@@ -24,7 +29,7 @@ export default class StyleButton extends React.Component {
     return (
       <span
         className={`${className} hint--top`}
-        onMouseDown={this.onToggle}
+        onMouseDown={this.onMouseDown}
         aria-label={this.props.description}
       >
         {this.props.icon ? <i className={`fa fa-${this.props.icon}`} /> : this.props.label}
@@ -45,4 +50,5 @@ StyleButton.propTypes = {
     PropTypes.object,
   ]),
   description: PropTypes.string,
+  onClick: PropTypes.func,
 };
