@@ -7,14 +7,14 @@ export default class StyleButton extends React.Component {
   constructor(props) {
     super(props);
     this.onToggle = (e) => {
+      const { onToggle, onClick } = this.props;
+      const { style } = this.props;
       e.preventDefault();
-      this.props.onToggle(this.props.style);
+      onToggle(style);
+      if (onClick) {
+        onClick();
+      }
     };
-  }
-
-  onMouseDown = (e) => {
-    this.onToggle(e);
-    this.props.onClick();
   }
 
   render() {
@@ -29,7 +29,7 @@ export default class StyleButton extends React.Component {
     return (
       <span
         className={`${className} hint--top`}
-        onMouseDown={this.onMouseDown}
+        onMouseDown={this.onToggle}
         aria-label={this.props.description}
       >
         {this.props.icon ? <i className={`fa fa-${this.props.icon}`} /> : this.props.label}
