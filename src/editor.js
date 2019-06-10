@@ -63,6 +63,7 @@ class MediumDraftEditor extends React.Component {
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
+      onClick: PropTypes.func,
     })),
     inlineButtons: PropTypes.arrayOf(PropTypes.shape({
       label: PropTypes.oneOfType([
@@ -73,6 +74,7 @@ class MediumDraftEditor extends React.Component {
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
+      onClick: PropTypes.func,
     })),
     placeholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),

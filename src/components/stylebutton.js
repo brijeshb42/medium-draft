@@ -7,8 +7,13 @@ export default class StyleButton extends React.Component {
   constructor(props) {
     super(props);
     this.onToggle = (e) => {
+      const { onToggle, onClick } = this.props;
+      const { style } = this.props;
       e.preventDefault();
-      this.props.onToggle(this.props.style);
+      onToggle(style);
+      if (onClick) {
+        onClick();
+      }
     };
   }
 
@@ -45,4 +50,5 @@ StyleButton.propTypes = {
     PropTypes.object,
   ]),
   description: PropTypes.string,
+  onClick: PropTypes.func,
 };

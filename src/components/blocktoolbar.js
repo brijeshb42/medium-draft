@@ -24,6 +24,7 @@ const BlockToolbar = (props) => {
             onToggle={props.onToggle}
             style={type.style}
             description={type.description}
+            onClick={type.onClick}
           />
         );
       })}
@@ -35,6 +36,7 @@ BlockToolbar.propTypes = {
   buttons: PropTypes.array,
   editorState: PropTypes.object.isRequired,
   onToggle: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 export default BlockToolbar;
