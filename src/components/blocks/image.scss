@@ -27,6 +27,17 @@ figure.md-block-image {
         .public-DraftStyleDefault-block {
             text-align: center;
         }
+
+        &.md-block-image-caption--empty {
+          position: relative;
+
+          &::before {
+            position: absolute;
+            content: attr(data-placeholder);
+            left: 0;
+            opacity: 0.5;
+          }
+        }
     }
 
     .md-block-image-inner-container {

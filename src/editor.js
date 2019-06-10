@@ -77,6 +77,7 @@ class MediumDraftEditor extends React.Component {
       onClick: PropTypes.func,
     })),
     placeholder: PropTypes.string,
+    imageCaptionPlaceholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
     sideButtons: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -106,6 +107,7 @@ class MediumDraftEditor extends React.Component {
     blockButtons: BLOCK_BUTTONS,
     inlineButtons: INLINE_BUTTONS,
     placeholder: 'Write your story...',
+    imageCaptionPlaceholder: 'Add image caption...',
     continuousBlocks: [
       Block.UNSTYLED,
       Block.BLOCKQUOTE,
@@ -142,7 +144,7 @@ class MediumDraftEditor extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
-    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState, this.props);
   }
 
   /**
