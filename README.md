@@ -1,6 +1,7 @@
 Latest development is going on in this [branch](https://github.com/brijeshb42/medium-draft/tree/djs-pl-ed-ts).
 
-# medium-draft - [demo](http://bitwiser.in/medium-draft/)
+# medium-draft ([![npm
+version](https://badge.fury.io/js/medium-draft.svg)](https://www.npmjs.com/package/medium-draft))- [demo](http://bitwiser.in/medium-draft/)
 
 [![Build Status](https://travis-ci.org/brijeshb42/medium-draft.svg?branch=master)](https://travis-ci.org/brijeshb42/medium-draft)
 
