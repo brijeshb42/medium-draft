@@ -34,7 +34,6 @@ export default class AddButton extends React.Component {
     const { editorState } = newProps;
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
-    const hasFocus = editorState.getSelection().getHasFocus();
     if (!selectionState.isCollapsed() || selectionState.anchorKey !== selectionState.focusKey || contentState.getBlockForKey(selectionState.getAnchorKey()).getType().indexOf('atomic') >= 0) {
       // console.log('no sel');
       this.hideBlock();
@@ -60,7 +59,7 @@ export default class AddButton extends React.Component {
         this.hideBlock();
       } else {
         this.setState({
-          visible: hasFocus,
+          visible: true,
         });
       }
       return;
@@ -98,9 +97,6 @@ export default class AddButton extends React.Component {
   }
 
   findNode() {
-    const { getEditorState } = this.props;
-    const editorState = getEditorState();
-    const hasFocus = editorState.getSelection().getHasFocus();
     // eslint-disable-next-line no-undef
     const node = getSelectedBlockNode(window);
     if (node === this.node) {
@@ -118,7 +114,7 @@ export default class AddButton extends React.Component {
     // const rect = node.getBoundingClientRect();
     this.node = node;
     this.setState({
-      visible: hasFocus,
+      visible: true,
       style: {
         top: node.offsetTop - 3,
       },
