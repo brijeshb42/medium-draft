@@ -64,8 +64,9 @@ export const htmlToBlock = (nodeName, node) => {
       data: {},
     };
   } else if (nodeName === 'p' && (
-             node.className === `md-block-${Block.CAPTION.toLowerCase()}` ||
-             node.className === `md-block-${Block.BLOCKQUOTE_CAPTION.toLowerCase()}`)) {
+    node.className === `md-block-${Block.CAPTION.toLowerCase()}` ||
+    node.className === `md-block-${Block.BLOCKQUOTE_CAPTION.toLowerCase()}`
+  )) {
     return {
       type: Block.BLOCKQUOTE_CAPTION,
       data: {},

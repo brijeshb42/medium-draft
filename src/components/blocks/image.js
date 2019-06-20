@@ -6,7 +6,6 @@ import { EditorBlock, EditorState, SelectionState } from 'draft-js';
 import { getCurrentBlock } from '../../model/';
 
 class ImageBlock extends React.Component {
-
   static propTypes = {
     block: PropTypes.object,
     blockProps: PropTypes.object,

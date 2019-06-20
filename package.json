@@ -42,7 +42,7 @@
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-transform": "^2.0.2",
     "babel-plugin-transform-class-properties": "^6.11.5",
@@ -54,7 +54,7 @@
     "css-loader": "^0.23.1",
     "draft-convert": "^2.0.0",
     "enzyme": "^2.8.2",
-    "eslint": "^3.3.1",
+    "eslint": "^4.8.2",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-loader": "^1.5.0",
     "eslint-plugin-import": "^1.14.0",

@@ -43,7 +43,6 @@ some built-in customisations like custom blocks (todo, caption, etc) and
 some key handling for ease of use so that users' mouse usage is minimum.
 */
 class MediumDraftEditor extends React.Component {
-
   static propTypes = {
     beforeInput: PropTypes.func,
     keyBindingFn: PropTypes.func,
