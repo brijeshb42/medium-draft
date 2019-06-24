@@ -12,7 +12,6 @@ import { getCurrentBlock } from '../model/index';
 import { Entity, HYPERLINK } from '../util/constants';
 
 export default class Toolbar extends React.Component {
-
   static propTypes = {
     editorEnabled: PropTypes.bool,
     editorState: PropTypes.object,

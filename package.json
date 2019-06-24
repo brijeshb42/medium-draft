@@ -1,6 +1,6 @@
 {
   "name": "medium-draft",
-  "version": "0.5.10",
+  "version": "0.5.15",
   "description": "A medium like rich text editor built upon draft-js with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts",
   "main": "lib/index.js",
   "repository": "https://github.com/brijeshb42/medium-draft",
@@ -34,15 +34,15 @@
     "react-transition-group": "^2.5.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.2",
     "draft-convert": "^2.0.0",
+    "prop-types": "^15.6.2",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-transform": "^2.0.2",
     "babel-plugin-transform-class-properties": "^6.11.5",
@@ -54,7 +54,7 @@
     "css-loader": "^0.23.1",
     "draft-convert": "^2.0.0",
     "enzyme": "^2.8.2",
-    "eslint": "^3.3.1",
+    "eslint": "^4.8.2",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-loader": "^1.5.0",
     "eslint-plugin-import": "^1.14.0",
@@ -68,15 +68,14 @@
     "json-loader": "^0.5.4",
     "mocha": "^2.4.5",
     "mocha-loader": "^0.7.1",
-    "node-sass": "^4.10.0",
+    "node-sass": "4.12.0",
     "prop-types": "^15.6.2",
     "react": "15.6.2",
     "react-dom": "15.6.2",
-    "react-hot-loader": "^4.3.12",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.0",
-    "webpack-dev-server": "^3.1.113.1.113.1.11"
+    "webpack-dev-server": "2.11.3"
   },
   "bugs": {
     "url": "https://github.com/brijeshb42/medium-draft/issues"

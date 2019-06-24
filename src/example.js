@@ -346,12 +346,12 @@ class App extends React.Component {
     setTimeout(this.fetchData, 1000);
   }
 
-  rendererFn(setEditorState, getEditorState) {
+  rendererFn(setEditorState, getEditorState, ...args) {
     const atomicRenderers = {
       embed: AtomicEmbedComponent,
       separator: AtomicSeparatorComponent,
     };
-    const rFnOld = rendererFn(setEditorState, getEditorState);
+    const rFnOld = rendererFn(setEditorState, getEditorState, ...args);
     const rFnNew = (contentBlock) => {
       const type = contentBlock.getType();
       switch(type) {

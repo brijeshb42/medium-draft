@@ -22,6 +22,7 @@ const InlineToolbar = (props) => {
             onToggle={props.onToggle}
             style={type.style}
             description={type.description}
+            onClick={type.onClick}
           />
         );
       })}
@@ -33,6 +34,7 @@ InlineToolbar.propTypes = {
   buttons: PropTypes.array,
   editorState: PropTypes.object.isRequired,
   onToggle: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 export default InlineToolbar;

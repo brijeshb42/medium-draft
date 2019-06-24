@@ -43,7 +43,6 @@ some built-in customisations like custom blocks (todo, caption, etc) and
 some key handling for ease of use so that users' mouse usage is minimum.
 */
 class MediumDraftEditor extends React.Component {
-
   static propTypes = {
     beforeInput: PropTypes.func,
     keyBindingFn: PropTypes.func,
@@ -63,6 +62,7 @@ class MediumDraftEditor extends React.Component {
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
+      onClick: PropTypes.func,
     })),
     inlineButtons: PropTypes.arrayOf(PropTypes.shape({
       label: PropTypes.oneOfType([
@@ -73,8 +73,10 @@ class MediumDraftEditor extends React.Component {
       style: PropTypes.string.isRequired,
       icon: PropTypes.string,
       description: PropTypes.string,
+      onClick: PropTypes.func,
     })),
     placeholder: PropTypes.string,
+    imageCaptionPlaceholder: PropTypes.string,
     continuousBlocks: PropTypes.arrayOf(PropTypes.string),
     sideButtons: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -104,6 +106,7 @@ class MediumDraftEditor extends React.Component {
     blockButtons: BLOCK_BUTTONS,
     inlineButtons: INLINE_BUTTONS,
     placeholder: 'Write your story...',
+    imageCaptionPlaceholder: 'Add image caption...',
     continuousBlocks: [
       Block.UNSTYLED,
       Block.BLOCKQUOTE,
@@ -140,7 +143,7 @@ class MediumDraftEditor extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
     this.setLink = this.setLink.bind(this);
-    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState);
+    this.blockRendererFn = this.props.rendererFn(this.onChange, this.getEditorState, this.props);
   }
 
   /**

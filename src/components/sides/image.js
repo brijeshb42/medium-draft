@@ -5,7 +5,6 @@ import { addNewBlock } from '../../model';
 import { Block } from '../../util/constants';
 
 export default class ImageButton extends React.Component {
-
   static propTypes = {
     setEditorState: PropTypes.func,
     getEditorState: PropTypes.func,

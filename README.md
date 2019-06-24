@@ -2,7 +2,7 @@ Latest development is going on in this [branch](https://github.com/brijeshb42/me
 
 # medium-draft - [demo](http://bitwiser.in/medium-draft/)
 
-[![Build Status](https://travis-ci.org/brijeshb42/medium-draft.svg?branch=master)](https://travis-ci.org/brijeshb42/medium-draft)
+[![npm version](https://badge.fury.io/js/medium-draft.svg)](https://www.npmjs.com/package/medium-draft) [![Build Status](https://travis-ci.org/brijeshb42/medium-draft.svg?branch=master)](https://travis-ci.org/brijeshb42/medium-draft)
 
 A medium like rich text editor built upon [draft-js](https://facebook.github.io/draft-js/) with an emphasis on eliminating mouse usage by adding relevant keyboard shortcuts.
 

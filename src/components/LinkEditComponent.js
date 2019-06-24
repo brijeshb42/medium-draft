@@ -16,7 +16,6 @@ const getRelativeParent = (element) => {
 };
 
 export default class LinkEditComponent extends React.Component {
-
   static propTypes = {
     editorState: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
