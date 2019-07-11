@@ -152,8 +152,8 @@ class MediumDraftEditor extends React.Component {
    */
   onTab(e) {
     if (this.props.onTab) {
-      this.props.onTab(e)
-      return
+      this.props.onTab(e);
+      return;
     }
     const { editorState } = this.props;
     const newEditorState = RichUtils.onTab(e, editorState, 2);
