@@ -84,6 +84,7 @@ class MediumDraftEditor extends React.Component {
     })),
     editorState: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    onTab: PropTypes.func,
     handleKeyCommand: PropTypes.func,
     handleReturn: PropTypes.func,
     handlePastedText: PropTypes.func,
@@ -150,6 +151,10 @@ class MediumDraftEditor extends React.Component {
    * Implemented to provide nesting of upto 2 levels in ULs or OLs.
    */
   onTab(e) {
+    if (this.props.onTab) {
+      this.props.onTab(e);
+      return;
+    }
     const { editorState } = this.props;
     const newEditorState = RichUtils.onTab(e, editorState, 2);
     if (newEditorState !== editorState) {
