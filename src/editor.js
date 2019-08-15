@@ -85,6 +85,8 @@ class MediumDraftEditor extends React.Component {
     editorState: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onTab: PropTypes.func,
+    onUpArrow: PropTypes.func,
+    onDownArrow: PropTypes.func,
     handleKeyCommand: PropTypes.func,
     handleReturn: PropTypes.func,
     handlePastedText: PropTypes.func,
@@ -138,6 +140,8 @@ class MediumDraftEditor extends React.Component {
     this.getEditorState = () => this.props.editorState;
 
     this.onTab = this.onTab.bind(this);
+    this.onUpArrow = this.onUpArrow.bind(this);
+    this.onDownArrow = this.onDownArrow.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.handleBeforeInput = this.handleBeforeInput.bind(this);
     this.handleReturn = this.handleReturn.bind(this);
@@ -163,6 +167,11 @@ class MediumDraftEditor extends React.Component {
   }
 
   onUpArrow = (e) => {
+    if (this.props.onUpArrow) {
+      this.props.onUpArrow(e);
+      return;
+    }
+
     const { editorState } = this.props;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
@@ -205,6 +214,12 @@ class MediumDraftEditor extends React.Component {
       this.onChange(EditorState.forceSelection(editorState, newSelection));
     }
   };
+
+  onDownArrow = (e) => {
+    if (this.props.onDownArrow) {
+      this.props.onDownArrow(e);
+    }
+  }
 
   /*
   Adds a hyperlink on the selected text with some basic checks.
@@ -548,6 +563,7 @@ class MediumDraftEditor extends React.Component {
             onChange={this.onChange}
             onTab={this.onTab}
             onUpArrow={this.onUpArrow}
+            onDownArrow={this.onDownArrow}
             blockRenderMap={this.props.blockRenderMap}
             handleKeyCommand={this.handleKeyCommand}
             handleBeforeInput={this.handleBeforeInput}
