@@ -88,7 +88,7 @@ export default class AddButton extends React.Component {
     }, () => { // callback function
       // save page state
       const x = window.scrollX || window.pageXOffset;
-      const y = window.scrollY || window.pageXOffset;
+      const y = window.scrollY || window.pageYOffset;
       // do focus
       this.props.focus();
       // back previous window state
