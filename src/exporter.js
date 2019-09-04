@@ -118,9 +118,7 @@ export const entityToHTML = (entity, originalText) => {
         href={entity.data.url}
         target="_blank"
         rel="noopener noreferrer"
-      >
-        {originalText}
-      </a>
+      />
     );
   }
   return originalText;
