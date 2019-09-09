@@ -94,6 +94,7 @@ class MediumDraftEditor extends React.Component {
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
+    addButtonAutoclose: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -127,6 +128,7 @@ class MediumDraftEditor extends React.Component {
     disableToolbar: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
+    addButtonAutoclose: true,
   };
 
   constructor(props) {
@@ -582,6 +584,7 @@ class MediumDraftEditor extends React.Component {
               setEditorState={this.onChange}
               focus={this.focus}
               sideButtons={this.props.sideButtons}
+              addButtonAutoclose={this.props.addButtonAutoclose}
             />
           )}
           {!disableToolbar && (

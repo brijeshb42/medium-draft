@@ -439,6 +439,11 @@ The importer is available as `MediumDraftImporter` global;
   // Use this editorState
 ```
 
+### Keep AddButton visible
+
+If you need the "+" button to be visible always, use `addButtonAutoclose={false}`
+
+
 ### Issues
 
 - [x] Write an exporter to export draft data to HTML specifically for `medium-draft`.
