@@ -334,6 +334,14 @@ The strings inside the `block` and `inline` arrays must match the `style` attrib
 
 To summarize: if you need add, remove, and reorder buttons, it's probably easiest to use `blockButtons`, `inlineButtons`, and `toolbarConfig` together.
 
+#### Supply Your Own Toolbar
+
+If the toolbar customization props aren't sufficient to get the behavior you want, you can inject your own toolbar with the `ToolbarComponent` prop.
+
+This pattern is called [component injection](https://reactpatterns.github.io/Component-injection/). Your `ToolbarComponent` receives the same props as the default toolbar.
+
+If you want to write your own toolbar component, a good place to start is [with the default component](https://github.com/brijeshb42/medium-draft/blob/master/src/components/toolbar.js).
+
 ### Render data to HTML
 
 The feature to export HTML is available from version `0.4.1` onwards.

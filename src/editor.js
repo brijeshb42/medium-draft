@@ -564,7 +564,7 @@ class MediumDraftEditor extends React.Component {
     const blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
     const inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
 
-    const Toolbar = ToolbarComponent || DefaultToolbar
+    const Toolbar = ToolbarComponent || DefaultToolbar;
 
     return (
       <div className="md-RichEditor-root">
