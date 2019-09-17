@@ -13,7 +13,7 @@ import isSoftNewlineEvent from 'draft-js/lib/isSoftNewlineEvent';
 import { OrderedMap } from 'immutable';
 
 import AddButton from './components/addbutton';
-import Toolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
+import DefaultToolbar, { BLOCK_BUTTONS, INLINE_BUTTONS } from './components/toolbar';
 import LinkEditComponent from './components/LinkEditComponent';
 
 import rendererFn from './components/customrenderer';
@@ -91,9 +91,11 @@ class MediumDraftEditor extends React.Component {
     handleReturn: PropTypes.func,
     handlePastedText: PropTypes.func,
     disableToolbar: PropTypes.bool,
+    disableLinkEdit: PropTypes.bool,
     showLinkEditToolbar: PropTypes.bool,
     toolbarConfig: PropTypes.object,
     processURL: PropTypes.func,
+    ToolbarComponent: PropTypes.node,
   };
 
   static defaultProps = {
@@ -125,6 +127,7 @@ class MediumDraftEditor extends React.Component {
       },
     ],
     disableToolbar: false,
+    disableLinkEdit: false,
     showLinkEditToolbar: true,
     toolbarConfig: {},
   };
@@ -542,7 +545,16 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
+    const {
+      editorState,
+      editorEnabled,
+      disableToolbar,
+      disableLinkEdit,
+      showLinkEditToolbar,
+      toolbarConfig,
+      ToolbarComponent,
+    } = this.props;
+
     const showAddButton = editorEnabled;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
@@ -551,6 +563,9 @@ class MediumDraftEditor extends React.Component {
     }
     const blockButtons = this.configureToolbarBlockOptions(toolbarConfig);
     const inlineButtons = this.configureToolbarInlineOptions(toolbarConfig);
+
+    const Toolbar = ToolbarComponent || DefaultToolbar;
+
     return (
       <div className="md-RichEditor-root">
         <div className={editorClass}>
@@ -598,7 +613,7 @@ class MediumDraftEditor extends React.Component {
               inlineButtons={inlineButtons}
             />
           )}
-          {isCursorLink && (
+          {isCursorLink && !disableLinkEdit && (
             <LinkEditComponent
               {...isCursorLink}
               editorState={editorState}
