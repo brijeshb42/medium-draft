@@ -4,9 +4,11 @@ import { Block } from './constants';
 Get custom classnames for each of the different block types supported.
 */
 
-const BASE_BLOCK_CLASS = 'md-block';
-
 export default (block) => {
+  const classFromData = block.getData().get('class');
+  const customClassToApply = classFromData ? `${classFromData} ` : '';
+  const BASE_BLOCK_CLASS = `${customClassToApply}md-block`;
+
   switch (block.getType()) {
     case Block.BLOCKQUOTE:
       return `${BASE_BLOCK_CLASS} ${BASE_BLOCK_CLASS}-quote md-RichEditor-blockquote`;
