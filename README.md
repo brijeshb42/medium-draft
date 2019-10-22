@@ -256,7 +256,7 @@ class App extends React.Component {
       this.setState({ editorState });
     };
 
-    this.refsEditor = React.createRefs()
+    this.refsEditor = React.createRef()
 
   }
 
